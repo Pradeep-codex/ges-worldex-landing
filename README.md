@@ -1,1 +1,0 @@
-# GES-wordlex-india

@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f8fc;
+  --foreground: #111521;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-manrope);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), sans-serif;
+}
+
+.loader-screen {
+  background:
+    radial-gradient(110% 92% at 12% 10%, #ffffff 0%, #f9fbff 40%, transparent 80%),
+    radial-gradient(90% 80% at 92% 15%, #fef7fb 0%, #f2f7ff 48%, transparent 82%),
+    linear-gradient(140deg, #ffffff 0%, #f7f5ff 40%, #f3fbff 72%, #f9fff8 100%);
+}
+
+.loader {
+  width: 90px;
+  height: 14px;
+  --c: #000 92%, #0000;
+  background:
+    radial-gradient(circle closest-side, var(--c)) calc(100% / -4) 0,
+    radial-gradient(circle closest-side, var(--c)) calc(100% / 4) 0;
+  background-size: calc(100% / 2) 100%;
+  animation: l14 1.5s infinite;
+}
+
+@keyframes l14 {
+  0% {
+    background-position: calc(100% / -4) 0, calc(100% / 4) 0;
+  }
+  50% {
+    background-position: calc(100% / -4) -14px, calc(100% / 4) 14px;
+  }
+  100% {
+    background-position: calc(100% / 4) -14px, calc(3 * 100% / 4) 14px;
+  }
+}
