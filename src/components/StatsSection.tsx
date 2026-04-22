@@ -120,10 +120,3 @@ export function StatsSection() {
     </section>
   );
 }
-
-
-        </div>
-      </div>
-    </section>
-  );
-}
