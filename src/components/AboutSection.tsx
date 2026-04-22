@@ -118,7 +118,7 @@ export function AboutSection() {
               "15+ Years of Industry Excellence",
               "Presence in 20+ Global Strategic Markets",
               "Connecting 50,000+ Business Leaders Annually"
-            ].map((item, idx) => (
+            ].map((item: string, idx: number) => (
               <li key={idx} className="flex items-center gap-3 text-foreground/80 font-semibold group">
                 <div className="w-6 h-6 rounded-full bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all">
                   <ArrowRight className="w-3 h-3" />

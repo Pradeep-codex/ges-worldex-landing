@@ -420,7 +420,7 @@ export function Header() {
 
               <div className="flex-1 overflow-y-auto p-6">
                 <nav className="flex flex-col gap-6">
-                  {navItems.map((item, idx) => (
+                  {navItems.map((item, idx: number) => (
                     <motion.div
                       key={item.name}
                       className="flex flex-col border-b border-foreground/10 pb-4"
