@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   Instagram,
@@ -100,6 +101,7 @@ export function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const [expandedMobileSub, setExpandedMobileSub] = useState<string | null>(null);
   const [canHover, setCanHover] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
   const pathname = usePathname();
   const desktopNavRef = useRef<HTMLElement | null>(null);
 
@@ -117,6 +119,8 @@ export function Header() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    setHasMounted(true);
+
     const mql = window.matchMedia("(hover: hover)");
     const update = () => setCanHover(mql.matches);
     update();
@@ -433,139 +437,144 @@ export function Header() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="xl:hidden fixed inset-0 bg-[color:rgba(0,0,0,0.35)] backdrop-blur-sm z-[55]"
-            />
+      {hasMounted
+        ? createPortal(
+            <AnimatePresence>
+              {isMobileMenuOpen && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="xl:hidden fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm z-[85]"
+                  />
 
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="xl:hidden fixed top-0 right-0 h-full w-[85%] max-w-[380px] bg-background shadow-[-10px_0_50px_rgba(0,0,0,0.25)] z-[60] flex flex-col rounded-l-[40px] overflow-hidden"
-            >
-              <div className="flex items-center justify-between p-6 border-b border-[color:var(--border)]">
-                <img src="/logo-light.png" alt="GES Worldex" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto" />
-                <img src="/logo-dark.png" alt="GES Worldex" className="hidden [html[data-theme='dark']_&]:block h-8 w-auto" />
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 text-foreground/55"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-6">
-                <nav className="flex flex-col gap-6">
-                  {navItems.map((item, idx: number) => (
-                    <motion.div
-                      key={item.name}
-                      className="flex flex-col border-b border-foreground/10 pb-4"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.05 }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <Link
-                          href={item.href}
-                          onClick={(e) => handleNavClick(e, item.href)}
-                          className={`text-xl font-black ${pathname === item.href ? "text-foreground" : "text-foreground/60"}`}
-                          onClickCapture={() => !item.subMenu && setIsMobileMenuOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                        {item.subMenu && (
-                          <button
-                            onClick={() => setExpandedMobileSub(expandedMobileSub === item.name ? null : item.name)}
-                            className={`w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 transition-all duration-300 ${expandedMobileSub === item.name ? "rotate-180 bg-foreground text-background" : "text-foreground/55"}`}
-                          >
-                            <ChevronDown className="w-5 h-5" />
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Mobile Sub-Menu Accordion */}
-                      <AnimatePresence>
-                        {item.subMenu && expandedMobileSub === item.name && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="flex flex-col gap-4 pl-4 pt-4 mt-2 border-l-2 border-foreground/12">
-                              {item.subMenu.map((sub) => (
-                                <Link
-                                  key={sub.name}
-                                  href={sub.href}
-                                  className="text-[15px] font-bold text-foreground/60 hover:text-foreground flex items-center gap-3 active:translate-x-2 transition-transform"
-                                  onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                  <div className="w-1.5 h-1.5 rounded-full bg-foreground/18" />
-                                  {sub.name}
-                                </Link>
-                              ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
-                  ))}
-                </nav>
-
-                <div className="mt-12 space-y-8">
-                  <div className="space-y-4">
-                    <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Contact Details</p>
-                    <div className="space-y-3 font-bold">
-                      <a href="tel:+919945012123" className="flex items-center gap-3 text-foreground text-lg">
-                        <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
-                          <Phone className="w-4 h-4" />
-                        </div>
-                        +91 99450 12123
-                      </a>
-                      <a href="mailto:info@gesindiaexh.com" className="flex items-center gap-3 text-foreground/70">
-                        <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
-                          <MapPin className="w-4 h-4" />
-                        </div>
-                        info@gesindiaexh.com
-                      </a>
+                  <motion.div
+                    initial={{ x: "100%" }}
+                    animate={{ x: 0 }}
+                    exit={{ x: "100%" }}
+                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                    className="xl:hidden fixed top-0 right-0 h-full w-[85%] max-w-[380px] bg-background shadow-[-10px_0_50px_rgba(0,0,0,0.25)] z-[90] flex flex-col rounded-l-[40px] overflow-hidden"
+                  >
+                    <div className="flex items-center justify-between p-6 border-b border-[color:var(--border)]">
+                      <img src="/logo-light.png" alt="GES Worldex" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto" />
+                      <img src="/logo-dark.png" alt="GES Worldex" className="hidden [html[data-theme='dark']_&]:block h-8 w-auto" />
+                      <button
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 text-foreground/55"
+                      >
+                        <X className="w-6 h-6" />
+                      </button>
                     </div>
-                  </div>
 
-                  <div className="space-y-4">
-                    <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Visit Us</p>
-                    <p className="text-foreground/70 font-medium leading-relaxed">
-                      12, Ground Floor, 2nd Main,<br />
-                      RMV 2nd Stage, Bangalore,<br />
-                      Karnataka - 560094
-                    </p>
-                  </div>
-                </div>
-              </div>
+                    <div className="flex-1 overflow-y-auto p-6">
+                      <nav className="flex flex-col gap-6">
+                        {navItems.map((item, idx: number) => (
+                          <motion.div
+                            key={item.name}
+                            className="flex flex-col border-b border-foreground/10 pb-4"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                          >
+                            <div className="flex items-center justify-between">
+                              <Link
+                                href={item.href}
+                                onClick={(e) => handleNavClick(e, item.href)}
+                                className={`text-xl font-black ${pathname === item.href ? "text-foreground" : "text-foreground/60"}`}
+                                onClickCapture={() => !item.subMenu && setIsMobileMenuOpen(false)}
+                              >
+                                {item.name}
+                              </Link>
+                              {item.subMenu && (
+                                <button
+                                  onClick={() => setExpandedMobileSub(expandedMobileSub === item.name ? null : item.name)}
+                                  className={`w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 transition-all duration-300 ${expandedMobileSub === item.name ? "rotate-180 bg-foreground text-background" : "text-foreground/55"}`}
+                                >
+                                  <ChevronDown className="w-5 h-5" />
+                                </button>
+                              )}
+                            </div>
 
-              <div className="p-6 bg-foreground/5">
-                <div className="flex items-center justify-between">
-                  <p className="text-[13px] font-bold text-foreground/45">Connect with us</p>
-                  <div className="flex gap-4">
-                    {socialIcons.map((social) => (
-                      <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="text-foreground/45 hover:text-foreground transition-colors">
-                        <div className="w-5 h-5">{social.svg}</div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                            {/* Mobile Sub-Menu Accordion */}
+                            <AnimatePresence>
+                              {item.subMenu && expandedMobileSub === item.name && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="flex flex-col gap-4 pl-4 pt-4 mt-2 border-l-2 border-foreground/12">
+                                    {item.subMenu.map((sub) => (
+                                      <Link
+                                        key={sub.name}
+                                        href={sub.href}
+                                        className="text-[15px] font-bold text-foreground/60 hover:text-foreground flex items-center gap-3 active:translate-x-2 transition-transform"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                      >
+                                        <div className="w-1.5 h-1.5 rounded-full bg-foreground/18" />
+                                        {sub.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                        ))}
+                      </nav>
+
+                      <div className="mt-12 space-y-8">
+                        <div className="space-y-4">
+                          <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Contact Details</p>
+                          <div className="space-y-3 font-bold">
+                            <a href="tel:+919945012123" className="flex items-center gap-3 text-foreground text-lg">
+                              <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
+                                <Phone className="w-4 h-4" />
+                              </div>
+                              +91 99450 12123
+                            </a>
+                            <a href="mailto:info@gesindiaexh.com" className="flex items-center gap-3 text-foreground/70">
+                              <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
+                                <MapPin className="w-4 h-4" />
+                              </div>
+                              info@gesindiaexh.com
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Visit Us</p>
+                          <p className="text-foreground/70 font-medium leading-relaxed">
+                            12, Ground Floor, 2nd Main,<br />
+                            RMV 2nd Stage, Bangalore,<br />
+                            Karnataka - 560094
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-6 bg-foreground/5">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[13px] font-bold text-foreground/45">Connect with us</p>
+                        <div className="flex gap-4">
+                          {socialIcons.map((social) => (
+                            <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="text-foreground/45 hover:text-foreground transition-colors">
+                              <div className="w-5 h-5">{social.svg}</div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
     </motion.header>
   );
 }
