@@ -112,7 +112,7 @@ export function StatsSection() {
                   className="w-full h-full object-cover transform scale-110"
                 />
               </div>
-            </div>
+            </motion.div>
           </div>
 
         </div>
