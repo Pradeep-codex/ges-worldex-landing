@@ -54,11 +54,15 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       aria-label={`Switch to ${nextTheme} mode`}
       title={`Switch to ${nextTheme} mode`}
       className={
-        "theme-toggle cursor-pointer relative grid place-items-center w-10 h-10 rounded-2xl border border-[color:var(--border)] bg-background/55 backdrop-blur-xl " +
-        "transition-colors duration-300 shadow-[var(--toggle-shadow)] hover:bg-background/70 active:scale-[0.98] " +
+        "theme-toggle cursor-pointer relative grid place-items-center w-10 h-10 rounded-2xl border border-[color:var(--border)] bg-background/55 backdrop-blur-xl transition-all duration-300 shadow-[var(--toggle-shadow)] " +
         className
       }
-      whileTap={{ scale: 0.96 }}
+      whileHover={{ 
+        scale: 1.1,
+        y: -2,
+        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)"
+      }}
+      whileTap={{ scale: 0.92 }}
     >
       {/* animated glow ring */}
       <span className="pointer-events-none absolute inset-0 rounded-2xl theme-toggle-ring" />
