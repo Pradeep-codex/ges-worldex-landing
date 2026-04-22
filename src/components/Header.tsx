@@ -108,6 +108,7 @@ export function Header() {
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
+    if (isMobileMenuOpen) return;
     const previous = scrollY.getPrevious() ?? 0;
     if (latest > previous && latest > 150) {
       setIsVisible(false);
@@ -182,399 +183,406 @@ export function Header() {
   };
 
   return (
-    <motion.header
-      initial={{ y: 0 }}
-      animate={{
-        y: isVisible ? 0 : -110,
-      }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed top-0 inset-x-0 z-50 py-4 will-change-transform"
-    >
-      <div className="mx-auto px-4 lg:px-6 w-full max-w-full">
-        <div
-          className={`flex items-center justify-between w-full h-full gap-2 lg:gap-4 relative ${isScrolled
+    <>
+      <motion.header
+        initial={{ y: 0 }}
+        animate={{
+          y: isVisible ? 0 : -110,
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="fixed top-0 inset-x-0 z-50 py-4 will-change-transform"
+      >
+        <div className="mx-auto px-4 lg:px-6 w-full max-w-full">
+          <div
+            className={`flex items-center justify-between w-full h-full gap-2 lg:gap-4 relative ${isScrolled
               ? "bg-background/75 backdrop-blur-2xl shadow-[0_10px_36px_rgba(0,0,0,0.08)] border border-[color:var(--border)] rounded-full px-4 lg:px-6 py-2 mx-auto"
               : "bg-transparent px-2 py-2"
-            }`}
-        >
-          <div className="flex flex-1 items-center justify-start">
-            <motion.div
-              initial={dropAnimation.initial}
-              animate={dropAnimation.animate}
-              transition={dropAnimation.transition(1.3)}
-            >
-              <Link
-                href="/"
-                className="flex items-center group transition-transform duration-300 active:scale-95"
+              }`}
+          >
+            <div className="flex flex-1 items-center justify-start">
+              <motion.div
+                initial={dropAnimation.initial}
+                animate={dropAnimation.animate}
+                transition={dropAnimation.transition(1.3)}
               >
-                <img
-                  src="/logo-light.png"
-                  alt="GES Worldex"
-                  className="block [html[data-theme='dark']_&]:hidden h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
-                />
-                <img
-                  src="/logo-dark.png"
-                  alt="GES Worldex"
-                  className="hidden [html[data-theme='dark']_&]:block h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
-                />
-              </Link>
-            </motion.div>
-          </div>
-
-          <div className="hidden xl:flex flex-none justify-center z-20">
-            <nav 
-              className="flex items-center relative bg-background/40 p-1.5 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.15),inset_0_-1px_1px_rgba(255,255,255,0.1),0_1px_2px_rgba(0,0,0,0.05)] border border-[color:var(--border)] backdrop-blur-2xl px-2"
-              onMouseLeave={() => setHoveredNav(null)}
-              ref={desktopNavRef}
-            >
-              {navItems.map((item, idx) => {
-                const isFocused = (hoveredNav || activeNav) === item.name;
-
-                return (
-                  <motion.div
-                    key={item.name}
-                    className="flex items-center relative"
-                    initial={dropAnimation.initial}
-                    animate={dropAnimation.animate}
-                    transition={dropAnimation.transition(1.4 + idx * 0.1)}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={(e) => {
-                        // Touch/tablet (no-hover): tap should open submenu, not navigate.
-                        if (item.subMenu && !canHover) {
-                          e.preventDefault();
-                          setHoveredNav((prev) => (prev === item.name ? null : item.name));
-                          return;
-                        }
-                        handleNavClick(e, item.href);
-                      }}
-                      className={`relative px-4 xl:px-6 py-2.5 text-[14px] xl:text-[15.5px] font-black tracking-tight xl:tracking-wide transition-all z-10 rounded-full whitespace-nowrap flex items-center gap-1.5 ${
-                        isFocused ? "text-[#111521] scale-105" : "text-foreground/60 hover:text-foreground"
-                      }`}
-                      onMouseEnter={() => setHoveredNav(item.name)}
-                    >
-                      <span className="relative z-10">{item.name}</span>
-                      {item.subMenu && (
-                        <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${hoveredNav === item.name ? "rotate-180" : ""}`} />
-                      )}
-
-                      {isFocused && (
-                        <motion.div
-                          layoutId="navDrop"
-                          className="absolute inset-0 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.2),0_4px_8px_rgba(0,0,0,0.1)] z-0 rounded-full"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ 
-                            type: "spring", 
-                            stiffness: 420, 
-                            damping: 32,
-                            opacity: { duration: 0.15 }
-                          }}
-                        />
-                      )}
-                    </Link>
-
-                    {item.subMenu && (
-                      <AnimatePresence>
-                        {hoveredNav === item.name && (
-                          <motion.div
-                            initial={{ clipPath: "inset(0% 0% 100% 0%)", opacity: 0 }}
-                            animate={{ clipPath: "inset(0% 0% 0% 0%)", opacity: 1 }}
-                            exit={{ clipPath: "inset(0% 0% 100% 0%)", opacity: 0 }}
-                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                            onMouseEnter={() => setHoveredNav(item.name)}
-                            onMouseLeave={() => setHoveredNav(null)}
-                            className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[100]"
-                          >
-                            <div className="bg-background border border-[color:var(--border)] p-2.5 rounded-[24px] shadow-[0_30px_90px_rgba(0,0,0,0.22)] min-w-[320px]">
-                              <motion.div 
-                                initial="hidden"
-                                animate="visible"
-                                variants={{
-                                  hidden: { opacity: 0 },
-                                  visible: {
-                                    opacity: 1,
-                                    transition: {
-                                      staggerChildren: 0.05
-                                    }
-                                  }
-                                }}
-                                className="flex flex-col gap-1"
-                              >
-                                {item.subMenu.map((sub) => (
-                                  <motion.div
-                                    key={sub.name}
-                                    variants={{
-                                      hidden: { opacity: 0, y: 15 },
-                                      visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } }
-                                    }}
-                                  >
-                                    <Link
-                                      href={sub.href}
-                                      className="group flex items-center justify-between p-3.5 rounded-xl hover:bg-foreground/5 transition-all border border-transparent hover:border-[color:var(--border)]"
-                                    >
-                                      <div className="flex flex-col">
-                                        <span className="text-[14px] xl:text-[15px] font-black text-foreground tracking-tight">{sub.name}</span>
-                                        <span className="text-[10px] text-foreground/45 font-bold uppercase tracking-widest mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Explore</span>
-                                      </div>
-                                      <div className="w-7 h-7 rounded-full bg-foreground/8 flex items-center justify-center text-foreground/55 group-hover:bg-foreground group-hover:text-background transition-all transform group-hover:translate-x-1">
-                                        {sub.icon}
-                                      </div>
-                                    </Link>
-                                  </motion.div>
-                                ))}
-                              </motion.div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    )}
-
-                    {idx < navItems.length - 1 && (
-                      <div className="w-[1px] h-[14px] mx-1 bg-foreground/15 rounded-full shrink-0 z-10" />
-                    )}
-                  </motion.div>
-                );
-              })}
-            </nav>
-          </div>
-
-          <div className="flex flex-1 justify-end items-center gap-3">
-            <div className="hidden 2xl:flex items-center gap-2">
-              {socialIcons.map((social, idx) => {
-                return (
-                  <motion.div
-                    key={social.name}
-                    initial={dropAnimation.initial}
-                    animate={dropAnimation.animate}
-                    transition={dropAnimation.transition(1.9 + idx * 0.1)}
-                    className="relative group flex items-center justify-center p-[7px] rounded-full cursor-pointer text-foreground/70 bg-background/40 border border-[color:var(--border)] transition-transform duration-300 transform hover:scale-110 z-30"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "#ffffff";
-                      e.currentTarget.style.backgroundColor = social.color;
-                      e.currentTarget.style.borderColor = "#ffffff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "";
-                      e.currentTarget.style.backgroundColor = "";
-                      e.currentTarget.style.borderColor = "";
-                    }}
-                  >
-                    <Link
-                      href={social.href}
-                      className="flex items-center justify-center relative z-10"
-                      aria-label={social.name}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {social.svg}
-                    </Link>
-
-                    <div className="absolute top-0 opacity-0 invisible group-hover:visible group-hover:-top-[45px] group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-300 ease-out z-[100] flex justify-center">
-                      <div
-                        className="text-white text-[14px] font-semibold px-[8px] py-[5px] rounded-[5px] shadow-[0_10px_10px_rgba(0,0,0,0.1)] whitespace-nowrap relative"
-                        style={{ backgroundColor: social.color }}
-                      >
-                        {social.name}
-                        <div
-                          className="absolute h-[8px] w-[8px] -bottom-[3px] left-1/2 -translate-x-1/2 rotate-45"
-                          style={{ backgroundColor: social.color }}
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                <Link
+                  href="/"
+                  className="flex items-center group transition-transform duration-300 active:scale-95"
+                >
+                  <img
+                    src="/logo-light.png"
+                    alt="GES Worldex"
+                    className="block [html[data-theme='dark']_&]:hidden h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
+                  />
+                  <img
+                    src="/logo-dark.png"
+                    alt="GES Worldex"
+                    className="hidden [html[data-theme='dark']_&]:block h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
+                  />
+                </Link>
+              </motion.div>
             </div>
 
-            <motion.div
-              className="h-5 w-[1px] bg-foreground/15 hidden xl:block rounded-full mx-1"
-              initial={dropAnimation.initial}
-              animate={dropAnimation.animate}
-              transition={dropAnimation.transition(2.2)}
-            />
-
-            <motion.div
-              initial={dropAnimation.initial}
-              animate={dropAnimation.animate}
-              transition={dropAnimation.transition(2.3)}
-              className="hidden xl:block"
-            >
-              <ThemeToggle className="shadow-none border-none xl:border-[color:var(--border)]" />
-            </motion.div>
-
-            <motion.a
-              href="tel:+919945012123"
-              initial={dropAnimation.initial}
-              animate={dropAnimation.animate}
-              transition={dropAnimation.transition(2.3)}
-              className="hidden xl:flex items-center gap-2 text-foreground/75 bg-background/55 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[0_14px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_18px_55px_rgba(0,0,0,0.16)] transition-all duration-300 group border border-[color:var(--border)] backdrop-blur-xl"
-            >
-              <Phone className="w-[16px] xl:w-[17px] h-[16px] xl:h-[17px] stroke-[2.5]" />
-              <span className="text-[13px] xl:text-[14.5px] font-bold tracking-tight xl:tracking-wide whitespace-nowrap text-foreground">
-                +91 99450 12123
-              </span>
-            </motion.a>
-
-            <motion.div
-              className="xl:hidden flex items-center gap-2"
-              initial={dropAnimation.initial}
-              animate={dropAnimation.animate}
-              transition={dropAnimation.transition(1.5)}
-            >
-              <ThemeToggle className="shadow-none" />
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="w-10 h-10 flex flex-col items-center justify-center p-0 rounded-xl bg-background/55 shadow-[0_14px_40px_rgba(0,0,0,0.10)] active:shadow-[0_10px_28px_rgba(0,0,0,0.12)] border border-[color:var(--border)] backdrop-blur-xl transition-shadow duration-200"
-                aria-label="Toggle Menu"
+            <div className="hidden xl:flex flex-none justify-center z-20">
+              <nav
+                className="flex items-center relative bg-background/40 p-1.5 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.15),inset_0_-1px_1px_rgba(255,255,255,0.1),0_1px_2px_rgba(0,0,0,0.05)] border border-[color:var(--border)] backdrop-blur-2xl px-2"
+                onMouseLeave={() => setHoveredNav(null)}
+                ref={desktopNavRef}
               >
-                <Menu className="w-5 h-5 text-foreground" />
-              </button>
-            </motion.div>
+                {navItems.map((item, idx) => {
+                  const isFocused = (hoveredNav || activeNav) === item.name;
 
+                  return (
+                    <motion.div
+                      key={item.name}
+                      className="flex items-center relative"
+                      initial={dropAnimation.initial}
+                      animate={dropAnimation.animate}
+                      transition={dropAnimation.transition(1.4 + idx * 0.1)}
+                    >
+                      <Link
+                        href={item.href}
+                        onClick={(e) => {
+                          // Touch/tablet (no-hover): tap should open submenu, not navigate.
+                          if (item.subMenu && !canHover) {
+                            e.preventDefault();
+                            setHoveredNav((prev) => (prev === item.name ? null : item.name));
+                            return;
+                          }
+                          handleNavClick(e, item.href);
+                        }}
+                        className={`relative px-4 xl:px-6 py-2.5 text-[14px] xl:text-[15.5px] font-black tracking-tight xl:tracking-wide transition-all z-10 rounded-full whitespace-nowrap flex items-center gap-1.5 ${isFocused ? "text-[#111521] scale-105" : "text-foreground/60 hover:text-foreground"
+                          }`}
+                        onMouseEnter={() => setHoveredNav(item.name)}
+                      >
+                        <span className="relative z-10">{item.name}</span>
+                        {item.subMenu && (
+                          <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${hoveredNav === item.name ? "rotate-180" : ""}`} />
+                        )}
+
+                        {isFocused && (
+                          <motion.div
+                            layoutId="navDrop"
+                            className="absolute inset-0 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.2),0_4px_8px_rgba(0,0,0,0.1)] z-0 rounded-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 420,
+                              damping: 32,
+                              opacity: { duration: 0.15 }
+                            }}
+                          />
+                        )}
+                      </Link>
+
+                      {item.subMenu && (
+                        <AnimatePresence>
+                          {hoveredNav === item.name && (
+                            <motion.div
+                              initial={{ clipPath: "inset(0% 0% 100% 0%)", opacity: 0 }}
+                              animate={{ clipPath: "inset(0% 0% 0% 0%)", opacity: 1 }}
+                              exit={{ clipPath: "inset(0% 0% 100% 0%)", opacity: 0 }}
+                              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                              onMouseEnter={() => setHoveredNav(item.name)}
+                              onMouseLeave={() => setHoveredNav(null)}
+                              className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[100]"
+                            >
+                              <div className="bg-background border border-[color:var(--border)] p-2.5 rounded-[24px] shadow-[0_30px_90px_rgba(0,0,0,0.22)] min-w-[320px]">
+                                <motion.div
+                                  initial="hidden"
+                                  animate="visible"
+                                  variants={{
+                                    hidden: { opacity: 0 },
+                                    visible: {
+                                      opacity: 1,
+                                      transition: {
+                                        staggerChildren: 0.05
+                                      }
+                                    }
+                                  }}
+                                  className="flex flex-col gap-1"
+                                >
+                                  {item.subMenu.map((sub) => (
+                                    <motion.div
+                                      key={sub.name}
+                                      variants={{
+                                        hidden: { opacity: 0, y: 15 },
+                                        visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } }
+                                      }}
+                                    >
+                                      <Link
+                                        href={sub.href}
+                                        className="group flex items-center justify-between p-3.5 rounded-xl hover:bg-foreground/5 transition-all border border-transparent hover:border-[color:var(--border)]"
+                                      >
+                                        <div className="flex flex-col">
+                                          <span className="text-[14px] xl:text-[15px] font-black text-foreground tracking-tight">{sub.name}</span>
+                                          <span className="text-[10px] text-foreground/45 font-bold uppercase tracking-widest mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Explore</span>
+                                        </div>
+                                        <div className="w-7 h-7 rounded-full bg-foreground/8 flex items-center justify-center text-foreground/55 group-hover:bg-foreground group-hover:text-background transition-all transform group-hover:translate-x-1">
+                                          {sub.icon}
+                                        </div>
+                                      </Link>
+                                    </motion.div>
+                                  ))}
+                                </motion.div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      )}
+
+                      {idx < navItems.length - 1 && (
+                        <div className="w-[1px] h-[14px] mx-1 bg-foreground/15 rounded-full shrink-0 z-10" />
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <div className="flex flex-1 justify-end items-center gap-3">
+              <div className="hidden 2xl:flex items-center gap-2">
+                {socialIcons.map((social, idx) => {
+                  return (
+                    <motion.div
+                      key={social.name}
+                      initial={dropAnimation.initial}
+                      animate={dropAnimation.animate}
+                      transition={dropAnimation.transition(1.9 + idx * 0.1)}
+                      className="relative group flex items-center justify-center p-[7px] rounded-full cursor-pointer text-foreground/70 bg-background/40 border border-[color:var(--border)] transition-transform duration-300 transform hover:scale-110 z-30"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "#ffffff";
+                        e.currentTarget.style.backgroundColor = social.color;
+                        e.currentTarget.style.borderColor = "#ffffff";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "";
+                        e.currentTarget.style.backgroundColor = "";
+                        e.currentTarget.style.borderColor = "";
+                      }}
+                    >
+                      <Link
+                        href={social.href}
+                        className="flex items-center justify-center relative z-10"
+                        aria-label={social.name}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {social.svg}
+                      </Link>
+
+                      <div className="absolute top-0 opacity-0 invisible group-hover:visible group-hover:-top-[45px] group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-300 ease-out z-[100] flex justify-center">
+                        <div
+                          className="text-white text-[14px] font-semibold px-[8px] py-[5px] rounded-[5px] shadow-[0_10px_10px_rgba(0,0,0,0.1)] whitespace-nowrap relative"
+                          style={{ backgroundColor: social.color }}
+                        >
+                          {social.name}
+                          <div
+                            className="absolute h-[8px] w-[8px] -bottom-[3px] left-1/2 -translate-x-1/2 rotate-45"
+                            style={{ backgroundColor: social.color }}
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              <motion.div
+                className="h-5 w-[1px] bg-foreground/15 hidden xl:block rounded-full mx-1"
+                initial={dropAnimation.initial}
+                animate={dropAnimation.animate}
+                transition={dropAnimation.transition(2.2)}
+              />
+
+              <motion.div
+                initial={dropAnimation.initial}
+                animate={dropAnimation.animate}
+                transition={dropAnimation.transition(2.3)}
+                className="hidden xl:block"
+              >
+                <ThemeToggle className="shadow-none border-none xl:border-[color:var(--border)]" />
+              </motion.div>
+
+              <motion.a
+                href="tel:+919945012123"
+                initial={dropAnimation.initial}
+                animate={dropAnimation.animate}
+                transition={dropAnimation.transition(2.3)}
+                className="hidden xl:flex items-center gap-2 text-foreground/75 bg-background/55 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[0_14px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_18px_55px_rgba(0,0,0,0.16)] transition-all duration-300 group border border-[color:var(--border)] backdrop-blur-xl"
+              >
+                <Phone className="w-[16px] xl:w-[17px] h-[16px] xl:h-[17px] stroke-[2.5]" />
+                <span className="text-[13px] xl:text-[14.5px] font-bold tracking-tight xl:tracking-wide whitespace-nowrap text-foreground">
+                  +91 99450 12123
+                </span>
+              </motion.a>
+
+              <motion.div
+                className="xl:hidden flex items-center gap-2"
+                initial={dropAnimation.initial}
+                animate={dropAnimation.animate}
+                transition={dropAnimation.transition(1.5)}
+              >
+                <ThemeToggle className="shadow-none" />
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="w-10 h-10 flex flex-col items-center justify-center p-0 rounded-xl bg-background/55 shadow-[0_14px_40px_rgba(0,0,0,0.10)] active:shadow-[0_10px_28px_rgba(0,0,0,0.12)] border border-[color:var(--border)] backdrop-blur-xl transition-shadow duration-200"
+                  aria-label="Toggle Menu"
+                >
+                  <Menu className="w-5 h-5 text-foreground" />
+                </button>
+              </motion.div>
+
+            </div>
           </div>
         </div>
-      </div>
+      </motion.header>
 
-      {hasMounted
-        ? createPortal(
-            <AnimatePresence>
-              {isMobileMenuOpen && (
-                <>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+        {hasMounted && createPortal(
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <div className="fixed inset-0 z-[10000] xl:hidden">
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              />
+
+              {/* Sidebar Content */}
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 28, stiffness: 240 }}
+                className="absolute inset-y-0 right-0 h-full w-[85%] max-w-[380px] bg-background flex flex-col rounded-l-[32px] shadow-2xl overflow-hidden border-l border-white/10"
+              >
+                {/* Header inside mobile menu - Integrated feel */}
+                <div className="flex items-center justify-between px-7 py-8 border-b border-foreground/5 mb-2">
+                  <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                    <img src="/logo-light.png" alt="Logo" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto opacity-90" />
+                    <img src="/logo-dark.png" alt="Logo" className="hidden [html[data-theme='dark']_&]:block h-8 w-auto opacity-90" />
+                  </Link>
+                  <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="xl:hidden fixed inset-0 bg-[rgba(0,0,0,0.35)] backdrop-blur-sm z-[85]"
-                  />
-
-                  <motion.div
-                    initial={{ x: "100%" }}
-                    animate={{ x: 0 }}
-                    exit={{ x: "100%" }}
-                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                    className="xl:hidden fixed top-0 right-0 h-[100dvh] w-[85%] max-w-[380px] bg-background shadow-[-10px_0_50px_rgba(0,0,0,0.25)] z-[90] flex flex-col rounded-l-[40px] overflow-hidden"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/[0.03] text-foreground/40 transition-colors active:bg-foreground/10"
                   >
-                    <div className="flex items-center justify-between p-6 border-b border-[color:var(--border)]">
-                      <img src="/logo-light.png" alt="GES Worldex" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto" />
-                      <img src="/logo-dark.png" alt="GES Worldex" className="hidden [html[data-theme='dark']_&]:block h-8 w-auto" />
-                      <button
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 text-foreground/55"
-                      >
-                        <X className="w-6 h-6" />
-                      </button>
-                    </div>
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
 
-                    <div className="flex-1 overflow-y-auto p-6">
-                      <nav className="flex flex-col gap-6">
-                        {navItems.map((item, idx: number) => (
-                          <motion.div
-                            key={item.name}
-                            className="flex flex-col border-b border-foreground/10 pb-4"
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.05 }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <Link
-                                href={item.href}
-                                onClick={(e) => handleNavClick(e, item.href)}
-                                className={`text-xl font-black ${pathname === item.href ? "text-foreground" : "text-foreground/60"}`}
-                                onClickCapture={() => !item.subMenu && setIsMobileMenuOpen(false)}
-                              >
-                                {item.name}
-                              </Link>
-                              {item.subMenu && (
-                                <button
-                                  onClick={() => setExpandedMobileSub(expandedMobileSub === item.name ? null : item.name)}
-                                  className={`w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 transition-all duration-300 ${expandedMobileSub === item.name ? "rotate-180 bg-foreground text-background" : "text-foreground/55"}`}
-                                >
-                                  <ChevronDown className="w-5 h-5" />
-                                </button>
-                              )}
-                            </div>
+                {/* Navigation Items */}
+                <div className="flex-1 overflow-y-auto px-7 py-4">
+                  <nav className="flex flex-col gap-2">
+                    {[
+                      { name: "Home", href: "/#home" },
+                      { name: "About Us", href: "/#about" },
+                      { name: "Exhibitors", href: "/exhibitors", hasSub: true },
+                      { name: "Visitors", href: "/visitors", hasSub: true },
+                      { name: "Testimonials", href: "/testimonials" },
+                      { name: "Portfolio", href: "/portfolio" },
+                      { name: "Contact", href: "/contact" },
+                    ].map((item) => {
+                      const originalItem = navItems.find(n => n.name === item.name);
+                      const isExpanded = expandedMobileSub === item.name;
 
-                            {/* Mobile Sub-Menu Accordion */}
-                            <AnimatePresence>
-                              {item.subMenu && expandedMobileSub === item.name && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: "auto", opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  className="overflow-hidden"
-                                >
-                                  <div className="flex flex-col gap-4 pl-4 pt-4 mt-2 border-l-2 border-foreground/12">
-                                    {item.subMenu.map((sub) => (
-                                      <Link
-                                        key={sub.name}
-                                        href={sub.href}
-                                        className="text-[15px] font-bold text-foreground/60 hover:text-foreground flex items-center gap-3 active:translate-x-2 transition-transform"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                      >
-                                        <div className="w-1.5 h-1.5 rounded-full bg-foreground/18" />
-                                        {sub.name}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </motion.div>
-                        ))}
-                      </nav>
-
-                      <div className="mt-12 space-y-8">
-                        <div className="space-y-4">
-                          <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Contact Details</p>
-                          <div className="space-y-3 font-bold">
-                            <a href="tel:+919945012123" className="flex items-center gap-3 text-foreground text-lg">
-                              <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
-                                <Phone className="w-4 h-4" />
-                              </div>
-                              +91 99450 12123
-                            </a>
-                            <a href="mailto:info@gesindiaexh.com" className="flex items-center gap-3 text-foreground/70">
-                              <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
-                                <MapPin className="w-4 h-4" />
-                              </div>
-                              info@gesindiaexh.com
-                            </a>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Visit Us</p>
-                          <p className="text-foreground/70 font-medium leading-relaxed">
-                            12, Ground Floor, 2nd Main,<br />
-                            RMV 2nd Stage, Bangalore,<br />
-                            Karnataka - 560094
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-6 bg-foreground/5">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[13px] font-bold text-foreground/45">Connect with us</p>
-                        <div className="flex gap-4">
-                          {socialIcons.map((social) => (
-                            <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="text-foreground/45 hover:text-foreground transition-colors">
-                              <div className="w-5 h-5">{social.svg}</div>
+                      return (
+                        <div key={item.name} className="flex flex-col gap-1">
+                          <div className="flex items-center justify-between py-3.5">
+                            <Link
+                              href={item.href}
+                              onClick={(e) => {
+                                handleNavClick(e, item.href);
+                                if (!item.hasSub) setIsMobileMenuOpen(false);
+                              }}
+                              className={`text-[19px] font-bold tracking-tight transition-all duration-300 ${pathname === item.href ? "text-indigo-600" : "text-foreground/80"}`}
+                            >
+                              {item.name}
                             </Link>
-                          ))}
+                            {item.hasSub && (
+                              <button
+                                onClick={() => setExpandedMobileSub(isExpanded ? null : item.name)}
+                                className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all duration-300 ${isExpanded ? "rotate-180 bg-indigo-600/10 text-indigo-600" : "bg-foreground/[0.03] text-foreground/30"}`}
+                              >
+                                <ChevronDown className="w-5 h-5" />
+                              </button>
+                            )}
+                          </div>
+
+                          <AnimatePresence>
+                            {item.hasSub && isExpanded && originalItem?.subMenu && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="overflow-hidden bg-foreground/[0.02] rounded-2xl mb-2"
+                              >
+                                <div className="flex flex-col gap-4 p-5 pl-7 border-l-2 border-indigo-600/20">
+                                  {originalItem.subMenu.map((sub) => (
+                                    <Link
+                                      key={sub.name}
+                                      href={sub.href}
+                                      className="text-[15px] font-semibold text-foreground/60 hover:text-indigo-600 flex items-center gap-3 transition-colors"
+                                      onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                      <div className="w-1 h-1 rounded-full bg-indigo-600/40" />
+                                      {sub.name}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                          
+                          <div className="h-[1px] w-full bg-foreground/[0.04]" />
                         </div>
+                      );
+                    })}
+                  </nav>
+
+                  <div className="mt-14 space-y-8">
+                    <div className="space-y-3">
+                      <p className="text-[10px] font-bold tracking-[0.15em] text-foreground/25 uppercase pl-1">Inquiries</p>
+                      <a href="tel:+919945012123" className="flex items-center gap-4 text-foreground/70 font-bold text-lg hover:text-indigo-600 transition-colors">
+                        <div className="w-10 h-10 rounded-2xl bg-indigo-600/5 flex items-center justify-center text-indigo-600">
+                          <Phone className="w-5 h-5" />
+                        </div>
+                        +91 99450 12123
+                      </a>
+                    </div>
+
+                    <div className="space-y-3">
+                      <p className="text-[10px] font-bold tracking-[0.15em] text-foreground/25 uppercase pl-1">Location</p>
+                      <div className="text-foreground/50 font-medium leading-relaxed p-5 bg-foreground/[0.02] rounded-2xl text-[14px] border border-foreground/[0.03]">
+                        12, Ground Floor, 2nd Main,<br />
+                        RMV 2nd Stage, Bangalore
                       </div>
                     </div>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>,
-            document.body,
-          )
-        : null}
-    </motion.header>
+                  </div>
+                </div>
+
+                <div className="p-7 bg-foreground/[0.02] border-t border-foreground/[0.04] mt-auto">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-[10px] text-foreground/20 uppercase tracking-[0.15em]">Social Hub</span>
+                    <div className="flex gap-4">
+                      {socialIcons.map((social) => (
+                        <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="text-foreground/30 hover:text-indigo-600 transition-all">
+                          <div className="w-5 h-5">{social.svg}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
   );
 }
+
