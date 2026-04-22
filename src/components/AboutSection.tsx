@@ -22,40 +22,44 @@ export function AboutSection() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ type: "tween", ease: "easeOut", duration: 0.55 }}
               className="absolute inset-0 rounded-full border-[12px] border-white shadow-2xl overflow-hidden z-0"
             >
-              <img src={abtMain} alt="About Big Content" className="w-full h-full object-cover" />
+              <img src={abtMain} alt="About Big Content" className="w-full h-full object-cover" loading="lazy" decoding="async" />
             </motion.div>
 
             {/* Small Blob 1 - Top Left Overlap */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ type: "tween", ease: "easeOut", delay: 0.08, duration: 0.45 }}
               className="absolute -top-6 -left-6 sm:-top-10 sm:-left-10 w-[140px] h-[140px] sm:w-[220px] sm:h-[220px] rounded-full border-[10px] sm:border-[12px] border-white z-20 overflow-hidden"
             >
-              <img src={blob1} alt="About 1" className="w-full h-full object-cover" />
+              <img src={blob1} alt="About 1" className="w-full h-full object-cover" loading="lazy" decoding="async" />
             </motion.div>
 
             {/* Small Blob 2 - Bottom Right Overlap */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ type: "tween", ease: "easeOut", delay: 0.16, duration: 0.45 }}
               className="absolute -bottom-10 -right-4 sm:-bottom-14 sm:-right-10 w-[160px] h-[160px] sm:w-[250px] sm:h-[250px] rounded-full border-[10px] sm:border-[12px] border-white z-30 overflow-hidden"
             >
-              <img src={blob2} alt="About 2" className="w-full h-full object-cover" />
+              <img src={blob2} alt="About 2" className="w-full h-full object-cover" loading="lazy" decoding="async" />
             </motion.div>
 
             {/* Small Blob 3 - Middle Right Overlap */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ type: "tween", ease: "easeOut", delay: 0.24, duration: 0.45 }}
               className="absolute top-12 -right-12 sm:top-16 sm:-right-20 w-[110px] h-[110px] sm:w-[180px] sm:h-[180px] rounded-full border-[10px] sm:border-[12px] border-white z-10 overflow-hidden"
             >
-              <img src={blob3} alt="About 3" className="w-full h-full object-cover" />
+              <img src={blob3} alt="About 3" className="w-full h-full object-cover" loading="lazy" decoding="async" />
             </motion.div>
 
             {/* Decorative Element */}
