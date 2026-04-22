@@ -455,7 +455,7 @@ export function Header() {
                     animate={{ x: 0 }}
                     exit={{ x: "100%" }}
                     transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                    className="xl:hidden fixed top-0 right-0 h-full w-[85%] max-w-[380px] bg-background shadow-[-10px_0_50px_rgba(0,0,0,0.25)] z-[90] flex flex-col rounded-l-[40px] overflow-hidden"
+                    className="xl:hidden fixed top-0 right-0 h-[100dvh] w-[85%] max-w-[380px] bg-background shadow-[-10px_0_50px_rgba(0,0,0,0.25)] z-[90] flex flex-col rounded-l-[40px] overflow-hidden"
                   >
                     <div className="flex items-center justify-between p-6 border-b border-[color:var(--border)]">
                       <img src="/logo-light.png" alt="GES Worldex" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto" />
