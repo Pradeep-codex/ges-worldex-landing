@@ -71,10 +71,7 @@ export default function RootLayout({
   try {
     var key = 'ges-theme';
     var stored = localStorage.getItem(key);
-    var theme = (stored === 'light' || stored === 'dark') ? stored : null;
-    if (!theme) {
-      theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
+    var theme = (stored === 'light' || stored === 'dark') ? stored : 'light';
     document.documentElement.dataset.theme = theme;
   } catch (e) {}
 })();`}
