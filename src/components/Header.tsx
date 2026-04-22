@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import {
   Instagram,
@@ -99,7 +99,9 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [expandedMobileSub, setExpandedMobileSub] = useState<string | null>(null);
+  const [canHover, setCanHover] = useState(true);
   const pathname = usePathname();
+  const desktopNavRef = useRef<HTMLElement | null>(null);
 
   const { scrollY } = useScroll();
 
@@ -112,6 +114,39 @@ export function Header() {
     }
     setIsScrolled(latest > 50);
   });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(hover: hover)");
+    const update = () => setCanHover(mql.matches);
+    update();
+
+    // Support older Safari
+    // eslint-disable-next-line deprecation/deprecation
+    if (typeof mql.addEventListener === "function") {
+      mql.addEventListener("change", update);
+      return () => mql.removeEventListener("change", update);
+    }
+    // eslint-disable-next-line deprecation/deprecation
+    mql.addListener(update);
+    // eslint-disable-next-line deprecation/deprecation
+    return () => mql.removeListener(update);
+  }, []);
+
+  useEffect(() => {
+    if (canHover) return;
+    if (!hoveredNav) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      const navEl = desktopNavRef.current;
+      if (!navEl) return;
+      if (navEl.contains(e.target as Node)) return;
+      setHoveredNav(null);
+    };
+
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    return () => window.removeEventListener("pointerdown", onPointerDown);
+  }, [canHover, hoveredNav]);
 
   const activeNav = navItems.find((item) => item.href === pathname)?.name || "Home";
 
@@ -186,6 +221,7 @@ export function Header() {
             <nav 
               className="flex items-center relative bg-background/40 p-1.5 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.15),inset_0_-1px_1px_rgba(255,255,255,0.1),0_1px_2px_rgba(0,0,0,0.05)] border border-[color:var(--border)] backdrop-blur-2xl px-2"
               onMouseLeave={() => setHoveredNav(null)}
+              ref={desktopNavRef}
             >
               {navItems.map((item, idx) => {
                 const isFocused = (hoveredNav || activeNav) === item.name;
@@ -200,7 +236,15 @@ export function Header() {
                   >
                     <Link
                       href={item.href}
-                      onClick={(e) => handleNavClick(e, item.href)}
+                      onClick={(e) => {
+                        // Touch/tablet (no-hover): tap should open submenu, not navigate.
+                        if (item.subMenu && !canHover) {
+                          e.preventDefault();
+                          setHoveredNav((prev) => (prev === item.name ? null : item.name));
+                          return;
+                        }
+                        handleNavClick(e, item.href);
+                      }}
                       className={`relative px-4 xl:px-6 py-2.5 text-[14px] xl:text-[15.5px] font-black tracking-tight xl:tracking-wide transition-all z-10 rounded-full whitespace-nowrap flex items-center gap-1.5 ${
                         isFocused ? "text-[#111521] scale-105" : "text-foreground/60 hover:text-foreground"
                       }`}
@@ -361,7 +405,7 @@ export function Header() {
               initial={dropAnimation.initial}
               animate={dropAnimation.animate}
               transition={dropAnimation.transition(2.3)}
-              className="hidden lg:flex items-center gap-2 text-foreground/75 bg-background/55 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[0_14px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_18px_55px_rgba(0,0,0,0.16)] transition-all duration-300 group border border-[color:var(--border)] backdrop-blur-xl"
+              className="hidden xl:flex items-center gap-2 text-foreground/75 bg-background/55 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[0_14px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_18px_55px_rgba(0,0,0,0.16)] transition-all duration-300 group border border-[color:var(--border)] backdrop-blur-xl"
             >
               <Phone className="w-[16px] xl:w-[17px] h-[16px] xl:h-[17px] stroke-[2.5]" />
               <span className="text-[13px] xl:text-[14.5px] font-bold tracking-tight xl:tracking-wide whitespace-nowrap text-foreground">
