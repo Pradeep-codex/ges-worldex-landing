@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
 
 interface StatItemProps {
@@ -12,10 +12,10 @@ interface StatItemProps {
 
 const StatCounter = ({ value, label, suffix = "+", decimals = 0 }: StatItemProps) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
   
   const springValue = useSpring(0, {
-    stiffness: 60,
+    stiffness: 50,
     damping: 30,
   });
 
@@ -32,101 +32,95 @@ const StatCounter = ({ value, label, suffix = "+", decimals = 0 }: StatItemProps
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
       viewport={{ once: true }}
-      className="relative group p-8 rounded-[32px] bg-white/40 backdrop-blur-md border border-white/50 shadow-[0_20px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.06)] hover:-translate-y-2 transition-all duration-500"
+      className="p-5 rounded-[24px] bg-[#f8faff] shadow-[10px_10px_20px_#d1d9e6,-10px_-10px_20px_#ffffff] flex flex-col items-center justify-center text-center group hover:shadow-[inset_5px_5px_10px_#d1d9e6,inset_-5px_-5px_10px_#ffffff] transition-all duration-300"
     >
-      <div className="flex flex-col items-start">
-        <div className="flex items-baseline">
-          <motion.span className="text-4xl md:text-5xl font-black text-[#111521] tracking-tighter">
-            {displayValue}
-          </motion.span>
-          <span className="text-3xl md:text-4xl font-bold text-indigo-600 ml-0.5">{suffix}</span>
-        </div>
-        <p className="mt-2 text-sm font-bold text-foreground/45 uppercase tracking-[0.15em]">
-          {label}
-        </p>
+      <div className="flex items-baseline mb-1">
+        <motion.span className="text-3xl font-black text-[#1a1f2e] tracking-tighter">
+          {displayValue}
+        </motion.span>
+        <span className="text-2xl font-bold text-indigo-500 ml-0.5">{suffix}</span>
       </div>
-      
-      {/* Decorative background element on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/[0.03] to-transparent opacity-0 group-hover:opacity-100 rounded-[32px] transition-opacity duration-500" />
+      <p className="text-[10px] font-bold text-foreground/40 uppercase tracking-[0.1em]">
+        {label}
+      </p>
     </motion.div>
   );
 };
 
 export function StatsSection() {
   return (
-    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-white to-[#f8faff]">
-      {/* Background Orbs for depth */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-indigo-100/40 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/4 w-[400px] h-[400px] bg-blue-50/50 rounded-full blur-[100px] pointer-events-none" />
-
+    <section className="relative py-16 overflow-hidden bg-[#f0f4f8]">
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-16">
+        <div className="flex flex-col lg:flex-row items-center gap-10">
           
           {/* Left Side: Content */}
-          <div className="w-full lg:w-1/2 space-y-12">
-            <div className="space-y-4">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+          <div className="w-full lg:w-[40%] space-y-6 text-center lg:text-left">
+            <div className="space-y-3">
+              <motion.h2
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-600/5 border border-indigo-600/10"
+                className="text-3xl md:text-4xl font-black leading-tight"
               >
-                <div className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
-                <span className="text-[11px] font-bold tracking-widest text-indigo-600 uppercase">Growth & Influence</span>
-              </motion.div>
-              
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                viewport={{ once: true }}
-                className="text-4xl md:text-5xl xl:text-6xl font-black text-[#111521] tracking-tight leading-[1.1]"
-              >
-                Our Impact in <br />
-                <span className="text-indigo-600 underline decoration-indigo-600/20 underline-offset-8">Numbers</span>
+                <span className="text-[#1a1f2e]">Our Impact </span>
+                <span className="text-indigo-600 font-display italic">in Numbers</span>
               </motion.h2>
               
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
-                className="text-lg text-foreground/60 font-medium leading-relaxed max-w-lg"
+                className="text-sm text-foreground/50 font-medium leading-relaxed max-w-sm mx-auto lg:mx-0"
               >
-                Connecting businesses, exhibitors, and visitors across India through world-class exhibitions and networking opportunities.
+                World-class exhibitions connecting India's business landscape.
               </motion.p>
             </div>
 
-            {/* Statistics Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-2">
+            {/* Statistics Grid - Smaller Neumorphic Design */}
+            <div className="grid grid-cols-2 gap-4">
               <StatCounter value={10000} label="Exhibitors" />
               <StatCounter value={500000} label="Visitors" />
-              <StatCounter value={400} label="Shows Organized" />
-              <StatCounter value={50000} label="Stalls Fabricated" />
+              <StatCounter value={400} label="Shows" />
+              <StatCounter value={50000} label="Stalls" />
             </div>
           </div>
 
-          {/* Right Side: 3D Illustration */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center">
+          {/* Right Side: Image inside Premium Blob */}
+          <div className="w-full lg:w-[60%] flex items-center justify-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative w-full max-w-[600px] flex items-center justify-center"
+              className="relative w-full max-w-[500px] flex items-center justify-center"
             >
-              <img
-                src="/stat1.png"
-                alt="GES Impact Stat"
-                className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
-              />
-            </motion.div>
+              {/* Premium Blob Backdrop */}
+              <div className="absolute inset-0 bg-indigo-500/10 [clip-path:polygon(30%_0%,70%_0%,100%_30%,100%_70%,70%_100%,30%_100%,0%_70%,0%_30%)] animate-[spin_20s_linear_infinite] scale-110 blur-2xl" />
+              <div className="absolute inset-0 bg-indigo-200/20 [clip-path:polygon(20%_10%,80%_0%,100%_40%,90%_90%,30%_100%,0%_60%)] animate-[spin_15s_linear_infinite_reverse] scale-105" />
+              
+              {/* Image Container with Blob Shape */}
+              <div className="relative z-10 w-full aspect-[4/3] bg-white/30 backdrop-blur-sm shadow-2xl overflow-hidden [clip-path:polygon(42%_4%,73%_11%,95%_42%,87%_78%,49%_98%,9%_81%,2%_33%,23%_6%)] border-4 border-white/50">
+                <img
+                  src="/stat1.png"
+                  alt="GES Stats"
+                  className="w-full h-full object-cover transform scale-110"
+                />
+              </div>
+            </div>
           </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
         </div>
       </div>
