@@ -114,33 +114,17 @@ export function StatsSection() {
           {/* Right Side: 3D Illustration */}
           <div className="w-full lg:w-1/2 flex items-center justify-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               viewport={{ once: true }}
-              className="relative w-full max-w-[600px] aspect-square flex items-center justify-center group"
+              className="relative w-full max-w-[600px] flex items-center justify-center"
             >
-              {/* Animated Floating effect wrapper */}
-              <motion.div
-                animate={{
-                  y: [0, -20, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="relative z-20"
-              >
-                <img
-                  src="/stats-3d.png"
-                  alt="GES Impact 3D"
-                  className="w-full h-auto object-contain drop-shadow-[0_35px_35px_rgba(30,58,138,0.1)] transition-transform duration-700 group-hover:scale-105"
-                />
-              </motion.div>
-
-              {/* Decorative background circle */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-indigo-100/50 to-blue-50/50 rounded-full scale-90 blur-3xl -z-10 animate-pulse" />
+              <img
+                src="/stat1.png"
+                alt="GES Impact Stat"
+                className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
+              />
             </motion.div>
           </div>
 
