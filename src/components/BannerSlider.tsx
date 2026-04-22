@@ -85,11 +85,9 @@ export function BannerSlider() {
   }, [isPaused, nextSlide]);
 
   return (
-    <section 
-      className="relative w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 mb-20 mt-8 md:mt-12 lg:mt-16"
-    >
+    <section className="relative w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12">
       <div 
-        className="relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] bg-slate-900"
+        className="relative w-full rounded-[24px] md:rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] bg-background"
         onMouseEnter={() => !isPortrait && setIsPaused(true)}
         onMouseLeave={() => !isPortrait && setIsPaused(false)}
       >
@@ -100,129 +98,129 @@ export function BannerSlider() {
           alt="spacer"
         />
 
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          <motion.div
-            key={current}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 150, damping: 25 },
-              opacity: { duration: 0.5 }
-            }}
-            className="absolute inset-0"
-          >
-            {/* Real Sliding Image */}
-            <img 
-              src={isPortrait ? bannerImages[current].mobile : bannerImages[current].desktop}
-              className={`w-full h-full block ${isPortrait ? 'object-contain' : 'object-cover'}`}
-              alt={bannerData[current].title}
-            />
-
-          {/* Solid to Transparent Gradient Overlay - DESKTOP ONLY */}
-          {!isPortrait && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isPaused ? 1 : 0 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0 z-10"
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              key={current}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 150, damping: 25 },
+                opacity: { duration: 0.5 }
+              }}
+              className="absolute inset-0"
             >
-            {/* Pure Solid Black for early range, then fade */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black via-35% to-transparent opacity-95" />
+              {/* Real Sliding Image */}
+              <img 
+                src={isPortrait ? bannerImages[current].mobile : bannerImages[current].desktop}
+                className={`w-full h-full block ${isPortrait ? 'object-contain' : 'object-cover'}`}
+                alt={bannerData[current].title}
+              />
 
-            {/* Content Container */}
-            <div className="relative h-full container mx-auto px-6 lg:px-12 flex flex-col justify-center z-20">
-              <div className="max-w-4xl space-y-8">
-              
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold uppercase tracking-[0.2em]"
-              >
-                {bannerData[current].tag}
-              </motion.div>
-
-              <div className="space-y-4">
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5, duration: 0.8 }}
-                  className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter"
+              {/* Solid to Transparent Gradient Overlay - DESKTOP ONLY */}
+              {!isPortrait && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: isPaused ? 1 : 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0 z-10"
                 >
-                  {bannerData[current].title.split(" ").map((word, i) => (
-                    <span key={i} className={i === 2 ? "text-slate-400" : ""}>{word} </span>
-                  ))}
-                </motion.h1>
-                
-                <motion.p
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
-                  className="text-lg md:text-xl text-slate-300 max-w-2xl font-medium leading-relaxed"
-                >
-                  {bannerData[current].subtitle}
-                </motion.p>
-              </div>
+                  {/* Premium dark overlay (no pure black) */}
+                  <div className="absolute inset-0 banner-image-overlay opacity-100" />
 
-              {/* Event Meta Info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.8 }}
-                className="flex flex-wrap items-center gap-y-4 gap-x-8 text-white/90"
-              >
-                <div className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
-                    <Calendar className="w-4 h-4" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Date</span>
-                    <span className="text-[15px] font-bold">{bannerData[current].date}</span>
-                  </div>
-                </div>
+                  {/* Content Container */}
+                  <div className="relative h-full container mx-auto px-6 lg:px-12 flex flex-col justify-center z-20">
+                    <div className="max-w-4xl space-y-8">
+                      
+                      <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4, duration: 0.8 }}
+                        className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] font-bold uppercase tracking-[0.2em]"
+                      >
+                        {bannerData[current].tag}
+                      </motion.div>
 
-                <div className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Timing</span>
-                    <span className="text-[15px] font-bold">{bannerData[current].time}</span>
-                  </div>
-                </div>
+                      <div className="space-y-4">
+                        <motion.h1
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5, duration: 0.8 }}
+                          className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.95] tracking-tighter"
+                        >
+                          {bannerData[current].title.split(" ").map((word, i) => (
+                            <span key={i} className={i === 2 ? "text-slate-400" : ""}>{word} </span>
+                          ))}
+                        </motion.h1>
+                        
+                        <motion.p
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.6, duration: 0.8 }}
+                          className="text-lg md:text-xl text-slate-300 max-w-2xl font-medium leading-relaxed"
+                        >
+                          {bannerData[current].subtitle}
+                        </motion.p>
+                      </div>
 
-                <div className="flex items-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Venue</span>
-                    <span className="text-[15px] font-bold">{bannerData[current].location}</span>
-                  </div>
-                </div>
-              </motion.div>
+                      {/* Event Meta Info */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7, duration: 0.8 }}
+                        className="flex flex-wrap items-center gap-y-4 gap-x-8 text-white/90"
+                      >
+                        <div className="flex items-center gap-3 group">
+                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
+                            <Calendar className="w-4 h-4" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Date</span>
+                            <span className="text-[15px] font-bold">{bannerData[current].date}</span>
+                          </div>
+                        </div>
 
-              {/* CTA Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.8 }}
-                className="pt-4"
-              >
-                <button className="group flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-widest rounded-full hover:bg-slate-200 transition-all active:scale-95">
-                  Register for access
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
+                        <div className="flex items-center gap-3 group">
+                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
+                            <Clock className="w-4 h-4" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Timing</span>
+                            <span className="text-[15px] font-bold">{bannerData[current].time}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 group">
+                          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
+                            <MapPin className="w-4 h-4" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Venue</span>
+                            <span className="text-[15px] font-bold">{bannerData[current].location}</span>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* CTA Button */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8, duration: 0.8 }}
+                        className="pt-4"
+                      >
+                        <button className="group flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-widest rounded-full hover:bg-slate-200 transition-all active:scale-95">
+                          Register for access
+                          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                      </motion.div>
+                    </div>
+                  </div>
                 </motion.div>
-              </div>
-            </div>
-          </motion.div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+              )}
+            </motion.div>
+          </AnimatePresence>
 
       {/* Arrow Controls - Hidden on Mobile/Tablet */}
       <button
@@ -251,13 +249,13 @@ export function BannerSlider() {
             }}
             className={`rounded-full transition-all duration-300 relative flex items-center justify-center ${
               current === index 
-              ? "w-5 h-5 md:w-7 md:h-7 bg-[#f4f7fb] shadow-[inset_4px_4px_8px_rgba(163,177,198,0.5),inset_-4px_-4px_8px_white] scale-110" 
-              : "w-3 h-3 md:w-5 md:h-5 bg-[#f4f7fb] shadow-[4px_4px_10px_rgba(163,177,198,0.4),-4px_-4px_10px_white] hover:scale-110"
+              ? "w-5 h-5 md:w-7 md:h-7 bg-background/65 border border-[color:var(--border)] shadow-[0_14px_40px_rgba(0,0,0,0.12)] scale-110 backdrop-blur-xl" 
+              : "w-3 h-3 md:w-5 md:h-5 bg-background/55 border border-[color:var(--border)] shadow-[0_12px_34px_rgba(0,0,0,0.10)] hover:scale-110 backdrop-blur-xl"
             }`}
           >
             <div 
               className={`rounded-full transition-all duration-500 ${
-                current === index ? "w-2 h-2 md:w-3 md:h-3 bg-[#FDB931] shadow-[0_0_12px_#FDB931]" : "w-1 h-1 md:w-1.5 md:h-1.5 bg-slate-300"
+                current === index ? "w-2 h-2 md:w-3 md:h-3 bg-[color:var(--dot-active)] shadow-[0_0_16px_var(--dot-shadow)]" : "w-1 h-1 md:w-1.5 md:h-1.5 bg-[color:var(--dot-inactive)]"
               }`}
             />
           </button>

@@ -2,12 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
-import { 
-  Instagram, 
-  Linkedin, 
-  Facebook, 
-  Twitter, 
-  Phone, 
+import {
+  Instagram,
+  Linkedin,
+  Facebook,
+  Twitter,
+  Phone,
   ArrowRight,
   Menu,
   X,
@@ -17,10 +17,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About Us", href: "/about" },
+  { name: "Home", href: "/#home" },
+  { name: "About Us", href: "/#about" },
   { 
     name: "Exhibitors", 
     href: "/exhibitors",
@@ -33,7 +34,17 @@ const navItems = [
       { name: "Sponsorship Info", href: "/exhibitors/sponsorship", icon: <ArrowRight className="w-4 h-4" /> },
     ]
   },
-  { name: "Visitors", href: "/visitors" },
+  { 
+    name: "Visitors", 
+    href: "/visitors",
+    subMenu: [
+      { name: "Visitor Registration", href: "/visitors/registration", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Floor Plan", href: "/visitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Exhibitor List", href: "/visitors/exhibitor-list", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Hotel Info", href: "/visitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "How to reach Venue?", href: "/visitors/how-to-reach", icon: <ArrowRight className="w-4 h-4" /> },
+    ]
+  },
   { name: "Testimonials", href: "/testimonials" },
   { name: "Portfolio", href: "/portfolio" },
   { name: "Contact", href: "/contact" },
@@ -104,6 +115,23 @@ export function Header() {
 
   const activeNav = navItems.find((item) => item.href === pathname)?.name || "Home";
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("/#")) {
+      e.preventDefault();
+      const id = href.replace("/#", "");
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        // Update URL hash without jumping
+        window.history.pushState(null, "", href);
+        setIsMobileMenuOpen(false);
+      }
+    }
+  };
+
   const dropAnimation = {
     initial: { opacity: 0, y: -25 },
     animate: { opacity: 1, y: 0 },
@@ -117,18 +145,18 @@ export function Header() {
   return (
     <motion.header
       initial={{ y: 0 }}
-      animate={{ 
+      animate={{
         y: isVisible ? 0 : -110,
       }}
-      className="fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-in-out py-4"
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="fixed top-0 inset-x-0 z-50 py-4 will-change-transform"
     >
-      <div className="mx-auto px-4 lg:px-6 w-full max-w-full transition-all duration-500">
+      <div className="mx-auto px-4 lg:px-6 w-full max-w-full">
         <div
-          className={`flex items-center justify-between w-full h-full gap-2 lg:gap-4 transition-all duration-500 ease-in-out relative ${
-            isScrolled
-              ? "bg-white/80 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] border border-slate-100 rounded-full px-4 lg:px-6 py-2 mx-auto"
+          className={`flex items-center justify-between w-full h-full gap-2 lg:gap-4 relative ${isScrolled
+              ? "bg-background/75 backdrop-blur-2xl shadow-[0_10px_36px_rgba(0,0,0,0.08)] border border-[color:var(--border)] rounded-full px-4 lg:px-6 py-2 mx-auto"
               : "bg-transparent px-2 py-2"
-          }`}
+            }`}
         >
           <div className="flex flex-1 items-center justify-start">
             <motion.div
@@ -141,18 +169,26 @@ export function Header() {
                 className="flex items-center group transition-transform duration-300 active:scale-95"
               >
                 <img
-                  src="/logo.png"
+                  src="/logo-light.png"
                   alt="GES Worldex"
-                  className="h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
+                  className="block [html[data-theme='dark']_&]:hidden h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
+                />
+                <img
+                  src="/logo-dark.png"
+                  alt="GES Worldex"
+                  className="hidden [html[data-theme='dark']_&]:block h-8 md:h-10 lg:h-12 xl:h-14 2xl:h-16 w-auto object-contain drop-shadow-sm"
                 />
               </Link>
             </motion.div>
           </div>
 
           <div className="hidden xl:flex flex-none justify-center z-20">
-            <nav className="flex items-center relative bg-[#f1f5f9]/80 p-2 rounded-full shadow-[inset_4px_4px_10px_rgba(163,177,198,0.4),inset_-4px_-4px_10px_rgba(255,255,255,0.8)] border border-white/60 backdrop-blur-xl">
+            <nav 
+              className="flex items-center relative bg-background/40 p-1.5 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.15),inset_0_-1px_1px_rgba(255,255,255,0.1),0_1px_2px_rgba(0,0,0,0.05)] border border-[color:var(--border)] backdrop-blur-2xl px-2"
+              onMouseLeave={() => setHoveredNav(null)}
+            >
               {navItems.map((item, idx) => {
-                const isHoveredOrActive = (hoveredNav || activeNav) === item.name;
+                const isFocused = (hoveredNav || activeNav) === item.name;
 
                 return (
                   <motion.div
@@ -164,24 +200,29 @@ export function Header() {
                   >
                     <Link
                       href={item.href}
-                      className={`relative px-3.5 xl:px-5 py-2.5 text-[12px] xl:text-[14px] font-bold tracking-tight xl:tracking-wide transition-all z-10 rounded-full whitespace-nowrap flex items-center gap-1.5 ${
-                        isHoveredOrActive ? "text-slate-800 scale-105" : "text-slate-500 hover:text-slate-700"
+                      onClick={(e) => handleNavClick(e, item.href)}
+                      className={`relative px-4 xl:px-6 py-2.5 text-[14px] xl:text-[15.5px] font-black tracking-tight xl:tracking-wide transition-all z-10 rounded-full whitespace-nowrap flex items-center gap-1.5 ${
+                        isFocused ? "text-[#111521] scale-105" : "text-foreground/60 hover:text-foreground"
                       }`}
                       onMouseEnter={() => setHoveredNav(item.name)}
-                      onMouseLeave={() => setHoveredNav(null)}
                     >
                       <span className="relative z-10">{item.name}</span>
                       {item.subMenu && (
                         <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${hoveredNav === item.name ? "rotate-180" : ""}`} />
                       )}
-                      
-                      {(hoveredNav === item.name || activeNav === item.name) && (
+
+                      {isFocused && (
                         <motion.div
                           layoutId="navDrop"
-                          className="absolute inset-0 bg-white shadow-[2px_2px_5px_rgba(163,177,198,0.4),-2px_-2px_5px_rgba(255,255,255,1)] z-0 rounded-full"
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                          className="absolute inset-0 bg-white shadow-[0_12px_32px_rgba(0,0,0,0.2),0_4px_8px_rgba(0,0,0,0.1)] z-0 rounded-full"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ 
+                            type: "spring", 
+                            stiffness: 420, 
+                            damping: 32,
+                            opacity: { duration: 0.15 }
+                          }}
                         />
                       )}
                     </Link>
@@ -190,31 +231,52 @@ export function Header() {
                       <AnimatePresence>
                         {hoveredNav === item.name && (
                           <motion.div
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            initial={{ clipPath: "inset(0% 0% 100% 0%)", opacity: 0 }}
+                            animate={{ clipPath: "inset(0% 0% 0% 0%)", opacity: 1 }}
+                            exit={{ clipPath: "inset(0% 0% 100% 0%)", opacity: 0 }}
+                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                             onMouseEnter={() => setHoveredNav(item.name)}
                             onMouseLeave={() => setHoveredNav(null)}
-                            className="absolute top-full left-1/2 -translate-x-1/2 pt-4 z-[100]"
+                            className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[100]"
                           >
-                            <div className="bg-white/95 backdrop-blur-2xl border border-white p-4 rounded-[28px] shadow-[20px_20px_60px_rgba(0,0,0,0.08),-10px_-10px_40px_rgba(255,255,255,0.7)] min-w-[440px]">
-                              <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-background border border-[color:var(--border)] p-2.5 rounded-[24px] shadow-[0_30px_90px_rgba(0,0,0,0.22)] min-w-[320px]">
+                              <motion.div 
+                                initial="hidden"
+                                animate="visible"
+                                variants={{
+                                  hidden: { opacity: 0 },
+                                  visible: {
+                                    opacity: 1,
+                                    transition: {
+                                      staggerChildren: 0.05
+                                    }
+                                  }
+                                }}
+                                className="flex flex-col gap-1"
+                              >
                                 {item.subMenu.map((sub) => (
-                                  <Link
+                                  <motion.div
                                     key={sub.name}
-                                    href={sub.href}
-                                    className="group flex items-center justify-between p-4 rounded-2xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100"
+                                    variants={{
+                                      hidden: { opacity: 0, y: 15 },
+                                      visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } }
+                                    }}
                                   >
-                                    <div className="flex flex-col">
-                                      <span className="text-[13px] font-black text-slate-800 tracking-tight">{sub.name}</span>
-                                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Launch</span>
-                                    </div>
-                                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all transform group-hover:translate-x-1">
-                                      {sub.icon}
-                                    </div>
-                                  </Link>
+                                    <Link
+                                      href={sub.href}
+                                      className="group flex items-center justify-between p-3.5 rounded-xl hover:bg-foreground/5 transition-all border border-transparent hover:border-[color:var(--border)]"
+                                    >
+                                      <div className="flex flex-col">
+                                        <span className="text-[14px] xl:text-[15px] font-black text-foreground tracking-tight">{sub.name}</span>
+                                        <span className="text-[10px] text-foreground/45 font-bold uppercase tracking-widest mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Explore</span>
+                                      </div>
+                                      <div className="w-7 h-7 rounded-full bg-foreground/8 flex items-center justify-center text-foreground/55 group-hover:bg-foreground group-hover:text-background transition-all transform group-hover:translate-x-1">
+                                        {sub.icon}
+                                      </div>
+                                    </Link>
+                                  </motion.div>
                                 ))}
-                              </div>
+                              </motion.div>
                             </div>
                           </motion.div>
                         )}
@@ -222,7 +284,7 @@ export function Header() {
                     )}
 
                     {idx < navItems.length - 1 && (
-                      <div className="w-[1px] h-[14px] mx-1 bg-slate-200 rounded-full shrink-0 z-10" />
+                      <div className="w-[1px] h-[14px] mx-1 bg-foreground/15 rounded-full shrink-0 z-10" />
                     )}
                   </motion.div>
                 );
@@ -239,7 +301,7 @@ export function Header() {
                     initial={dropAnimation.initial}
                     animate={dropAnimation.animate}
                     transition={dropAnimation.transition(1.9 + idx * 0.1)}
-                    className="relative group flex items-center justify-center p-[7px] rounded-full cursor-pointer text-slate-800 bg-transparent border border-slate-800 transition-transform duration-300 transform hover:scale-110 z-30"
+                    className="relative group flex items-center justify-center p-[7px] rounded-full cursor-pointer text-foreground/70 bg-background/40 border border-[color:var(--border)] transition-transform duration-300 transform hover:scale-110 z-30"
                     onMouseEnter={(e) => {
                       e.currentTarget.style.color = "#ffffff";
                       e.currentTarget.style.backgroundColor = social.color;
@@ -262,13 +324,13 @@ export function Header() {
                     </Link>
 
                     <div className="absolute top-0 opacity-0 invisible group-hover:visible group-hover:-top-[45px] group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-300 ease-out z-[100] flex justify-center">
-                      <div 
+                      <div
                         className="text-white text-[14px] font-semibold px-[8px] py-[5px] rounded-[5px] shadow-[0_10px_10px_rgba(0,0,0,0.1)] whitespace-nowrap relative"
                         style={{ backgroundColor: social.color }}
                       >
                         {social.name}
-                        <div 
-                          className="absolute h-[8px] w-[8px] -bottom-[3px] left-1/2 -translate-x-1/2 rotate-45" 
+                        <div
+                          className="absolute h-[8px] w-[8px] -bottom-[3px] left-1/2 -translate-x-1/2 rotate-45"
                           style={{ backgroundColor: social.color }}
                         />
                       </div>
@@ -279,40 +341,50 @@ export function Header() {
             </div>
 
             <motion.div
-               className="h-5 w-[1px] bg-slate-200 hidden lg:block rounded-full"
-               initial={dropAnimation.initial}
-               animate={dropAnimation.animate}
-               transition={dropAnimation.transition(2.2)} 
+              className="h-5 w-[1px] bg-foreground/15 hidden xl:block rounded-full mx-1"
+              initial={dropAnimation.initial}
+              animate={dropAnimation.animate}
+              transition={dropAnimation.transition(2.2)}
             />
+
+            <motion.div
+              initial={dropAnimation.initial}
+              animate={dropAnimation.animate}
+              transition={dropAnimation.transition(2.3)}
+              className="hidden xl:block"
+            >
+              <ThemeToggle className="shadow-none border-none xl:border-[color:var(--border)]" />
+            </motion.div>
 
             <motion.a
               href="tel:+919945012123"
               initial={dropAnimation.initial}
               animate={dropAnimation.animate}
-              transition={dropAnimation.transition(2.3)} 
-              className="hidden lg:flex items-center gap-2 text-slate-700 bg-[#f4f7fb] px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[5px_5px_12px_rgba(163,177,198,0.5),-5px_-5px_12px_rgba(255,255,255,1)] hover:shadow-[inset_4px_4px_8px_rgba(163,177,198,0.5),inset_-4px_-4px_8px_rgba(255,255,255,0.9)] transition-all duration-300 group border border-white/50"
+              transition={dropAnimation.transition(2.3)}
+              className="hidden lg:flex items-center gap-2 text-foreground/75 bg-background/55 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[0_14px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_18px_55px_rgba(0,0,0,0.16)] transition-all duration-300 group border border-[color:var(--border)] backdrop-blur-xl"
             >
               <Phone className="w-[16px] xl:w-[17px] h-[16px] xl:h-[17px] stroke-[2.5]" />
-              <span className="text-[13px] xl:text-[14.5px] font-bold tracking-tight xl:tracking-wide whitespace-nowrap text-slate-800">
+              <span className="text-[13px] xl:text-[14.5px] font-bold tracking-tight xl:tracking-wide whitespace-nowrap text-foreground">
                 +91 99450 12123
               </span>
             </motion.a>
 
             <motion.div
-              className="xl:hidden flex items-center"
+              className="xl:hidden flex items-center gap-2"
               initial={dropAnimation.initial}
               animate={dropAnimation.animate}
               transition={dropAnimation.transition(1.5)}
             >
+              <ThemeToggle className="shadow-none" />
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="w-10 h-10 flex flex-col items-center justify-center p-0 rounded-xl bg-[#f4f7fb] shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] active:shadow-[inset_2px_2px_4px_#d1d9e6,inset_-2px_-2px_4px_#ffffff] transition-shadow duration-200"
+                className="w-10 h-10 flex flex-col items-center justify-center p-0 rounded-xl bg-background/55 shadow-[0_14px_40px_rgba(0,0,0,0.10)] active:shadow-[0_10px_28px_rgba(0,0,0,0.12)] border border-[color:var(--border)] backdrop-blur-xl transition-shadow duration-200"
                 aria-label="Toggle Menu"
               >
-                <Menu className="w-5 h-5 text-slate-900" />
+                <Menu className="w-5 h-5 text-foreground" />
               </button>
             </motion.div>
-            
+
           </div>
         </div>
       </div>
@@ -325,7 +397,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="xl:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[55]"
+              className="xl:hidden fixed inset-0 bg-[color:rgba(0,0,0,0.35)] backdrop-blur-sm z-[55]"
             />
 
             <motion.div
@@ -333,13 +405,14 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="xl:hidden fixed top-0 right-0 h-full w-[85%] max-w-[380px] bg-white shadow-[-10px_0_40px_rgba(0,0,0,0.1)] z-[60] flex flex-col rounded-l-[40px] overflow-hidden"
+              className="xl:hidden fixed top-0 right-0 h-full w-[85%] max-w-[380px] bg-background shadow-[-10px_0_50px_rgba(0,0,0,0.25)] z-[60] flex flex-col rounded-l-[40px] overflow-hidden"
             >
-              <div className="flex items-center justify-between p-6 border-b border-slate-100">
-                <img src="/logo.png" alt="GES Worldex" className="h-8 w-auto" />
-                <button 
+              <div className="flex items-center justify-between p-6 border-b border-[color:var(--border)]">
+                <img src="/logo-light.png" alt="GES Worldex" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto" />
+                <img src="/logo-dark.png" alt="GES Worldex" className="hidden [html[data-theme='dark']_&]:block h-8 w-auto" />
+                <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 text-slate-400"
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 text-foreground/55"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -348,25 +421,26 @@ export function Header() {
               <div className="flex-1 overflow-y-auto p-6">
                 <nav className="flex flex-col gap-6">
                   {navItems.map((item, idx) => (
-                    <motion.div 
-                      key={item.name} 
-                      className="flex flex-col border-b border-slate-50 pb-4"
+                    <motion.div
+                      key={item.name}
+                      className="flex flex-col border-b border-foreground/10 pb-4"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
                     >
                       <div className="flex items-center justify-between">
-                        <Link 
+                        <Link
                           href={item.href}
-                          className={`text-xl font-black ${pathname === item.href ? "text-slate-900" : "text-slate-500"}`}
-                          onClick={() => !item.subMenu && setIsMobileMenuOpen(false)}
+                          onClick={(e) => handleNavClick(e, item.href)}
+                          className={`text-xl font-black ${pathname === item.href ? "text-foreground" : "text-foreground/60"}`}
+                          onClickCapture={() => !item.subMenu && setIsMobileMenuOpen(false)}
                         >
                           {item.name}
                         </Link>
                         {item.subMenu && (
-                          <button 
+                          <button
                             onClick={() => setExpandedMobileSub(expandedMobileSub === item.name ? null : item.name)}
-                            className={`w-10 h-10 flex items-center justify-center rounded-full bg-slate-50 transition-all duration-300 ${expandedMobileSub === item.name ? "rotate-180 bg-slate-900 text-white" : "text-slate-400"}`}
+                            className={`w-10 h-10 flex items-center justify-center rounded-full bg-foreground/6 transition-all duration-300 ${expandedMobileSub === item.name ? "rotate-180 bg-foreground text-background" : "text-foreground/55"}`}
                           >
                             <ChevronDown className="w-5 h-5" />
                           </button>
@@ -382,15 +456,15 @@ export function Header() {
                             exit={{ height: 0, opacity: 0 }}
                             className="overflow-hidden"
                           >
-                            <div className="flex flex-col gap-4 pl-4 pt-4 mt-2 border-l-2 border-slate-100">
+                            <div className="flex flex-col gap-4 pl-4 pt-4 mt-2 border-l-2 border-foreground/12">
                               {item.subMenu.map((sub) => (
                                 <Link
                                   key={sub.name}
                                   href={sub.href}
-                                  className="text-[15px] font-bold text-slate-500 hover:text-slate-900 flex items-center gap-3 active:translate-x-2 transition-transform"
+                                  className="text-[15px] font-bold text-foreground/60 hover:text-foreground flex items-center gap-3 active:translate-x-2 transition-transform"
                                   onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                  <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
+                                  <div className="w-1.5 h-1.5 rounded-full bg-foreground/18" />
                                   {sub.name}
                                 </Link>
                               ))}
@@ -404,40 +478,40 @@ export function Header() {
 
                 <div className="mt-12 space-y-8">
                   <div className="space-y-4">
-                    <p className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Contact Details</p>
+                    <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Contact Details</p>
                     <div className="space-y-3 font-bold">
-                      <a href="tel:+919945012123" className="flex items-center gap-3 text-slate-800 text-lg">
-                         <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
-                            <Phone className="w-4 h-4" />
-                         </div>
-                         +91 99450 12123
+                      <a href="tel:+919945012123" className="flex items-center gap-3 text-foreground text-lg">
+                        <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
+                          <Phone className="w-4 h-4" />
+                        </div>
+                        +91 99450 12123
                       </a>
-                      <a href="mailto:info@gesindiaexh.com" className="flex items-center gap-3 text-slate-600">
-                         <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
-                            <MapPin className="w-4 h-4" />
-                         </div>
-                         info@gesindiaexh.com
+                      <a href="mailto:info@gesindiaexh.com" className="flex items-center gap-3 text-foreground/70">
+                        <div className="w-10 h-10 rounded-full bg-foreground/6 flex items-center justify-center">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        info@gesindiaexh.com
                       </a>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <p className="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Visit Us</p>
-                    <p className="text-slate-600 font-medium leading-relaxed">
-                      12, Ground Floor, 2nd Main,<br/>
-                      RMV 2nd Stage, Bangalore,<br/>
+                    <p className="text-[11px] font-bold tracking-widest text-foreground/45 uppercase">Visit Us</p>
+                    <p className="text-foreground/70 font-medium leading-relaxed">
+                      12, Ground Floor, 2nd Main,<br />
+                      RMV 2nd Stage, Bangalore,<br />
                       Karnataka - 560094
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-slate-50">
+              <div className="p-6 bg-foreground/5">
                 <div className="flex items-center justify-between">
-                  <p className="text-[13px] font-bold text-slate-400">Connect with us</p>
+                  <p className="text-[13px] font-bold text-foreground/45">Connect with us</p>
                   <div className="flex gap-4">
                     {socialIcons.map((social) => (
-                      <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-900 transition-colors">
+                      <Link key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" className="text-foreground/45 hover:text-foreground transition-colors">
                         <div className="w-5 h-5">{social.svg}</div>
                       </Link>
                     ))}

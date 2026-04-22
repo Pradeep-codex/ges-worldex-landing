@@ -4,6 +4,8 @@ import { AnimatePresence } from "framer-motion";
 import { useMemo, useState } from "react";
 import { LoaderScreen } from "@/components/loader-screen";
 import { BannerSlider } from "@/components/BannerSlider";
+import { WelcomeLine } from "@/components/WelcomeLine";
+import { AboutSection } from "@/components/AboutSection";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 
 export default function Home() {
@@ -33,22 +35,32 @@ export default function Home() {
         {isLoading ? <LoaderScreen key="loader" onComplete={handleLoaderComplete} /> : null}
       </AnimatePresence>
 
-      <main className="min-h-screen relative overflow-hidden" aria-label="GES Worldex home">
+      <main id="home" className="min-h-screen relative overflow-hidden" aria-label="GES Worldex home">
         {!isLoading && (
           <>
-            <BannerSlider />
-            
-            {/* Simple Test Sections */}
-            <div className="h-[100vh] flex items-center justify-center bg-white border-b border-slate-100">
-               <p className="text-slate-300 font-bold uppercase tracking-widest">Scroll Down to Verify Header Hide</p>
-            </div>
-            
-            <div className="h-[100vh] flex items-center justify-center bg-slate-50 border-b border-slate-100">
-               <p className="text-slate-300 font-bold uppercase tracking-widest">Scroll Up lightly to Verify Header Show</p>
+            <div className="w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 mt-2 md:mt-4 lg:mt-6">
+              <div className="max-w-[1200px]">
+                <WelcomeLine />
+              </div>
             </div>
 
-            <div className="h-[100vh] flex items-center justify-center bg-white">
-               <p className="text-slate-300 font-bold uppercase tracking-widest">End of Page</p>
+            <div className="mt-2 md:mt-4">
+              <BannerSlider />
+            </div>
+
+            <AboutSection />
+            
+            {/* Simple Test Sections */}
+            <div className="h-[100vh] flex items-center justify-center bg-transparent border-b border-[color:var(--border)]">
+              <p className="text-foreground/65 font-bold uppercase tracking-widest">Scroll Down to Verify Header Hide</p>
+            </div>
+            
+            <div className="h-[100vh] flex items-center justify-center bg-transparent border-b border-[color:var(--border)]">
+              <p className="text-foreground/65 font-bold uppercase tracking-widest">Scroll Up lightly to Verify Header Show</p>
+            </div>
+
+            <div className="h-[100vh] flex items-center justify-center bg-transparent">
+              <p className="text-foreground/65 font-bold uppercase tracking-widest">End of Page</p>
             </div>
           </>
         )}

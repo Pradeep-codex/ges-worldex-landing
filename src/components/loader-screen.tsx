@@ -23,9 +23,14 @@ export function LoaderScreen({ onComplete }: LoaderScreenProps) {
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 overflow-hidden loader-screen"
     >
       <img
-        src="/logo.png"
+        src="/logo-light.png"
         alt="GES Worldex logo"
-        className="h-auto w-[180px] sm:w-[220px]"
+        className="block [html[data-theme='dark']_&]:hidden h-auto w-[180px] sm:w-[220px]"
+      />
+      <img
+        src="/logo-dark.png"
+        alt="GES Worldex logo"
+        className="hidden [html[data-theme='dark']_&]:block h-auto w-[180px] sm:w-[220px]"
       />
 
       <div>
