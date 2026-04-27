@@ -5,6 +5,8 @@
   scroll-padding-top: 100px;
   --background: #fbfcff;
   --foreground: #111521;
+  --font-outfit: "Aptos", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Segoe UI", "Aptos", ui-sans-serif, system-ui, sans-serif;
 
   /* theme primitives */
   --border: rgba(17, 21, 33, 0.12);

@@ -247,15 +247,15 @@ export function BannerSlider() {
               setDirection(index > current ? 1 : -1);
               setCurrent(index);
             }}
-            className={`rounded-full transition-all duration-300 relative flex items-center justify-center ${
+            className={`w-5 h-5 md:w-7 md:h-7 rounded-full transition-all duration-300 relative flex items-center justify-center bg-background/65 border border-[color:var(--border)] backdrop-blur-xl ${
               current === index 
-              ? "w-5 h-5 md:w-7 md:h-7 bg-background/65 border border-[color:var(--border)] shadow-[0_14px_40px_rgba(0,0,0,0.12)] scale-110 backdrop-blur-xl" 
-              : "w-3 h-3 md:w-5 md:h-5 bg-background/55 border border-[color:var(--border)] shadow-[0_12px_34px_rgba(0,0,0,0.10)] hover:scale-110 backdrop-blur-xl"
+              ? "shadow-[0_14px_40px_rgba(0,0,0,0.12)]" 
+              : "shadow-[0_12px_34px_rgba(0,0,0,0.10)]"
             }`}
           >
             <div 
-              className={`rounded-full transition-all duration-500 ${
-                current === index ? "w-2 h-2 md:w-3 md:h-3 bg-[color:var(--dot-active)] shadow-[0_0_16px_var(--dot-shadow)]" : "w-1 h-1 md:w-1.5 md:h-1.5 bg-[color:var(--dot-inactive)]"
+              className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-500 ${
+                current === index ? "bg-[color:var(--dot-active)] shadow-[0_0_16px_var(--dot-shadow)]" : "bg-[color:var(--dot-inactive)]"
               }`}
             />
           </button>

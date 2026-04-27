@@ -1,23 +1,10 @@
 import type { Metadata } from "next";
-import { Outfit, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -62,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
       <head>

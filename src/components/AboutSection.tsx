@@ -1,69 +1,93 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import RotatingText from "./ui/RotatingText";
 
-const abtMain = "/about-images/abt-main.JPG";
-const blob1 = "/about-images/blob1.JPG";
-const blob2 = "/about-images/blob2.JPG";
-const blob3 = "/about-images/blob3.JPG";
+const visionCardClass =
+  "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[26px] sm:rounded-[34px] border-[6px] sm:border-[8px] border-white bg-[#f4f1ea]";
+
+const visionCards = [
+  {
+    className: "left-[2%] top-[24%]",
+    baseZ: 10,
+    rotate: -4,
+    group: "secondary",
+    src: "/about-images/abt1.JPG",
+    alt: "GES Worldex exhibition planning",
+  },
+  {
+    className: "left-[22%] top-[8%]",
+    baseZ: 30,
+    rotate: 0,
+    group: "primary",
+    src: "/about-images/abt2.JPG",
+    alt: "GES Worldex trade show audience",
+  },
+  {
+    className: "left-[50%] top-[24%]",
+    baseZ: 20,
+    rotate: 5,
+    group: "secondary",
+    src: "/about-images/abt3.JPG",
+    alt: "GES Worldex business networking",
+  },
+] as const;
 
 export function AboutSection() {
+  const [activeVisionGroup, setActiveVisionGroup] = useState<"primary" | "secondary">("primary");
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveVisionGroup((current) => (current === "primary" ? "secondary" : "primary"));
+    }, 3000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
   return (
     <section id="about" className="relative w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 pt-16 pb-4 lg:pt-24 lg:pb-6 overflow-visible">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-24 items-center">
 
-        {/* Left Side: Complex Blob Design */}
+        {/* Left Side: Shuffled Focus Cards */}
         <div className="relative order-2 lg:order-1 flex justify-center items-center py-12 lg:py-0">
-          <div className="relative w-[280px] h-[280px] sm:w-[420px] sm:h-[420px] lg:w-[540px] lg:h-[540px]">
+          <div className="relative w-[340px] h-[330px] sm:w-[560px] sm:h-[430px] lg:w-[700px] lg:h-[500px]">
+            {visionCards.map((card, index) => {
+              const isFocused = card.group === activeVisionGroup;
 
-            {/* Big Background Blob */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.45 }}
-              transition={{ type: "tween", ease: "easeOut", duration: 0.55 }}
-              className="absolute inset-0 rounded-full border-[12px] border-white shadow-2xl overflow-hidden z-0"
-            >
-              <img src={abtMain} alt="About Big Content" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-            </motion.div>
+              return (
+                <motion.div
+                  key={card.src}
+                  className={`${visionCardClass} ${card.className}`}
+                  style={{ zIndex: isFocused ? card.baseZ + 40 : card.baseZ }}
+                  animate={{
+                    scale: isFocused ? 1.045 : 0.96,
+                    rotate: isFocused ? 0 : card.rotate,
+                    y: isFocused ? -10 : 0,
+                    filter: isFocused ? "brightness(1.05) saturate(1.05)" : "brightness(0.74) saturate(0.82)",
+                    boxShadow: isFocused
+                      ? "0 34px 86px rgba(39,31,35,0.32)"
+                      : "0 16px 42px rgba(39,31,35,0.12)",
+                  }}
+                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <img
+                    src={card.src}
+                    alt={card.alt}
+                    className="w-full h-full object-cover"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                  <motion.div
+                    className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,253,243,0.04),rgba(37,31,34,0.18))]"
+                    animate={{ opacity: isFocused ? 0.08 : 0.48 }}
+                    transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                </motion.div>
+              );
+            })}
 
-            {/* Small Blob 1 - Top Left Overlap */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.45 }}
-              transition={{ type: "tween", ease: "easeOut", delay: 0.08, duration: 0.45 }}
-              className="absolute -top-6 -left-6 sm:-top-10 sm:-left-10 w-[140px] h-[140px] sm:w-[220px] sm:h-[220px] rounded-full border-[10px] sm:border-[12px] border-white z-20 overflow-hidden"
-            >
-              <img src={blob1} alt="About 1" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-            </motion.div>
-
-            {/* Small Blob 2 - Bottom Right Overlap */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.45 }}
-              transition={{ type: "tween", ease: "easeOut", delay: 0.16, duration: 0.45 }}
-              className="absolute -bottom-10 -right-4 sm:-bottom-14 sm:-right-10 w-[160px] h-[160px] sm:w-[250px] sm:h-[250px] rounded-full border-[10px] sm:border-[12px] border-white z-30 overflow-hidden"
-            >
-              <img src={blob2} alt="About 2" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-            </motion.div>
-
-            {/* Small Blob 3 - Middle Right Overlap */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.45 }}
-              transition={{ type: "tween", ease: "easeOut", delay: 0.24, duration: 0.45 }}
-              className="absolute top-12 -right-12 sm:top-16 sm:-right-20 w-[110px] h-[110px] sm:w-[180px] sm:h-[180px] rounded-full border-[10px] sm:border-[12px] border-white z-10 overflow-hidden"
-            >
-              <img src={blob3} alt="About 3" className="w-full h-full object-cover" loading="lazy" decoding="async" />
-            </motion.div>
-
-            {/* Decorative Element */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] border-2 border-dashed border-foreground/10 rounded-full animate-[spin_20s_linear_infinite] pointer-events-none" />
           </div>
         </div>
 
