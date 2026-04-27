@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 const DESKTOP_BAND_HEIGHT = 320;
-const MOBILE_BAND_HEIGHT = 176;
-const MOBILE_SECTION_HEIGHT = 420;
+const MOBILE_BAND_HEIGHT = 220;
+const MOBILE_SECTION_HEIGHT = 576;
 const OVERFLOW_HEADROOM = 48;
 const HIDDEN_OFFSET = 100;
 const REVEAL_SPEED = 0.00155;
@@ -13,9 +13,9 @@ const IMAGE_HEIGHT = 680;
 const FINAL_RISE_REDUCTION = 214;
 const MOBILE_IMAGE_HEIGHT = 350;
 const MOBILE_FINAL_RISE_REDUCTION = 112;
-const MOBILE_STAGE_HEIGHT = 132;
-const MOBILE_OVERFLOW_HEIGHT = 72;
+const MOBILE_BAND_HEADROOM = 52;
 const MOBILE_BREAKPOINT = 1024;
+const MOBILE_ONLY_BREAKPOINT = 768;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -121,13 +121,13 @@ function CompactStat({
   start: boolean;
 }) {
   return (
-    <div className="rounded-[16px] border border-white/70 bg-white/68 px-3 py-2.5 backdrop-blur-sm">
+    <div className="rounded-[20px] border border-slate-800/80 bg-[linear-gradient(180deg,rgba(15,23,42,0.98)_0%,rgba(30,41,59,0.98)_100%)] px-3.5 py-3 shadow-[0_20px_40px_rgba(2,6,23,0.28)]">
       <div
-        className="h-1.5 w-12 rounded-full"
+        className="h-1.5 w-12 rounded-full opacity-95"
         style={{ background: accent }}
       />
       <div
-        className="welcome-display-font mt-2 text-[1.28rem] font-black leading-none tracking-[-0.07em] text-transparent sm:text-[1.5rem]"
+        className="welcome-display-font mt-2.5 text-[1.38rem] font-black leading-none tracking-[-0.07em] text-transparent sm:text-[1.56rem]"
         style={{
           backgroundImage: accent,
           WebkitBackgroundClip: "text",
@@ -136,7 +136,7 @@ function CompactStat({
       >
         <CountUp end={end} suffix={suffix} start={start} />
       </div>
-      <div className="mt-1 text-[0.62rem] font-black uppercase tracking-[0.18em] text-sky-800/80 sm:text-[0.68rem]">
+      <div className="mt-1.5 text-[0.62rem] font-black uppercase tracking-[0.2em] text-slate-300 sm:text-[0.68rem]">
         {label}
       </div>
     </div>
@@ -145,19 +145,17 @@ function CompactStat({
 
 function MobileStatsDetails({ animateNumbers }: { animateNumbers: boolean }) {
   return (
-    <div className="space-y-3 lg:hidden">
-      <div className="space-y-1.5">
-        <h2
-          className="welcome-display-font max-w-[12ch] text-[1.42rem] font-black leading-[0.9] tracking-[-0.08em] text-transparent sm:text-[1.66rem]"
-          style={{
-            backgroundImage: "linear-gradient(95deg, #1d4ed8 0%, #06b6d4 55%, #2563eb 100%)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-          }}
-        >
+    <div className="space-y-4 lg:hidden">
+      <div className="space-y-2">
+        <div className="inline-flex rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.24em] text-slate-300">
           Exhibition Metrics
+        </div>
+        <h2
+          className="welcome-display-font max-w-[12ch] text-[1.52rem] font-black leading-[0.9] tracking-[-0.08em] text-slate-950 sm:text-[1.72rem]"
+        >
+          Bigger Reach, Stronger Visibility
         </h2>
-        <p className="max-w-[34ch] text-[0.78rem] leading-relaxed text-sky-900/70 sm:text-[0.84rem]">
+        <p className="max-w-[34ch] text-[0.8rem] leading-relaxed text-slate-600 sm:text-[0.86rem]">
           Bigger reach, sharper brand presence, stronger product discovery.
         </p>
       </div>
@@ -221,9 +219,9 @@ function StatsBand({
       <div className="pointer-events-none absolute left-[45%] top-8 hidden h-[calc(100%-4rem)] w-px bg-[linear-gradient(180deg,transparent,rgba(148,163,184,0.26),transparent)] lg:block" />
 
       <div className="relative h-full lg:hidden">
-        <div className="flex h-full flex-col px-4 py-4 sm:px-5 sm:py-5">
-          <div className="relative mt-auto h-[132px] sm:h-[140px]">
-            <div className="absolute inset-x-0 bottom-0 h-full overflow-hidden">
+        <div className="flex h-full flex-col justify-end px-4 py-4 sm:px-5 sm:py-5">
+          <div className="relative h-[148px] overflow-visible sm:h-[156px]">
+            <div className="absolute inset-x-0 bottom-0 h-full overflow-visible">
               <div
                 className="absolute bottom-0 inset-x-[8%] sm:inset-x-[12%]"
                 style={{ height: `${MOBILE_IMAGE_HEIGHT}px` }}
@@ -243,31 +241,6 @@ function StatsBand({
                     className="object-contain object-bottom"
                   />
                 </div>
-              </div>
-            </div>
-
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-full overflow-hidden"
-              style={{ height: `${MOBILE_OVERFLOW_HEIGHT}px` }}
-            >
-              <div
-                className="absolute inset-x-[8%] sm:inset-x-[12%]"
-                style={{
-                  bottom: `${-MOBILE_STAGE_HEIGHT}px`,
-                  height: `${MOBILE_IMAGE_HEIGHT}px`,
-                  opacity: overflowOpacity,
-                  transform: `translateY(${mobileLoweredTranslate}) scale(${imageScale})`,
-                  transformOrigin: "bottom center",
-                }}
-              >
-                <Image
-                  src="/stat-img.png"
-                  alt=""
-                  fill
-                  aria-hidden="true"
-                  sizes="100vw"
-                  className="object-contain object-bottom"
-                />
               </div>
             </div>
           </div>
@@ -388,12 +361,14 @@ export function StatsSection() {
   const lastScrollYRef = useRef(0);
   const lastTriggerTopRef = useRef<number | null>(null);
   const canPinRef = useRef(true);
+  const hasCompletedRevealRef = useRef(false);
   const releaseReadyRef = useRef(false);
   const touchYRef = useRef<number | null>(null);
 
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<"idle" | "pinned" | "done">("idle");
   const [isMobileLayout, setIsMobileLayout] = useState(false);
+  const [isPhoneLayout, setIsPhoneLayout] = useState(false);
 
   useEffect(() => {
     progressRef.current = progress;
@@ -405,16 +380,20 @@ export function StatsSection() {
 
   useEffect(() => {
     const media = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const phoneMedia = window.matchMedia(`(max-width: ${MOBILE_ONLY_BREAKPOINT - 1}px)`);
 
     const syncLayout = () => {
       setIsMobileLayout(media.matches);
+      setIsPhoneLayout(phoneMedia.matches);
     };
 
     syncLayout();
     media.addEventListener("change", syncLayout);
+    phoneMedia.addEventListener("change", syncLayout);
 
     return () => {
       media.removeEventListener("change", syncLayout);
+      phoneMedia.removeEventListener("change", syncLayout);
     };
   }, []);
 
@@ -458,6 +437,7 @@ export function StatsSection() {
 
         if (
           phaseRef.current === "idle" &&
+          !hasCompletedRevealRef.current &&
           canPinRef.current &&
           scrollDirectionRef.current === "down" &&
           progressRef.current < 1
@@ -489,7 +469,12 @@ export function StatsSection() {
       const previousTop = lastTriggerTopRef.current;
       lastTriggerTopRef.current = rect.top;
 
-      if (phaseRef.current !== "done" || scrollDirectionRef.current !== "up" || !canPinRef.current) {
+      if (
+        phaseRef.current !== "done" ||
+        scrollDirectionRef.current !== "up" ||
+        !canPinRef.current ||
+        hasCompletedRevealRef.current
+      ) {
         return;
       }
 
@@ -527,8 +512,9 @@ export function StatsSection() {
     body.style.overscrollBehavior = "none";
 
     const finishPinnedSequence = () => {
+      hasCompletedRevealRef.current = true;
       releaseReadyRef.current = false;
-      canPinRef.current = true;
+      canPinRef.current = false;
       setProgress(1);
       setPhase("done");
     };
@@ -632,18 +618,33 @@ export function StatsSection() {
     };
   }, [phase]);
 
+  if (isPhoneLayout) {
+    return (
+      <section
+        className="relative mx-auto w-full max-w-[1700px] px-4 md:px-8 lg:px-12"
+        aria-label="Statistics section"
+      >
+        <div className="rounded-[30px] border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.98)_0%,rgba(241,245,249,0.98)_100%)] p-4 shadow-[0_24px_70px_rgba(15,23,42,0.1)] sm:p-5">
+          <MobileStatsDetails animateNumbers={true} />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       className="relative mx-auto w-full max-w-[1700px] px-4 md:px-8 lg:px-12"
       style={{
         height: `${isMobileLayout ? MOBILE_SECTION_HEIGHT : DESKTOP_BAND_HEIGHT + OVERFLOW_HEADROOM}px`,
-        paddingTop: `${OVERFLOW_HEADROOM}px`,
+        paddingTop: `${isMobileLayout ? 0 : OVERFLOW_HEADROOM}px`,
       }}
       aria-label="Statistics reveal section"
     >
       <div className="mb-4 px-1 lg:hidden">
         <MobileStatsDetails animateNumbers={animateNumbers} />
       </div>
+
+      <div className="lg:hidden" aria-hidden="true" style={{ height: `${MOBILE_BAND_HEADROOM}px` }} />
 
       <div ref={triggerRef} className={phase === "pinned" ? "invisible" : "visible"}>
         <StatsBand

@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import RotatingText from "./ui/RotatingText";
 
 const visionCardClass =
-  "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[26px] sm:rounded-[34px] border-[6px] sm:border-[8px] border-white bg-[#f4f1ea]";
+  "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[30px] bg-[#f4f1ea] will-change-transform sm:rounded-[38px]";
 
 const visionCards = [
   {
@@ -37,6 +37,7 @@ const visionCards = [
 
 export function AboutSection() {
   const [activeVisionGroup, setActiveVisionGroup] = useState<"primary" | "secondary">("primary");
+  const revealViewport = { once: true, amount: 0.2 } as const;
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -47,11 +48,14 @@ export function AboutSection() {
   }, []);
 
   return (
-    <section id="about" className="relative w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 pt-16 pb-4 lg:pt-24 lg:pb-6 overflow-visible">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-24 items-center">
+    <section
+      id="about"
+      className="relative z-0 isolate mx-auto w-full max-w-[1700px] overflow-x-clip px-4 pt-12 pb-6 md:px-8 md:pt-16 md:pb-10 lg:px-12 lg:pt-28 lg:pb-20"
+    >
+      <div className="grid grid-cols-1 items-center gap-12 sm:gap-16 lg:grid-cols-2 lg:gap-24">
 
         {/* Left Side: Shuffled Focus Cards */}
-        <div className="relative order-2 lg:order-1 flex justify-center items-center py-12 lg:py-0">
+        <div className="relative order-2 flex items-center justify-center py-3 sm:py-6 lg:order-1 lg:py-2">
           <div className="relative w-[340px] h-[330px] sm:w-[560px] sm:h-[430px] lg:w-[700px] lg:h-[500px]">
             {visionCards.map((card, index) => {
               const isFocused = card.group === activeVisionGroup;
@@ -67,15 +71,17 @@ export function AboutSection() {
                     y: isFocused ? -10 : 0,
                     filter: isFocused ? "brightness(1.05) saturate(1.05)" : "brightness(0.74) saturate(0.82)",
                     boxShadow: isFocused
-                      ? "0 34px 86px rgba(39,31,35,0.32)"
-                      : "0 16px 42px rgba(39,31,35,0.12)",
+                      ? "0 0 36px rgba(17, 24, 39, 0.28), 0 28px 72px rgba(17, 24, 39, 0.3), 0 10px 24px rgba(255, 255, 255, 0.18)"
+                      : "0 0 22px rgba(17, 24, 39, 0.18), 0 18px 42px rgba(17, 24, 39, 0.2), 0 6px 16px rgba(255, 255, 255, 0.12)",
                   }}
                   transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true, amount: 0.2 }}
                 >
                   <img
                     src={card.src}
                     alt={card.alt}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full rounded-[30px] object-cover sm:rounded-[38px]"
                     loading={index === 0 ? "eager" : "lazy"}
                     decoding="async"
                   />
@@ -97,6 +103,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            viewport={revealViewport}
             className="space-y-4"
           >
             <h3 className="text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-[0.2em] text-sm">
@@ -131,6 +138,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.6 }}
+            viewport={revealViewport}
             className="text-lg md:text-xl text-foreground/70 leading-relaxed max-w-xl"
           >
             GES Worldex is a leading force in international exhibitions, dedicated to creating platforms where innovation meets opportunity. We bridge the gap between global service providers and emerging markets.
@@ -140,6 +148,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
+            viewport={revealViewport}
             className="space-y-4"
           >
             {[
@@ -160,6 +169,7 @@ export function AboutSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
+            viewport={revealViewport}
             className="pt-4"
           >
             <button className="group relative px-8 py-4 bg-foreground text-background font-black text-sm uppercase tracking-widest rounded-full overflow-hidden transition-all hover:pr-12 active:scale-95">

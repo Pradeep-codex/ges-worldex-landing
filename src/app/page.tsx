@@ -50,7 +50,9 @@ export default function Home() {
             </div>
 
             <AboutSection />
-            <StatsSection />
+            <div className="mt-8 md:mt-12 lg:mt-16">
+              <StatsSection />
+            </div>
             {/* Simple Test Sections */}
             <div className="h-[100vh] flex items-center justify-center bg-transparent border-b border-[color:var(--border)]">
               <p className="text-foreground/65 font-bold uppercase tracking-widest">Scroll Down to Verify Header Hide</p>
