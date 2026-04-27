@@ -81,7 +81,7 @@ function StatTile({
   start: boolean;
 }) {
   return (
-    <div className="min-w-0 rounded-[18px] border border-white/75 bg-white/60 px-3 py-3 backdrop-blur-sm">
+    <div className="min-w-0 rounded-[18px] border border-white/75 bg-white/60 px-3 py-3 backdrop-blur-sm [html[data-theme='dark']_&]:border-slate-700/80 [html[data-theme='dark']_&]:bg-slate-900/72">
       <div className="flex items-center justify-between gap-3">
         <div
           className="h-9 w-1.5 rounded-full opacity-90"
@@ -98,7 +98,7 @@ function StatTile({
           >
             <CountUp end={end} suffix={suffix} start={start} />
           </div>
-          <div className="mt-1 truncate text-[0.7rem] font-black uppercase tracking-[0.24em] text-sky-700 sm:text-[0.78rem]">
+          <div className="mt-1 truncate text-[0.7rem] font-black uppercase tracking-[0.24em] text-sky-700 sm:text-[0.78rem] [html[data-theme='dark']_&]:text-slate-300">
             {label}
           </div>
         </div>
@@ -121,7 +121,7 @@ function CompactStat({
   start: boolean;
 }) {
   return (
-    <div className="rounded-[20px] border border-slate-800/80 bg-[linear-gradient(180deg,rgba(15,23,42,0.98)_0%,rgba(30,41,59,0.98)_100%)] px-3.5 py-3 shadow-[0_20px_40px_rgba(2,6,23,0.28)]">
+    <div className="rounded-[20px] border border-sky-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(241,245,249,0.98)_100%)] px-3.5 py-3 shadow-[0_16px_32px_rgba(148,163,184,0.18)] [html[data-theme='dark']_&]:border-slate-700/80 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(30,41,59,0.94)_0%,rgba(51,65,85,0.94)_100%)] [html[data-theme='dark']_&]:shadow-[0_16px_32px_rgba(2,6,23,0.22)]">
       <div
         className="h-1.5 w-12 rounded-full opacity-95"
         style={{ background: accent }}
@@ -136,7 +136,7 @@ function CompactStat({
       >
         <CountUp end={end} suffix={suffix} start={start} />
       </div>
-      <div className="mt-1.5 text-[0.62rem] font-black uppercase tracking-[0.2em] text-slate-300 sm:text-[0.68rem]">
+      <div className="mt-1.5 text-[0.62rem] font-black uppercase tracking-[0.2em] text-slate-600 sm:text-[0.68rem] [html[data-theme='dark']_&]:text-slate-300">
         {label}
       </div>
     </div>
@@ -151,11 +151,11 @@ function MobileStatsDetails({ animateNumbers }: { animateNumbers: boolean }) {
           Exhibition Metrics
         </div>
         <h2
-          className="welcome-display-font max-w-[12ch] text-[1.52rem] font-black leading-[0.9] tracking-[-0.08em] text-slate-950 sm:text-[1.72rem]"
+          className="welcome-display-font max-w-[12ch] text-[1.52rem] font-black leading-[0.94] tracking-[-0.03em] text-slate-950 sm:text-[1.72rem] [html[data-theme='dark']_&]:text-slate-100"
         >
           Bigger Reach, Stronger Visibility
         </h2>
-        <p className="max-w-[34ch] text-[0.8rem] leading-relaxed text-slate-600 sm:text-[0.86rem]">
+        <p className="max-w-[34ch] text-[0.8rem] leading-relaxed text-slate-600 sm:text-[0.86rem] [html[data-theme='dark']_&]:text-slate-400">
           Bigger reach, sharper brand presence, stronger product discovery.
         </p>
       </div>
@@ -211,12 +211,12 @@ function StatsBand({
 
   return (
     <div
-      className="relative rounded-[30px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(244,247,255,0.98)_55%,rgba(236,241,251,0.98)_100%)] shadow-[0_30px_90px_rgba(14,20,35,0.12)]"
+      className="relative rounded-[30px] border border-white/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.98)_0%,rgba(244,247,255,0.98)_55%,rgba(236,241,251,0.98)_100%)] shadow-[0_30px_90px_rgba(14,20,35,0.12)] [html[data-theme='dark']_&]:border-slate-700/80 [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,rgba(15,23,42,0.96)_0%,rgba(17,24,39,0.98)_55%,rgba(30,41,59,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[0_30px_90px_rgba(2,6,23,0.4)]"
       style={{ height: `${bandHeight}px` }}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.94),transparent_36%),radial-gradient(circle_at_82%_18%,rgba(198,220,255,0.32),transparent_30%)]" />
-      <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(49,84,255,0.65),rgba(98,180,255,0.18),transparent)]" />
-      <div className="pointer-events-none absolute left-[45%] top-8 hidden h-[calc(100%-4rem)] w-px bg-[linear-gradient(180deg,transparent,rgba(148,163,184,0.26),transparent)] lg:block" />
+      <div className="pointer-events-none absolute inset-0 rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.94),transparent_36%),radial-gradient(circle_at_82%_18%,rgba(198,220,255,0.32),transparent_30%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.16),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(14,165,233,0.12),transparent_28%)]" />
+      <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(49,84,255,0.65),rgba(98,180,255,0.18),transparent)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,transparent,rgba(96,165,250,0.34),rgba(56,189,248,0.12),transparent)]" />
+      <div className="pointer-events-none absolute left-[45%] top-8 hidden h-[calc(100%-4rem)] w-px bg-[linear-gradient(180deg,transparent,rgba(148,163,184,0.26),transparent)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,transparent,rgba(100,116,139,0.22),transparent)] lg:block" />
 
       <div className="relative h-full lg:hidden">
         <div className="flex h-full flex-col justify-end px-4 py-4 sm:px-5 sm:py-5">
@@ -252,7 +252,7 @@ function StatsBand({
           <div className="max-w-[620px] pr-[40%] sm:pr-[35%] lg:pr-6">
             <div className="space-y-2.5">
               <h2
-                className="welcome-display-font max-w-[11ch] text-[2.05rem] font-black leading-[0.88] tracking-[-0.08em] text-transparent sm:text-[2.35rem] lg:text-[2.65rem]"
+                className="welcome-display-font max-w-[11ch] text-[2.05rem] font-black leading-[0.92] tracking-[-0.035em] text-transparent sm:text-[2.35rem] lg:text-[2.65rem]"
                 style={{
                   backgroundImage: "linear-gradient(95deg, #1d4ed8 0%, #06b6d4 55%, #2563eb 100%)",
                   WebkitBackgroundClip: "text",
@@ -261,7 +261,7 @@ function StatsBand({
               >
                 Exhibition Metrics
               </h2>
-              <p className="max-w-[30ch] text-[0.95rem] leading-relaxed text-sky-900/70 sm:text-[1rem]">
+              <p className="max-w-[30ch] text-[0.95rem] leading-relaxed text-sky-900/70 sm:text-[1rem] [html[data-theme='dark']_&]:text-slate-400">
                 Bigger reach, sharper brand presence, stronger product discovery.
               </p>
             </div>
@@ -624,7 +624,7 @@ export function StatsSection() {
         className="relative mx-auto w-full max-w-[1700px] px-4 md:px-8 lg:px-12"
         aria-label="Statistics section"
       >
-        <div className="rounded-[30px] border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.98)_0%,rgba(241,245,249,0.98)_100%)] p-4 shadow-[0_24px_70px_rgba(15,23,42,0.1)] sm:p-5">
+        <div className="rounded-[30px] border border-slate-200 bg-[linear-gradient(180deg,rgba(248,250,252,0.98)_0%,rgba(241,245,249,0.98)_100%)] p-4 shadow-[0_24px_70px_rgba(15,23,42,0.1)] [html[data-theme='dark']_&]:border-slate-700/80 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(2,6,23,0.96)_0%,rgba(15,23,42,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[0_24px_70px_rgba(2,6,23,0.34)] sm:p-5">
           <MobileStatsDetails animateNumbers={true} />
         </div>
       </section>

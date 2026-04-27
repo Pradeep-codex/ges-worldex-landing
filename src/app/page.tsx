@@ -7,6 +7,8 @@ import { BannerSlider } from "@/components/BannerSlider";
 import { WelcomeLine } from "@/components/WelcomeLine";
 import { AboutSection } from "@/components/AboutSection";
 import { StatsSection } from "@/components/StatsSection";
+import { ExhibitionCategoriesSection } from "@/components/ExhibitionCategoriesSection";
+import { WhySwitchSection } from "@/components/WhySwitchSection";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 
 export default function Home() {
@@ -53,6 +55,8 @@ export default function Home() {
             <div className="mt-8 md:mt-12 lg:mt-16">
               <StatsSection />
             </div>
+            <ExhibitionCategoriesSection />
+            <WhySwitchSection />
             {/* Simple Test Sections */}
             <div className="h-[100vh] flex items-center justify-center bg-transparent border-b border-[color:var(--border)]">
               <p className="text-foreground/65 font-bold uppercase tracking-widest">Scroll Down to Verify Header Hide</p>
