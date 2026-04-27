@@ -11,7 +11,7 @@ const blob3 = "/about-images/blob3.JPG";
 
 export function AboutSection() {
   return (
-    <section id="about" className="relative w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 py-16 lg:py-24 overflow-visible">
+    <section id="about" className="relative w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 pt-16 pb-4 lg:pt-24 lg:pb-6 overflow-visible">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 lg:gap-24 items-center">
 
         {/* Left Side: Complex Blob Design */}

@@ -36,7 +36,7 @@ export default function Home() {
         {isLoading ? <LoaderScreen key="loader" onComplete={handleLoaderComplete} /> : null}
       </AnimatePresence>
 
-      <main id="home" className="min-h-screen relative overflow-hidden" aria-label="GES Worldex home">
+      <main id="home" className="min-h-screen relative overflow-x-hidden" aria-label="GES Worldex home">
         {!isLoading && (
           <>
             <div className="w-full max-w-[1700px] mx-auto px-4 md:px-8 lg:px-12 mt-2 md:mt-4 lg:mt-6">
@@ -51,7 +51,6 @@ export default function Home() {
 
             <AboutSection />
             <StatsSection />
-            
             {/* Simple Test Sections */}
             <div className="h-[100vh] flex items-center justify-center bg-transparent border-b border-[color:var(--border)]">
               <p className="text-foreground/65 font-bold uppercase tracking-widest">Scroll Down to Verify Header Hide</p>
