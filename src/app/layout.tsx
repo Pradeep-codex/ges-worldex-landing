@@ -4,7 +4,7 @@ import "./globals.css";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { FloatingBlobs } from "@/components/FloatingBlobs";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -70,6 +70,7 @@ export default function RootLayout({
         <main className="flex-1 mt-20 lg:mt-24">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );

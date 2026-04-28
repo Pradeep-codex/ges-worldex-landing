@@ -62,13 +62,32 @@ export function ExhibitionCategoriesSection() {
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isMarqueeHovered, setIsMarqueeHovered] = useState(false);
+  const [canHover, setCanHover] = useState(false);
   const reduceMotion = useReducedMotion();
   const marqueeTrackRef = useRef<HTMLDivElement>(null);
   const marqueeLoopWidthRef = useRef(0);
   const marqueeSpeedRef = useRef(58);
   const marqueeXRef = useRef(0);
 
-  const previewId = hoveredId ?? activeId;
+  const previewId = canHover && hoveredId ? hoveredId : activeId;
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover)");
+
+    const syncHoverCapability = () => {
+      setCanHover(media.matches);
+      if (!media.matches) {
+        setHoveredId(null);
+      }
+    };
+
+    syncHoverCapability();
+    media.addEventListener("change", syncHoverCapability);
+
+    return () => {
+      media.removeEventListener("change", syncHoverCapability);
+    };
+  }, []);
 
   useEffect(() => {
     if (reduceMotion) {
@@ -150,7 +169,7 @@ export function ExhibitionCategoriesSection() {
 
   return (
     <section
-      className="relative mx-auto w-full max-w-[1700px] px-4 py-16 md:px-8 md:py-20 lg:px-12 lg:py-24"
+      className="relative mx-auto w-full max-w-[1700px] px-4 pb-16 pt-6 md:px-8 md:pb-20 md:pt-8 lg:px-12 lg:pb-24 lg:pt-10"
       aria-labelledby="exhibition-categories-heading"
     >
       <div className="relative px-0 py-0 md:overflow-hidden md:rounded-[34px] md:border md:border-slate-200/80 md:bg-[linear-gradient(180deg,rgba(248,250,252,0.96)_0%,rgba(255,255,255,1)_42%,rgba(241,245,249,0.98)_100%)] md:px-6 md:py-6 md:shadow-[0_36px_100px_rgba(15,23,42,0.08)] lg:px-8 lg:py-8 [html[data-theme='dark']_&]:md:border-slate-800/80 [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.98)_48%,rgba(17,24,39,0.98)_100%)] [html[data-theme='dark']_&]:md:shadow-[0_36px_100px_rgba(2,6,23,0.32)]">
@@ -177,7 +196,10 @@ export function ExhibitionCategoriesSection() {
             </div>
           </div>
 
-          <div className="hidden gap-3 lg:flex" onMouseLeave={() => setHoveredId(null)}>
+          <div
+            className="hidden gap-3 lg:flex"
+            onMouseLeave={canHover ? () => setHoveredId(null) : undefined}
+          >
             {exhibitionCategories.map((category, index) => {
               const expanded = previewId === category.id;
 
@@ -186,9 +208,9 @@ export function ExhibitionCategoriesSection() {
                   key={category.id}
                   type="button"
                   layout
-                  onMouseEnter={() => setHoveredId(category.id)}
-                  onFocus={() => setHoveredId(category.id)}
-                  onBlur={() => setHoveredId(null)}
+                  onMouseEnter={canHover ? () => setHoveredId(category.id) : undefined}
+                  onFocus={canHover ? () => setHoveredId(category.id) : undefined}
+                  onBlur={canHover ? () => setHoveredId(null) : undefined}
                   onClick={() => setActiveId(category.id)}
                   aria-pressed={activeId === category.id}
                   className="group relative flex h-[540px] min-w-0 cursor-pointer overflow-hidden rounded-[28px] border border-white/20 text-left outline-none ring-0 focus-visible:ring-2 focus-visible:ring-sky-400"

@@ -1,0 +1,80 @@
+"use client";
+
+import { ArrowUpRight, PlayCircle } from "lucide-react";
+import { motion } from "framer-motion";
+
+const videoUrl = "https://www.youtube.com/watch?v=LI9m-6uwETY";
+const embedUrl =
+  "https://www.youtube-nocookie.com/embed/LI9m-6uwETY?rel=0&modestbranding=1&playsinline=1";
+
+export function FeaturedVideoSection() {
+  return (
+    <section className="relative mx-auto w-full max-w-[1700px] px-0 pb-24 pt-6 md:px-8 md:pb-28 md:pt-8 lg:px-12 lg:pb-32 lg:pt-10">
+      <div className="relative isolate overflow-hidden px-0 py-0 md:rounded-[42px] md:bg-[linear-gradient(135deg,#cfe5ef_0%,#c8deea_44%,#bfd7e5_100%)] md:px-7 md:py-8 md:shadow-[0_40px_90px_rgba(138,168,186,0.26)] lg:px-10 lg:py-10 [html[data-theme='dark']_&]:md:bg-[linear-gradient(135deg,#153346_0%,#193c52_44%,#1f465d_100%)] [html[data-theme='dark']_&]:md:shadow-[0_40px_90px_rgba(3,12,20,0.4)]">
+        <div className="pointer-events-none absolute inset-0 hidden md:block md:bg-[radial-gradient(circle_at_18%_16%,rgba(234,247,252,0.95)_0%,rgba(234,247,252,0.28)_32%,transparent_60%),radial-gradient(circle_at_82%_18%,rgba(219,237,246,0.9)_0%,rgba(219,237,246,0.24)_32%,transparent_62%),linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_28%,rgba(168,197,213,0.08)_100%)] [html[data-theme='dark']_&]:md:bg-[radial-gradient(circle_at_18%_16%,rgba(118,177,201,0.16)_0%,rgba(118,177,201,0.05)_32%,transparent_60%),radial-gradient(circle_at_82%_18%,rgba(122,202,222,0.14)_0%,rgba(122,202,222,0.05)_32%,transparent_62%),linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0)_28%,rgba(7,19,28,0.1)_100%)]" />
+        <div className="pointer-events-none absolute inset-x-[10%] top-[-12%] hidden h-40 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.5)_0%,rgba(255,255,255,0.14)_38%,transparent_74%)] blur-3xl [html[data-theme='dark']_&]:bg-[radial-gradient(circle,rgba(196,236,248,0.14)_0%,rgba(196,236,248,0.04)_38%,transparent_74%)] md:block" />
+        <div className="pointer-events-none absolute bottom-[-18%] left-[8%] hidden h-52 w-[44%] rounded-full bg-[radial-gradient(circle,rgba(162,190,206,0.24)_0%,rgba(162,190,206,0.08)_42%,transparent_76%)] blur-3xl [html[data-theme='dark']_&]:bg-[radial-gradient(circle,rgba(26,76,98,0.28)_0%,rgba(26,76,98,0.08)_42%,transparent_76%)] md:block" />
+
+        <div className="relative z-10 grid gap-6 px-4 sm:px-5 md:gap-8 md:px-0 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
+            className="space-y-4 md:space-y-5"
+          >
+            <div className="space-y-4">
+              <h2 className="welcome-display-font max-w-[12ch] text-[1.9rem] font-black leading-[0.94] tracking-[-0.04em] text-[#214357] md:max-w-none md:text-[2.9rem] lg:text-[3.4rem] [html[data-theme='dark']_&]:text-[#e1f7ff]">
+                Watch The Exhibition Energy Come Alive
+              </h2>
+              <p className="max-w-[58ch] text-[0.92rem] leading-relaxed text-[#55758b] md:text-[1.04rem] [html[data-theme='dark']_&]:text-[#b8d9e7]">
+                A more cinematic look into the scale, atmosphere, and movement behind the GES
+                Worldex experience, presented in a sharper, more modern showcase frame.
+              </p>
+            </div>
+
+            <div>
+              <a
+                href={videoUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/28 bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0.05)_100%)] px-3.5 py-2 text-[0.72rem] font-black uppercase tracking-[0.16em] text-[#28556a] shadow-[8px_8px_20px_rgba(138,168,186,0.34),-4px_-4px_10px_rgba(255,255,255,0.28),inset_1px_1px_0_rgba(255,255,255,0.42)] transition-transform duration-300 hover:-translate-y-0.5 md:px-4 md:py-2.5 md:text-[0.8rem] md:tracking-[0.18em] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] [html[data-theme='dark']_&]:text-[#d7f2fb] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(3,12,20,0.34),-4px_-4px_10px_rgba(129,191,216,0.05),inset_1px_1px_0_rgba(255,255,255,0.08)]"
+              >
+                <PlayCircle className="h-4 w-4" />
+                Open On YouTube
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.06 }}
+            className="relative -mx-4 sm:-mx-5 md:mx-0"
+          >
+            <div className="pointer-events-none absolute inset-[-4%] hidden rounded-[40px] bg-[radial-gradient(circle_at_30%_18%,rgba(255,255,255,0.52),transparent_34%),radial-gradient(circle_at_80%_18%,rgba(255,255,255,0.26),transparent_28%)] blur-xl [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_30%_18%,rgba(205,242,252,0.12),transparent_34%),radial-gradient(circle_at_80%_18%,rgba(205,242,252,0.06),transparent_28%)] md:block" />
+
+            <div className="relative rounded-none bg-transparent p-0 shadow-none md:rounded-[36px] md:bg-[linear-gradient(135deg,#cfe5ef_0%,#c8deea_44%,#bfd7e5_100%)] md:p-4 md:shadow-[18px_18px_36px_rgba(138,168,186,0.34),-6px_-6px_14px_rgba(255,255,255,0.22),inset_1px_1px_0_rgba(255,255,255,0.42)] [html[data-theme='dark']_&]:md:bg-[linear-gradient(135deg,#153346_0%,#193c52_44%,#1f465d_100%)] [html[data-theme='dark']_&]:md:shadow-[20px_20px_38px_rgba(3,12,20,0.36),-6px_-6px_12px_rgba(129,191,216,0.05),inset_1px_1px_0_rgba(255,255,255,0.08)]">
+              <div className="pointer-events-none absolute inset-x-4 top-3 hidden h-14 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.34)_0%,rgba(255,255,255,0)_100%)] blur-sm [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(220,248,255,0.08)_0%,rgba(220,248,255,0)_100%)] md:block" />
+              <div className="relative overflow-hidden rounded-none border-0 shadow-none md:rounded-[30px] md:border md:border-white/24 md:shadow-[inset_2px_2px_4px_rgba(255,255,255,0.42),inset_-4px_-4px_8px_rgba(138,168,186,0.16),0_16px_32px_rgba(138,168,186,0.24)] [html[data-theme='dark']_&]:md:border-white/8 [html[data-theme='dark']_&]:md:shadow-[inset_2px_2px_4px_rgba(220,248,255,0.06),inset_-6px_-6px_10px_rgba(3,12,20,0.22),0_16px_32px_rgba(3,12,20,0.24)]">
+                <div className="aspect-video bg-[linear-gradient(135deg,#cfe5ef_0%,#c8deea_44%,#bfd7e5_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,#153346_0%,#193c52_44%,#1f465d_100%)]">
+                  <iframe
+                    src={embedUrl}
+                    title="GES Worldex featured video"
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_38%),radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.08),transparent_34%)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(220,248,255,0.04)_0%,rgba(220,248,255,0)_38%),radial-gradient(circle_at_50%_50%,rgba(220,248,255,0.03),transparent_34%)]" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
