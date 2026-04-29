@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight, Globe, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 
 const quickLinks = [
-  { label: "About", href: "/#about" },
+  { label: "About", href: "/about" },
   { label: "Exhibitors", href: "/exhibitors" },
   { label: "Visitors", href: "/visitors" },
   { label: "Portfolio", href: "/portfolio" },

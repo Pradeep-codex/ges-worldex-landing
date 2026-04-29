@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import RotatingText from "./ui/RotatingText";
 
 const visionCardClass =
@@ -172,11 +173,12 @@ export function AboutSection() {
             viewport={revealViewport}
             className="pt-4"
           >
-            <button className="group relative px-8 py-4 bg-foreground text-background font-black text-sm uppercase tracking-widest rounded-full overflow-hidden transition-all hover:pr-12 active:scale-95">
+            <Link href="/about" className="group relative inline-flex px-8 py-4 bg-foreground text-background font-black text-sm uppercase tracking-widest rounded-full overflow-hidden transition-all hover:pr-12 active:scale-95">
               <span className="relative z-10 transition-all">Discover Our Story</span>
               <ArrowRight className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all w-5 h-5 z-10" />
               <div className="absolute inset-0 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
-            </button>
+            </Link>
+          </motion.div>
           </motion.div>
         </div>
 

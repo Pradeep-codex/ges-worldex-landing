@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LoaderScreen } from "@/components/loader-screen";
 import { BannerSlider } from "@/components/BannerSlider";
 import { WelcomeLine } from "@/components/WelcomeLine";
@@ -16,7 +16,8 @@ import { MasonryGallerySection } from "@/components/MasonryGallerySection";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [shouldShowLoader, setShouldShowLoader] = useState(false);
 
   const orgSchema = useMemo(
     () => ({
@@ -29,7 +30,22 @@ export default function Home() {
     [],
   );
 
-  const handleLoaderComplete = useMemo(() => () => setIsLoading(false), []);
+  useEffect(() => {
+    const hasSeenLoader = window.sessionStorage.getItem("ges-home-loader-seen") === "true";
+
+    if (!hasSeenLoader) {
+      setShouldShowLoader(true);
+      setIsLoading(true);
+    }
+  }, []);
+
+  const handleLoaderComplete = useMemo(
+    () => () => {
+      window.sessionStorage.setItem("ges-home-loader-seen", "true");
+      setIsLoading(false);
+    },
+    [],
+  );
 
   return (
     <>
@@ -39,7 +55,7 @@ export default function Home() {
       />
 
       <AnimatePresence mode="wait">
-        {isLoading ? <LoaderScreen key="loader" onComplete={handleLoaderComplete} /> : null}
+        {shouldShowLoader && isLoading ? <LoaderScreen key="loader" onComplete={handleLoaderComplete} /> : null}
       </AnimatePresence>
 
       <main id="home" className="min-h-screen relative overflow-x-hidden" aria-label="GES Worldex home">

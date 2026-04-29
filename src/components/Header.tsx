@@ -21,8 +21,8 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
-  { name: "Home", href: "/#home" },
-  { name: "About Us", href: "/#about" },
+  { name: "Home", href: "/" },
+  { name: "About Us", href: "/about" },
   { 
     name: "Exhibitors", 
     href: "/exhibitors",
@@ -153,7 +153,9 @@ export function Header() {
     return () => window.removeEventListener("pointerdown", onPointerDown);
   }, [canHover, hoveredNav]);
 
-  const activeNav = navItems.find((item) => item.href === pathname)?.name || "Home";
+  const activeNav =
+    navItems.find((item) => item.href === pathname || (item.href !== "/" && pathname.startsWith(`${item.href}/`)))?.name ||
+    "Home";
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("/#")) {
@@ -478,8 +480,8 @@ export function Header() {
                 <div className="flex-1 overflow-y-auto px-7 py-4">
                   <nav className="flex flex-col gap-2">
                     {[
-                      { name: "Home", href: "/#home" },
-                      { name: "About Us", href: "/#about" },
+                      { name: "Home", href: "/" },
+                      { name: "About Us", href: "/about" },
                       { name: "Exhibitors", href: "/exhibitors", hasSub: true },
                       { name: "Visitors", href: "/visitors", hasSub: true },
                       { name: "Testimonials", href: "/testimonials" },
@@ -496,7 +498,7 @@ export function Header() {
                               href={item.href}
                               onClick={(e) => {
                                 handleNavClick(e, item.href);
-                                if (!item.hasSub) setIsMobileMenuOpen(false);
+                                setIsMobileMenuOpen(false);
                               }}
                               className={`text-[19px] font-bold tracking-tight transition-all duration-300 ${pathname === item.href ? "text-indigo-600" : "text-foreground/80"}`}
                             >
