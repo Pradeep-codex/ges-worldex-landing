@@ -5,18 +5,17 @@ import { useEffect, useMemo, useState } from "react";
 import { LoaderScreen } from "@/components/loader-screen";
 
 export function AppLoaderGate() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
     if (window.sessionStorage.getItem("ges-site-loader-seen") === "true") {
+      setIsLoading(false);
       return;
     }
 
-    const frame = window.requestAnimationFrame(() => {
-      setIsLoading(true);
-    });
-
-    return () => window.cancelAnimationFrame(frame);
+    setIsLoading(true);
   }, []);
 
   const handleLoaderComplete = useMemo(
