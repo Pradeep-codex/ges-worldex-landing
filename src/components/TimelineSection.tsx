@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 
+const timelineFrames = Array.from({ length: 121 }, (_, index) => {
+  const frameNumber = String(index + 1).padStart(3, "0");
+  return `/timeline/V1__${frameNumber}.jpg`;
+});
+
 const storyMoments = [
   {
     title: "A vision takes shape",
@@ -71,115 +76,29 @@ function StoryPanel({ align, body, index, label, title }: StoryPanelProps) {
 
 export function TimelineSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const videoDurationRef = useRef(0);
-  const progressRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeFrameIndex, setActiveFrameIndex] = useState(0);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
   });
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) {
-      return;
-    }
-
-    video.pause();
-    video.currentTime = 0;
-  }, []);
-
-  useEffect(() => {
-    const syncVideoToProgress = (progress = progressRef.current) => {
-      const video = videoRef.current;
-      if (!video) {
-        return;
-      }
-
-      const duration = videoDurationRef.current || Math.min(video.duration || 0, 7);
-      if (duration <= 0) {
-        return;
-      }
-
-      videoDurationRef.current = duration;
-      const targetTime = progress * duration;
-
-      if (!video.paused) {
-        video.pause();
-      }
-
-      if (Math.abs(video.currentTime - targetTime) <= 0.01) {
-        return;
-      }
-
-      video.currentTime = targetTime;
-    };
-
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        syncVideoToProgress();
-      }
-    };
-
-    const handleWindowRefresh = () => {
-      syncVideoToProgress();
-    };
-
-    const video = videoRef.current;
-    if (!video) {
-      return;
-    }
-
-    const handleLoaded = () => {
-      videoDurationRef.current = Math.min(video.duration || 0, 7);
-      syncVideoToProgress();
-    };
-
-    video.addEventListener("loadedmetadata", handleLoaded);
-    video.addEventListener("loadeddata", handleLoaded);
-    video.addEventListener("canplay", handleLoaded);
-    window.addEventListener("resize", handleWindowRefresh);
-    window.addEventListener("focus", handleWindowRefresh);
-    window.addEventListener("pageshow", handleWindowRefresh);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    syncVideoToProgress();
-
-    return () => {
-      video.removeEventListener("loadedmetadata", handleLoaded);
-      video.removeEventListener("loadeddata", handleLoaded);
-      video.removeEventListener("canplay", handleLoaded);
-      window.removeEventListener("resize", handleWindowRefresh);
-      window.removeEventListener("focus", handleWindowRefresh);
-      window.removeEventListener("pageshow", handleWindowRefresh);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
+    timelineFrames.forEach((src) => {
+      const image = new window.Image();
+      image.src = src;
+    });
   }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    progressRef.current = latest;
     const nextIndex = Math.min(storyMoments.length - 1, Math.floor(latest * storyMoments.length));
+    const nextFrameIndex = Math.min(
+      timelineFrames.length - 1,
+      Math.round(latest * (timelineFrames.length - 1)),
+    );
+
     setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
-    const video = videoRef.current;
-    if (!video) {
-      return;
-    }
-
-    const duration = videoDurationRef.current || Math.min(video.duration || 0, 7);
-    if (duration <= 0) {
-      return;
-    }
-
-    videoDurationRef.current = duration;
-    const targetTime = latest * duration;
-
-    if (!video.paused) {
-      video.pause();
-    }
-
-    if (Math.abs(video.currentTime - targetTime) > 0.01) {
-      video.currentTime = targetTime;
-    }
+    setActiveFrameIndex((current) => (current === nextFrameIndex ? current : nextFrameIndex));
   });
 
   const activeMoment = storyMoments[activeIndex];
@@ -213,24 +132,12 @@ export function TimelineSection() {
             </div>
 
             <div className="relative z-10 mx-auto w-full max-w-[860px] overflow-hidden rounded-[22px]">
-              <video
-                ref={videoRef}
-                muted
-                playsInline
-                preload="auto"
-                className="block h-auto w-full rounded-[22px]"
-                onLoadedMetadata={() => {
-                  const video = videoRef.current;
-                  if (!video) {
-                    return;
-                  }
-
-                  videoDurationRef.current = Math.min(video.duration || 0, 7);
-                  video.currentTime = progressRef.current * videoDurationRef.current;
-                }}
-              >
-                <source src="/timeline.mp4" type="video/mp4" />
-              </video>
+              <img
+                src={timelineFrames[activeFrameIndex]}
+                alt=""
+                draggable={false}
+                className="block h-auto w-full rounded-[22px] select-none"
+              />
             </div>
           </div>
 
