@@ -1,114 +1,250 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 
-const timelineSteps = [
+const storyMoments = [
   {
-    year: "2000s",
     title: "A vision takes shape",
-    body: "A team of exhibition professionals came together to rethink how theme-led trade platforms could be planned, built, and experienced across India.",
+    label: "2000s",
+    body: "At the turn of the new millennium, a group of experienced and forward-thinking exhibition professionals came together with a shared ambition to redefine how trade exhibitions are conceptualized and delivered across India. They envisioned platforms that went beyond conventional displays, focusing instead on curated, theme-led environments that could elevate business interactions and create meaningful industry connections. This collective vision laid the foundation for what would become GES Worldex India Pvt. Ltd.",
   },
   {
-    year: "400+ Shows",
     title: "Execution at scale",
-    body: "GES Worldex India Pvt. Ltd. expanded its footprint with hundreds of successful exhibitions, balancing creative planning with disciplined delivery.",
+    label: "400+ Shows",
+    body: "Over the years, GES Worldex India Pvt. Ltd. established itself as a trusted name by successfully delivering more than 400 exhibitions across diverse industries. Each event was executed with a balance of creative planning and operational discipline, ensuring consistency, quality, and impact at scale. This phase marked the company’s evolution from a growing organization into a reliable industry leader capable of managing large-scale, high-value exhibitions.",
   },
   {
-    year: "Pan India",
     title: "Markets connected",
-    body: "The company built exhibition environments that help brands, buyers, and industry communities meet with stronger intent and sharper visibility.",
+    label: "Pan India",
+    body: "With a strong presence across multiple cities and regions, GES Worldex expanded its reach to build truly Pan-India exhibition platforms. These platforms enabled brands, buyers, and industry communities to come together with greater purpose, facilitating stronger networking, enhanced visibility, and more effective business engagement. The focus remained on creating environments where meaningful connections could thrive.",
   },
   {
-    year: "Today",
     title: "Experience-led growth",
-    body: "Every event is treated as a platform to inspire, connect, and grow, with business outcomes at the center of the exhibition experience.",
+    label: "Today",
+    body: "Today, GES Worldex India Pvt. Ltd. continues to evolve with a clear focus on experience-driven exhibitions. Every event is thoughtfully designed as a platform that not only showcases innovation but also drives tangible business outcomes. With an emphasis on quality, engagement, and long-term value, the company remains committed to creating exhibitions that inspire, connect, and contribute to sustained growth for all stakeholders.",
   },
-];
+] as const;
+
+type StoryPanelProps = {
+  align: "left" | "right" | "center";
+  body: string;
+  index: number;
+  label: string;
+  title: string;
+};
+
+function StoryPanel({ align, body, index, label, title }: StoryPanelProps) {
+  const isRight = align === "right";
+
+  return (
+    <motion.article
+      key={`${align}-${index}`}
+      initial={{ opacity: 0, y: 18, x: align === "center" ? 0 : isRight ? 24 : -24 }}
+      animate={{ opacity: 1, y: 0, x: 0 }}
+      exit={{ opacity: 0, y: -12, x: align === "center" ? 0 : isRight ? 18 : -18 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className={`absolute inset-y-0 z-30 flex items-center ${align === "left" ? "left-0 justify-start" : align === "right" ? "right-0 justify-end" : "inset-x-0 justify-center"}`}
+    >
+      <div
+        className={`w-full max-w-[32rem] space-y-4 xl:max-w-[35rem] ${
+          align === "left"
+            ? "pr-6 xl:pr-12"
+            : align === "right"
+              ? "pl-6 xl:pl-12"
+              : "text-center"
+        }`}
+      >
+        <p className={`text-[0.72rem] font-black uppercase tracking-[0.28em] text-[#9f7b28] ${align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"}`}>
+          {label}
+        </p>
+        <h3 className={`text-[1.95rem] font-black leading-[1.02] tracking-[-0.05em] text-[#17130d] xl:text-[2.25rem] ${align === "center" ? "text-center" : "text-left"}`}>
+          {title}
+        </h3>
+        <p className={`text-[15px] leading-7 tracking-[0.02em] text-[#62594d] xl:text-base xl:leading-8 ${align === "center" ? "text-center" : "text-justify"}`}>
+          {body}
+        </p>
+      </div>
+    </motion.article>
+  );
+}
 
 export function TimelineSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoDurationRef = useRef(0);
+  const progressRef = useRef(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"],
+    offset: ["start start", "end end"],
   });
-  const rotateY = useTransform(scrollYProgress, [0, 1], [0, 420]);
-  const rotateX = useTransform(scrollYProgress, [0, 1], [18, -18]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+
+    video.pause();
+    video.currentTime = 0;
+  }, []);
+
+  useEffect(() => {
+    const syncVideoToProgress = (progress = progressRef.current) => {
+      const video = videoRef.current;
+      if (!video) {
+        return;
+      }
+
+      const duration = videoDurationRef.current || Math.min(video.duration || 0, 7);
+      if (duration <= 0) {
+        return;
+      }
+
+      videoDurationRef.current = duration;
+      const targetTime = progress * duration;
+
+      if (!video.paused) {
+        video.pause();
+      }
+
+      if (Math.abs(video.currentTime - targetTime) <= 0.01) {
+        return;
+      }
+
+      video.currentTime = targetTime;
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        syncVideoToProgress();
+      }
+    };
+
+    const handleWindowRefresh = () => {
+      syncVideoToProgress();
+    };
+
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+
+    const handleLoaded = () => {
+      videoDurationRef.current = Math.min(video.duration || 0, 7);
+      syncVideoToProgress();
+    };
+
+    video.addEventListener("loadedmetadata", handleLoaded);
+    video.addEventListener("loadeddata", handleLoaded);
+    video.addEventListener("canplay", handleLoaded);
+    window.addEventListener("resize", handleWindowRefresh);
+    window.addEventListener("focus", handleWindowRefresh);
+    window.addEventListener("pageshow", handleWindowRefresh);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    syncVideoToProgress();
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoaded);
+      video.removeEventListener("loadeddata", handleLoaded);
+      video.removeEventListener("canplay", handleLoaded);
+      window.removeEventListener("resize", handleWindowRefresh);
+      window.removeEventListener("focus", handleWindowRefresh);
+      window.removeEventListener("pageshow", handleWindowRefresh);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    progressRef.current = latest;
+    const nextIndex = Math.min(storyMoments.length - 1, Math.floor(latest * storyMoments.length));
+    setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+
+    const duration = videoDurationRef.current || Math.min(video.duration || 0, 7);
+    if (duration <= 0) {
+      return;
+    }
+
+    videoDurationRef.current = duration;
+    const targetTime = latest * duration;
+
+    if (!video.paused) {
+      video.pause();
+    }
+
+    if (Math.abs(video.currentTime - targetTime) > 0.01) {
+      video.currentTime = targetTime;
+    }
+  });
+
+  const activeMoment = storyMoments[activeIndex];
+  const activeSide = activeIndex % 2 === 0 ? "left" : "right";
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden bg-[linear-gradient(180deg,#f8f6f2_0%,#f2ece2_52%,#f8f6f2_100%)] px-4 py-24 md:px-8 md:py-28 lg:px-12 lg:py-32"
-    >
-      <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(90deg,#17130d_1px,transparent_1px),linear-gradient(#17130d_1px,transparent_1px)] [background-size:44px_44px]" />
+    <section ref={sectionRef} className="relative h-[340vh] bg-[#f8f6f2]">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div className="mx-auto flex h-full w-full max-w-[1720px] flex-col px-4 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10 lg:px-12">
+          <div className="relative z-40 mx-auto max-w-[980px] text-center">
+            <h2 className="text-[2.5rem] font-black leading-[0.95] tracking-[-0.06em] text-[#17130d] md:text-[3.4rem] lg:text-[4.2rem]">
+              A story of vision, scale, and consistent excellence.
+            </h2>
+            <p className="mx-auto mt-3 max-w-[36rem] text-sm leading-6 tracking-[0.02em] text-[#62594d] md:text-base">
+              Center video, alternating story reveals, scroll-led playback.
+            </p>
+          </div>
 
-      <div className="mx-auto max-w-[1320px]">
-        <div className="mx-auto max-w-[720px] text-center">
-          <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-sm font-black uppercase tracking-[0.24em] text-transparent">
-            Timeline
-          </p>
-          <h2 className="mt-5 text-4xl font-black leading-tight tracking-tight text-[#17130d] md:text-5xl">
-            A story of vision, scale, and consistent excellence.
-          </h2>
-        </div>
+          <div className="relative flex min-h-0 flex-1 items-center justify-center">
+            <div className="pointer-events-none absolute inset-0 z-30 hidden lg:block">
+              <AnimatePresence mode="wait">
+                <StoryPanel
+                  key={`${activeSide}-${activeIndex}`}
+                  align={activeSide}
+                  body={activeMoment.body}
+                  index={activeIndex}
+                  label={activeMoment.label}
+                  title={activeMoment.title}
+                />
+              </AnimatePresence>
+            </div>
 
-        <div className="relative mt-20">
-          <div className="absolute left-5 top-0 h-full w-px bg-[#17130d]/10 md:left-1/2 md:-translate-x-1/2" />
+            <div className="relative z-10 mx-auto w-full max-w-[860px] overflow-hidden rounded-[22px]">
+              <video
+                ref={videoRef}
+                muted
+                playsInline
+                preload="auto"
+                className="block h-auto w-full rounded-[22px]"
+                onLoadedMetadata={() => {
+                  const video = videoRef.current;
+                  if (!video) {
+                    return;
+                  }
 
-          <motion.div
-            style={{ rotateY, rotateX }}
-            className="sticky top-32 z-10 mx-auto hidden h-24 w-24 items-center justify-center rounded-[28px] bg-[linear-gradient(135deg,#8d6a1e,#d8b766,#fff0a8,#9f7b28)] shadow-[0_26px_70px_rgba(159,123,40,0.28)] md:flex"
-          >
-            <div className="h-14 w-14 rounded-[18px] border border-white/45 bg-white/16 shadow-[inset_0_0_24px_rgba(255,255,255,0.28)]" />
-          </motion.div>
+                  videoDurationRef.current = Math.min(video.duration || 0, 7);
+                  video.currentTime = progressRef.current * videoDurationRef.current;
+                }}
+              >
+                <source src="/timeline.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
 
-          <div className="-mt-24 space-y-24 md:space-y-28">
-            {timelineSteps.map((step, index) => {
-              const isLeft = index % 2 === 0;
-
-              return (
-                <div key={step.title} className="relative grid gap-8 md:grid-cols-2 md:gap-16">
-                  <div className={`relative ${isLeft ? "md:pr-14" : "md:col-start-2 md:pl-14"}`}>
-                    <span className="absolute -left-[2px] top-8 z-20 h-4 w-4 rounded-full border-4 border-[#f8f6f2] bg-[#c7a24a] shadow-[0_0_0_8px_rgba(199,162,74,0.12)] md:hidden" />
-                    <span
-                      className={`absolute top-8 z-20 hidden h-4 w-4 rounded-full border-4 border-[#f8f6f2] bg-[#c7a24a] shadow-[0_0_0_8px_rgba(199,162,74,0.12)] md:block ${
-                        isLeft ? "-right-2" : "-left-2"
-                      }`}
-                    />
-
-                    <motion.article
-                      initial={{
-                        opacity: 0,
-                        x: isLeft ? -56 : 56,
-                        y: 24,
-                        scale: 0.96,
-                        clipPath: "inset(0 18% 0 18% round 20px)",
-                      }}
-                      whileInView={{
-                        opacity: 1,
-                        x: 0,
-                        y: 0,
-                        scale: 1,
-                        clipPath: "inset(0 0% 0 0% round 20px)",
-                      }}
-                      viewport={{ once: true, amount: 0.35 }}
-                      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-                      className="ml-10 rounded-[20px] bg-[#fffdf8]/86 p-7 shadow-[0_22px_70px_rgba(23,19,13,0.08)] ring-1 ring-[#17130d]/6 md:ml-0 md:p-8"
-                    >
-                      <p className="text-xs font-black uppercase tracking-[0.22em] text-[#9f7b28]">
-                        {step.year}
-                      </p>
-                      <h3 className="mt-3 text-2xl font-black tracking-tight text-[#17130d] md:text-3xl">
-                        {step.title}
-                      </h3>
-                      <p className="mt-4 text-base leading-8 text-[#62594d]">
-                        {step.body}
-                      </p>
-                    </motion.article>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="relative mx-auto mt-5 h-[180px] w-full max-w-[36rem] lg:hidden">
+            <AnimatePresence mode="wait">
+              <StoryPanel
+                key={`mobile-${activeIndex}`}
+                align="center"
+                body={activeMoment.body}
+                index={activeIndex}
+                label={activeMoment.label}
+                title={activeMoment.title}
+              />
+            </AnimatePresence>
           </div>
         </div>
       </div>
