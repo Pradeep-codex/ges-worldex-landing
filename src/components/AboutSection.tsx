@@ -179,7 +179,6 @@ export function AboutSection() {
               <div className="absolute inset-0 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
             </Link>
           </motion.div>
-        
         </div>
 
       </div>

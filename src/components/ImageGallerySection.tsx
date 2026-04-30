@@ -11,10 +11,10 @@ export function ImageGallerySection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.25 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="mb-4 text-center md:mb-5"
+        className="mb-6 text-center md:mb-8"
       >
-        <h2 className="text-[0.8rem] font-black uppercase tracking-[0.24em] text-[#11627a] [html[data-theme='dark']_&]:text-cyan-200">
-          Image Gallery
+        <h2 className="mx-auto max-w-[12ch] text-[2rem] font-black uppercase tracking-[-0.06em] text-[#0d3142] sm:max-w-none sm:text-[2.6rem] md:text-[3.3rem] lg:text-[4.2rem] [html[data-theme='dark']_&]:text-white">
+          GES Worldex All Over The World
         </h2>
       </motion.div>
 
