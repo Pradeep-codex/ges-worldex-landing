@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { LoaderScreen } from "@/components/loader-screen";
 
 export function AppLoaderGate() {
@@ -9,22 +9,39 @@ export function AppLoaderGate() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    
-    if (window.sessionStorage.getItem("ges-site-loader-seen") === "true") {
-      setIsLoading(false);
-      return;
+
+    try {
+      if (window.sessionStorage.getItem("ges-site-loader-seen") === "true") {
+        setIsLoading(false);
+        return;
+      }
+    } catch {
+      // Ignore storage access issues and continue with loader.
     }
 
     setIsLoading(true);
   }, []);
 
-  const handleLoaderComplete = useMemo(
-    () => () => {
-      window.sessionStorage.setItem("ges-site-loader-seen", "true");
+  useEffect(() => {
+    if (!isLoading) return;
+
+    // Fail-safe: never allow the loader to block the app indefinitely.
+    const fallbackTimer = window.setTimeout(() => {
       setIsLoading(false);
-    },
-    [],
-  );
+    }, 3500);
+
+    return () => window.clearTimeout(fallbackTimer);
+  }, [isLoading]);
+
+  const handleLoaderComplete = useCallback(() => {
+    try {
+      window.sessionStorage.setItem("ges-site-loader-seen", "true");
+    } catch {
+      // Ignore storage access issues and always continue to the app.
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
