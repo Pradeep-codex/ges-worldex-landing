@@ -5,6 +5,7 @@ import { defaultSeo, siteUrl } from "@/lib/seo";
 import { Header } from "@/components/Header";
 import { FloatingBlobs } from "@/components/FloatingBlobs";
 import { Footer } from "@/components/Footer";
+import { AppLoaderGate } from "@/components/AppLoaderGate";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -65,6 +66,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-full flex flex-col bg-background">
+        <AppLoaderGate />
         <FloatingBlobs />
         <Header />
         <main className="flex-1 mt-20 lg:mt-24">
