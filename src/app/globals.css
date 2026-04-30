@@ -243,14 +243,13 @@ html[data-theme="dark"] .floating-blobs {
 }
 
 .loader-screen {
-  background:
-    radial-gradient(110% 92% at 12% 10%, #ffffff 0%, rgba(223, 241, 255, 0.55) 42%, transparent 80%),
-    radial-gradient(90% 80% at 92% 15%, #ffffff 0%, rgba(242, 230, 255, 0.5) 48%, transparent 82%),
-    linear-gradient(140deg, #ffffff 0%, rgba(242, 230, 255, 0.4) 38%, rgba(223, 241, 255, 0.35) 70%, rgba(230, 255, 244, 0.32) 100%);
+  background: #ffffff;
+  --loader-color: #111521;
 }
 
 html[data-theme="dark"] .loader-screen {
-  background: var(--background);
+  background: #ffffff;
+  --loader-color: #111521;
 }
 
 .loader {
