@@ -7,11 +7,31 @@ import { useEffect, useRef, useState } from "react";
 const exhibitionCategories = [
   {
     id: "jewellery",
-    title: "Jewellery Exhibitions",
+    title: "Gold Exhibitions",
     eyebrow: "Luxury trade experiences",
     description:
       "High-value showcase environments for fine jewellery brands, gemstone houses, designers, and premium buyers.",
     image: "/exhibition/jewellery.png",
+    accentClass:
+      "from-amber-300/30 via-yellow-200/18 to-amber-950/88 [box-shadow:inset_0_0_0_1px_rgba(252,211,77,0.18)]",
+    mobileDotClass:
+      "bg-amber-500 [html[data-theme='dark']_&]:bg-amber-300",
+    badgeClass:
+      "border-amber-200/45 bg-amber-300/18 text-amber-50",
+  },
+  {
+    id: "silver",
+    title: "Silver Exhibitions",
+    eyebrow: "Refined precious-metal showcases",
+    description:
+      "Purpose-built environments for sterling silver collections, artisanal craftsmanship, gifting brands, and high-intent trade buyers.",
+    image: "/exhibition/silver.png",
+    accentClass:
+      "from-slate-100/24 via-slate-200/16 to-slate-950/88 [box-shadow:inset_0_0_0_1px_rgba(226,232,240,0.18)]",
+    mobileDotClass:
+      "bg-slate-400 [html[data-theme='dark']_&]:bg-slate-300",
+    badgeClass:
+      "border-slate-200/40 bg-slate-100/14 text-slate-100",
   },
   {
     id: "construction",
@@ -20,6 +40,11 @@ const exhibitionCategories = [
     description:
       "Sector-focused expos for infrastructure leaders, construction technologies, heavy materials, and project partnerships.",
     image: "/exhibition/construction.png",
+    accentClass:
+      "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
+    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    badgeClass:
+      "border-white/18 bg-black/20 text-white/80",
   },
   {
     id: "interior",
@@ -28,6 +53,11 @@ const exhibitionCategories = [
     description:
       "Immersive exhibition formats for furniture houses, decor brands, interior solutions, and design-led business discovery.",
     image: "/exhibition/interior-furniture.png",
+    accentClass:
+      "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
+    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    badgeClass:
+      "border-white/18 bg-black/20 text-white/80",
   },
   {
     id: "auto",
@@ -36,6 +66,11 @@ const exhibitionCategories = [
     description:
       "Future-ready platforms for automotive brands, EV ecosystems, components, smart mobility, and transport innovation.",
     image: "/exhibition/auto.png",
+    accentClass:
+      "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
+    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    badgeClass:
+      "border-white/18 bg-black/20 text-white/80",
   },
   {
     id: "lifestyle",
@@ -44,6 +79,11 @@ const exhibitionCategories = [
     description:
       "Flexible trade-show experiences for consumer brands, lifestyle launches, curated retail, and broad-market engagement.",
     image: "/exhibition/lifestyle.png",
+    accentClass:
+      "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
+    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    badgeClass:
+      "border-white/18 bg-black/20 text-white/80",
   },
 ] as const;
 
@@ -237,6 +277,9 @@ export function ExhibitionCategoriesSection() {
                       transition={{ duration: reduceMotion ? 0 : 0.28 }}
                       className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.12)_0%,rgba(2,6,23,0.22)_36%,rgba(2,6,23,0.86)_100%)]"
                     />
+                    <div
+                      className={`absolute inset-0 bg-[linear-gradient(180deg,var(--tw-gradient-from),var(--tw-gradient-via),var(--tw-gradient-to))] ${category.accentClass}`}
+                    />
 
                     <motion.div
                       className="absolute bottom-5 left-3 z-20 flex items-end"
@@ -276,7 +319,9 @@ export function ExhibitionCategoriesSection() {
 
                   <div className="relative z-10 flex h-full flex-col justify-between p-4">
                     <div className="flex items-start justify-between gap-3">
-                      <div className="rounded-full border border-white/18 bg-black/20 px-3 py-1 text-[0.64rem] font-black uppercase tracking-[0.2em] text-white/80 backdrop-blur-sm">
+                      <div
+                        className={`rounded-full border px-3 py-1 text-[0.64rem] font-black uppercase tracking-[0.2em] backdrop-blur-sm ${category.badgeClass}`}
+                      >
                         {String(index + 1).padStart(2, "0")}
                       </div>
                     </div>
@@ -295,7 +340,9 @@ export function ExhibitionCategoriesSection() {
             <div className="space-y-3">
               {exhibitionCategories.map((category) => (
                 <div key={category.id} className="flex items-start gap-3">
-                  <div className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400" />
+                  <div
+                    className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${category.mobileDotClass}`}
+                  />
                   <div className="min-w-0 space-y-1">
                     <div className="text-[1rem] font-black leading-snug text-slate-900 [html[data-theme='dark']_&]:text-slate-100">
                       {category.title}
