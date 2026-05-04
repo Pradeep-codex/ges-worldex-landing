@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-const timelineFrames = Array.from({ length: 121 }, (_, index) => {
+const timelineFrames = Array.from({ length: 144 }, (_, index) => {
   const frameNumber = String(index + 1).padStart(3, "0");
-  return `/timeline/V1__${frameNumber}.png`;
+  return `/timline/b_b_a_d_mp__${frameNumber}.png`;
 });
 
 const storyMoments = [
@@ -255,8 +255,8 @@ export function TimelineSection() {
           </AnimatePresence>
         </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-[560px] rounded-[28px] px-4 py-3 sm:max-w-[720px] sm:px-5 sm:py-4 md:max-w-[840px] md:px-6 md:py-5 lg:max-w-[980px] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:max-w-[660px] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:px-3 [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:py-2">
-          <div className="mx-auto w-full max-w-[500px] overflow-hidden rounded-[22px] sm:max-w-[650px] md:max-w-[750px] lg:max-w-[860px] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:max-w-[620px]">
+        <div className="relative z-10 mx-auto w-full max-w-[350px] rounded-[28px] px-3 py-2 sm:max-w-[460px] sm:px-4 sm:py-3 md:max-w-[530px] md:px-5 md:py-4 lg:max-w-[630px] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:max-w-[420px] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:px-3 [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:py-2">
+          <div className="mx-auto w-full max-w-[315px] overflow-hidden rounded-[22px] sm:max-w-[410px] md:max-w-[480px] lg:max-w-[550px] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:max-w-[390px]">
             <img
               src={timelineFrames[activeFrameIndex]}
               alt=""

@@ -31,9 +31,9 @@
   /* About page colors - light mode */
   --about-bg-light: #f8f6f2;
   --about-hero-bg: #d9ddd9;
-  --about-text-primary: #17130d;
-  --about-text-secondary: #4d463c;
-  --about-text-muted: #62594d;
+  --about-text-primary: #2f2318;
+  --about-text-secondary: #6b5743;
+  --about-text-muted: #7b6650;
   --about-card-bg: #fffdf8;
   --about-card-border: rgba(23, 19, 13, 0.1);
 }
@@ -77,9 +77,9 @@ html[data-theme="dark"] {
   /* About page colors - dark mode */
   --about-bg-light: #071018;
   --about-hero-bg: #071018;
-  --about-text-primary: #ffffff;
-  --about-text-secondary: #d1c8be;
-  --about-text-muted: #d6ccb9;
+  --about-text-primary: #f3e7d4;
+  --about-text-secondary: #d8c2a8;
+  --about-text-muted: #cdb79d;
   --about-card-bg: #071018;
   --about-card-border: rgba(255, 255, 255, 0.1);
 }

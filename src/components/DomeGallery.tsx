@@ -91,13 +91,15 @@ export default function DomeGallery({
   const pointerIdRef = useRef<number | null>(null);
   const pressedImageRef = useRef<GalleryImage | null>(null);
   const isDraggingRef = useRef(false);
+  const isHoveringRef = useRef(false);
   const didDragRef = useRef(false);
   const rotationRef = useRef({ x: 0, y: 0 });
   const startRotationRef = useRef({ x: 0, y: 0 });
   const startPointerRef = useRef({ x: 0, y: 0 });
   const velocityRef = useRef({ x: 0, y: 0 });
   const lastMoveRef = useRef<{ x: number; y: number; time: number } | null>(null);
-  const inertiaFrameRef = useRef<number | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const autoRotateSpeedRef = useRef(0.03);
 
   const items = useMemo(() => buildItems(images, segments), [images, segments]);
 
@@ -110,41 +112,61 @@ export default function DomeGallery({
     node.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDeg}deg) rotateY(${yDeg}deg)`;
   }, []);
 
-  const stopInertia = useCallback(() => {
-    if (inertiaFrameRef.current !== null) {
-      cancelAnimationFrame(inertiaFrameRef.current);
-      inertiaFrameRef.current = null;
+  const stopAnimation = useCallback(() => {
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
   }, []);
 
-  const startInertia = useCallback(() => {
+  const startAnimation = useCallback(() => {
     const friction = clamp(0.94 + dragDampening * 0.01, 0.94, 0.985);
-    const threshold = 0.02;
+    const threshold = 0.004;
+    const baseAutoRotateSpeed = 0.03;
+    let lastTime = performance.now();
 
-    const step = () => {
-      velocityRef.current.x *= friction;
-      velocityRef.current.y *= friction;
+    const step = (now: number) => {
+      const delta = Math.max(now - lastTime, 16);
+      lastTime = now;
 
-      if (Math.abs(velocityRef.current.x) < threshold && Math.abs(velocityRef.current.y) < threshold) {
-        inertiaFrameRef.current = null;
-        return;
+      if (!isDraggingRef.current) {
+        velocityRef.current.x *= friction;
+        velocityRef.current.y *= friction;
+
+        if (Math.abs(velocityRef.current.x) < threshold) {
+          velocityRef.current.x = 0;
+        }
+        if (Math.abs(velocityRef.current.y) < threshold) {
+          velocityRef.current.y = 0;
+        }
+
+        const targetAutoSpeed = isHoveringRef.current ? 0 : baseAutoRotateSpeed;
+        const autoBlend = 1 - Math.exp(-(isHoveringRef.current ? 0.008 : 0.0035) * delta);
+        autoRotateSpeedRef.current += (targetAutoSpeed - autoRotateSpeedRef.current) * autoBlend;
+
+        if (Math.abs(autoRotateSpeedRef.current) < 0.0005 && targetAutoSpeed === 0) {
+          autoRotateSpeedRef.current = 0;
+        }
+
+        const nextX = clamp(
+          rotationRef.current.x - velocityRef.current.y,
+          -maxVerticalRotationDeg,
+          maxVerticalRotationDeg,
+        );
+        const nextY = wrapAngleSigned(
+          rotationRef.current.y + velocityRef.current.x + autoRotateSpeedRef.current * (delta / 16),
+        );
+
+        rotationRef.current = { x: nextX, y: nextY };
+        applyTransform(nextX, nextY);
       }
 
-      const nextX = clamp(
-        rotationRef.current.x - velocityRef.current.y,
-        -maxVerticalRotationDeg,
-        maxVerticalRotationDeg,
-      );
-      const nextY = wrapAngleSigned(rotationRef.current.y + velocityRef.current.x);
-
-      rotationRef.current = { x: nextX, y: nextY };
-      applyTransform(nextX, nextY);
-      inertiaFrameRef.current = requestAnimationFrame(step);
+      animationFrameRef.current = requestAnimationFrame(step);
     };
 
-    stopInertia();
-    inertiaFrameRef.current = requestAnimationFrame(step);
-  }, [applyTransform, dragDampening, maxVerticalRotationDeg, stopInertia]);
+    stopAnimation();
+    animationFrameRef.current = requestAnimationFrame(step);
+  }, [applyTransform, dragDampening, maxVerticalRotationDeg, stopAnimation]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -180,9 +202,17 @@ export default function DomeGallery({
 
   useEffect(() => {
     return () => {
-      stopInertia();
+      stopAnimation();
     };
-  }, [stopInertia]);
+  }, [stopAnimation]);
+
+  useEffect(() => {
+    startAnimation();
+
+    return () => {
+      stopAnimation();
+    };
+  }, [startAnimation, stopAnimation]);
 
   useEffect(() => {
     if (!activeImage) {
@@ -204,7 +234,6 @@ export default function DomeGallery({
       return;
     }
 
-    stopInertia();
     pointerIdRef.current = event.pointerId;
     isDraggingRef.current = true;
     didDragRef.current = false;
@@ -277,10 +306,6 @@ export default function DomeGallery({
       setActiveImage(pressedImageRef.current);
     }
     pressedImageRef.current = null;
-
-    if (Math.abs(velocityRef.current.x) > 0.01 || Math.abs(velocityRef.current.y) > 0.01) {
-      startInertia();
-    }
   };
 
   return (
@@ -313,6 +338,12 @@ export default function DomeGallery({
                   className={styles.imageWrap}
                   data-dome-image-index={index}
                   aria-label={`Zoom ${item.alt}`}
+                  onPointerEnter={() => {
+                    isHoveringRef.current = true;
+                  }}
+                  onPointerLeave={() => {
+                    isHoveringRef.current = false;
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();

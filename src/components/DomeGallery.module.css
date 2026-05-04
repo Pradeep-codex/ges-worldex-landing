@@ -88,7 +88,7 @@
 
 .imageWrap {
   position: absolute;
-  inset: 10px;
+  inset: 6px;
   overflow: hidden;
   border-radius: var(--tile-radius);
   border: 0;
@@ -194,7 +194,7 @@
   }
 
   .imageWrap {
-    inset: 7px;
+    inset: 4px;
     border-radius: 16px;
   }
 

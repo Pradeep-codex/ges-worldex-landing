@@ -20,8 +20,8 @@ export function ImageGallerySection() {
 
       <div className="h-[520px] overflow-visible md:h-[700px] lg:h-[860px]">
         <DomeGallery
-          fit={0.96}
-          minRadius={720}
+          fit={1.02}
+          minRadius={760}
           maxVerticalRotationDeg={5}
           segments={34}
           dragDampening={4}
