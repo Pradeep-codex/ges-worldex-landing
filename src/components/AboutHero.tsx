@@ -81,7 +81,7 @@ export function AboutHero() {
               <p className="max-w-[42rem] text-sm leading-7 tracking-[0.03em] sm:text-base md:text-lg md:leading-8" style={{ color: 'var(--about-text-secondary)' }}>
                 We create exhibition environments that give brands stronger visibility, clearer positioning, and meaningful business connection at scale.
               </p>
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-col items-start gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <Link
                   href="/contact"
                   className="group inline-flex items-center gap-2 sm:gap-3 rounded-full bg-[#15212a] dark:bg-indigo-600 px-5 py-3 sm:px-7 sm:py-4 text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-white transition-all hover:bg-[#9f7b28] active:scale-95"
@@ -89,7 +89,7 @@ export function AboutHero() {
                   Talk To Our Team
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-                <p className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: 'var(--about-text-secondary)' }}>
+                <p className="hidden text-xs font-bold uppercase tracking-[0.22em] sm:block" style={{ color: 'var(--about-text-secondary)' }}>
                   Scroll down
                 </p>
               </div>
