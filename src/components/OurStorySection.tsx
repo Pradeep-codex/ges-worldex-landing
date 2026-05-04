@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export function OurStorySection() {
   return (
-    <section className="relative overflow-hidden px-3 sm:px-4 pt-12 sm:pt-20 md:pt-24 lg:pt-28 pb-2 sm:pb-4 md:pb-6 lg:pb-8" style={{ backgroundColor: 'var(--about-bg-light)' }}>
+    <section className="relative overflow-hidden px-3 pb-2 pt-12 sm:px-4 sm:pb-4 sm:pt-20 md:pb-6 md:pt-24 lg:pb-8 lg:pt-28" style={{ backgroundColor: 'var(--about-bg-light)' }}>
       <div className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(#17130d_0.8px,transparent_0.8px)] [background-size:18px_18px]" />
 
       <motion.div
@@ -18,7 +18,7 @@ export function OurStorySection() {
           <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-xs font-black uppercase tracking-[0.28em] text-transparent md:text-sm">
             Our Story
           </p>
-          <h2 className="max-w-[13ch] text-2xl font-black leading-[0.98] tracking-[-0.05em] sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px]" style={{ color: 'var(--about-text-primary)' }}>
+          <h2 className="max-w-none text-2xl font-black leading-[0.98] tracking-[-0.05em] sm:max-w-[13ch] sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px]" style={{ color: 'var(--about-text-primary)' }}>
             Built on vision, shaped by experience.
           </h2>
         </div>
@@ -38,6 +38,8 @@ export function OurStorySection() {
           </p>
         </div>
       </motion.div>
+
+      <div className="pointer-events-none relative mx-auto mt-8 h-px w-full max-w-[1320px] bg-[linear-gradient(90deg,transparent,rgba(143,116,48,0.28)_18%,rgba(143,116,48,0.42)_50%,rgba(143,116,48,0.28)_82%,transparent)] shadow-[0_6px_16px_rgba(143,116,48,0.16)]" />
     </section>
   );
 }
