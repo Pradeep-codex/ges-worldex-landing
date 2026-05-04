@@ -22,7 +22,7 @@ export function AboutHero() {
   const imageFilter = useMotionTemplate`blur(${imageBlur}px) brightness(${imageBrightness}) saturate(${imageSaturate})`;
 
   return (
-    <section ref={sectionRef} className="relative -mt-20 h-[132vh] bg-[#d9ddd9] lg:-mt-24">
+    <section ref={sectionRef} className="relative -mt-20 h-[132vh] lg:-mt-24" style={{ backgroundColor: 'var(--about-hero-bg)' }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         <motion.div className="absolute inset-0" style={{ scale: imageScale }}>
           <motion.div
@@ -52,25 +52,25 @@ export function AboutHero() {
         <div className="relative z-10 flex h-full items-center px-4 md:px-8 lg:px-12">
           <div className="w-full max-w-[760px] lg:ml-4">
             <div className="space-y-6">
-              <p className="text-xs font-black uppercase tracking-[0.32em] text-[#42505a] md:text-sm">
+              <p className="text-xs font-black uppercase tracking-[0.32em] md:text-sm" style={{ color: 'var(--about-text-secondary)' }}>
                 About GES Worldex
               </p>
-              <h1 className="max-w-[14ch] text-4xl font-black uppercase leading-[0.92] tracking-[0.02em] text-[#15212a] sm:text-5xl md:text-6xl lg:text-[76px]">
+              <h1 className="max-w-[14ch] text-3xl font-black uppercase leading-[0.92] tracking-[0.02em] sm:text-4xl md:text-5xl lg:text-6xl xl:text-[76px]" style={{ color: 'var(--about-text-primary)' }}>
                 Exhibition stories told through space.
               </h1>
-              <p className="max-w-[42rem] text-sm leading-7 tracking-[0.03em] text-[#33424c] sm:text-base md:text-lg md:leading-8">
+              <p className="max-w-[42rem] text-sm leading-7 tracking-[0.03em] sm:text-base md:text-lg md:leading-8" style={{ color: 'var(--about-text-secondary)' }}>
                 We create exhibition environments that give brands stronger visibility, clearer positioning, and meaningful business connection at scale.
               </p>
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
                   href="/contact"
-                  className="group inline-flex items-center gap-3 rounded-full bg-[#15212a] px-7 py-4 text-sm font-black uppercase tracking-[0.22em] text-white transition-all hover:bg-[#9f7b28] active:scale-95"
+                  className="group inline-flex items-center gap-2 sm:gap-3 rounded-full bg-[#15212a] dark:bg-indigo-600 px-5 py-3 sm:px-7 sm:py-4 text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-white transition-all hover:bg-[#9f7b28] active:scale-95"
                 >
                   Talk To Our Team
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#4d5c66]">
-                  Scroll down to continue
+                <p className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: 'var(--about-text-secondary)' }}>
+                  Scroll down
                 </p>
               </div>
             </div>

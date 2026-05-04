@@ -27,6 +27,15 @@
   --banner-overlay-1: rgba(0, 0, 0, 1);
   --banner-overlay-2: rgba(0, 0, 0, 1);
   --banner-overlay-3: rgba(0, 0, 0, 0);
+
+  /* About page colors - light mode */
+  --about-bg-light: #f8f6f2;
+  --about-hero-bg: #d9ddd9;
+  --about-text-primary: #17130d;
+  --about-text-secondary: #4d463c;
+  --about-text-muted: #62594d;
+  --about-card-bg: #fffdf8;
+  --about-card-border: rgba(23, 19, 13, 0.1);
 }
 
 html {
@@ -64,6 +73,15 @@ html[data-theme="dark"] {
   --banner-overlay-1: rgba(0, 0, 0, 1);
   --banner-overlay-2: rgba(0, 0, 0, 1);
   --banner-overlay-3: rgba(0, 0, 0, 0);
+
+  /* About page colors - dark mode */
+  --about-bg-light: #071018;
+  --about-hero-bg: #071018;
+  --about-text-primary: #ffffff;
+  --about-text-secondary: #d1c8be;
+  --about-text-muted: #d6ccb9;
+  --about-card-bg: #071018;
+  --about-card-border: rgba(255, 255, 255, 0.1);
 }
 
 :root {

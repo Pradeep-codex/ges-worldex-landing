@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AboutHero } from "@/components/AboutHero";
 import { OurStorySection } from "@/components/OurStorySection";
 import { OurProcessSection } from "@/components/OurProcessSection";
+import { ManagingDirectorSection } from "@/components/ManagingDirectorSection";
 import { VisionMottoSection } from "@/components/VisionMottoSection";
 import { TimelineSection } from "@/components/TimelineSection";
 
@@ -20,33 +21,43 @@ const metrics = [
 
 export default function AboutPage() {
   return (
-    <main className="relative w-full overflow-x-clip bg-[#f8f6f2]">
+    <main className="relative w-full overflow-x-clip" style={{ backgroundColor: 'var(--about-bg-light)' }}>
       <AboutHero />
 
       <OurStorySection />
+
+      <TimelineSection />
+
+      <ManagingDirectorSection />
 
       <VisionMottoSection />
 
       <OurProcessSection />
 
-      <TimelineSection />
-
-      <section className="mx-auto w-full max-w-[1320px] border-t border-[#17130d]/10 px-4 py-12 md:px-8 md:py-16 lg:px-12">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
+      <section className="mx-auto w-full max-w-[1320px] px-3 sm:px-4 py-8 sm:py-12 md:px-8 md:py-16 lg:px-12" style={{ borderTopColor: 'var(--about-card-border)', borderTopWidth: '1px' }}>
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div className="space-y-3">
             <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-sm font-black uppercase tracking-[0.2em] text-transparent">
               Exhibition Metrics
             </p>
-            <h2 className="text-3xl font-black tracking-tight text-[#17130d] md:text-5xl">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-black tracking-tight" style={{ color: 'var(--about-text-primary)' }}>
               Bigger reach, sharper brand presence, stronger product discovery.
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:gap-4">
             {metrics.map((metric) => (
-              <div key={metric.label} className="rounded-[8px] border border-[#17130d]/10 bg-white/50 p-5 shadow-lg shadow-[#17130d]/5">
-                <div className="text-3xl font-black text-[#17130d] md:text-4xl">{metric.value}</div>
-                <div className="mt-2 text-sm font-bold uppercase tracking-widest text-[#5f574c]">{metric.label}</div>
+              <div
+                key={metric.label}
+                className="rounded-[8px] p-3 sm:p-4 md:p-5"
+                style={{
+                  backgroundColor: 'var(--about-card-bg)',
+                  borderColor: 'var(--about-card-border)',
+                  borderWidth: '1px'
+                }}
+              >
+                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black" style={{ color: 'var(--about-text-primary)' }}>{metric.value}</div>
+                <div className="mt-1 sm:mt-2 text-xs sm:text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--about-text-secondary)' }}>{metric.label}</div>
               </div>
             ))}
           </div>

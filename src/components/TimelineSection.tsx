@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-
 
 const timelineFrames = Array.from({ length: 121 }, (_, index) => {
   const frameNumber = String(index + 1).padStart(3, "0");
-  return `/timeline/V1__${frameNumber}.jpg`;
+  return `/timeline/V1__${frameNumber}.png`;
 });
 
 const storyMoments = [
@@ -63,10 +63,10 @@ function StoryPanel({ align, body, index, label, title }: StoryPanelProps) {
         <p className={`text-[0.72rem] font-black uppercase tracking-[0.28em] text-[#9f7b28] ${align === "right" ? "text-right" : align === "center" ? "text-center" : "text-left"}`}>
           {label}
         </p>
-        <h3 className={`text-[1.95rem] font-black leading-[1.02] tracking-[-0.05em] text-[#17130d] xl:text-[2.25rem] ${align === "center" ? "text-center" : "text-left"}`}>
+        <h3 className={`text-[1.95rem] font-black leading-[1.02] tracking-[-0.05em] xl:text-[2.25rem] ${align === "center" ? "text-center" : "text-left"}`} style={{ color: 'var(--about-text-primary)' }}>
           {title}
         </h3>
-        <p className={`text-[15px] leading-7 tracking-[0.02em] text-[#62594d] xl:text-base xl:leading-8 ${align === "center" ? "text-center" : "text-justify"}`}>
+        <p className={`text-[15px] leading-7 tracking-[0.02em] xl:text-base xl:leading-8 ${align === "center" ? "text-center" : "text-justify"}`} style={{ color: 'var(--about-text-secondary)' }}>
           {body}
         </p>
       </div>
@@ -105,16 +105,13 @@ export function TimelineSection() {
   const activeSide = activeIndex % 2 === 0 ? "left" : "right";
 
   return (
-    <section ref={sectionRef} className="relative h-[340vh] bg-[#f8f6f2]">
+    <section ref={sectionRef} className="relative h-[340vh]" style={{ backgroundColor: 'var(--about-bg-light)' }}>
       <div className="sticky top-0 h-screen overflow-hidden">
-        <div className="mx-auto flex h-full w-full max-w-[1720px] flex-col px-4 pb-8 pt-8 md:px-8 md:pb-10 md:pt-10 lg:px-12">
-          <div className="relative z-40 mx-auto max-w-[980px] text-center">
-            <h2 className="text-[2.5rem] font-black leading-[0.95] tracking-[-0.06em] text-[#17130d] md:text-[3.4rem] lg:text-[4.2rem]">
-              A story of vision, scale, and consistent excellence.
+        <div className="mx-auto flex h-full w-full max-w-[1720px] flex-col px-3 sm:px-4 pb-6 sm:pb-8 pt-0 sm:pt-1 md:px-8 md:pb-10 md:pt-2 lg:px-12">
+          <div className="relative z-40 flex justify-center pt-4 sm:pt-6 pb-3 sm:pb-4 md:pb-5">
+            <h2 className="text-base font-black uppercase tracking-[0.22em] sm:text-lg md:text-xl lg:text-2xl" style={{ color: 'var(--about-text-primary)' }}>
+              Our Journey
             </h2>
-            <p className="mx-auto mt-3 max-w-[36rem] text-sm leading-6 tracking-[0.02em] text-[#62594d] md:text-base">
-              Center video, alternating story reveals, scroll-led playback.
-            </p>
           </div>
 
           <div className="relative flex min-h-0 flex-1 items-center justify-center">
@@ -131,7 +128,7 @@ export function TimelineSection() {
               </AnimatePresence>
             </div>
 
-            <div className="relative z-10 mx-auto w-full max-w-[860px] overflow-hidden rounded-[22px]">
+            <div className="relative z-10 mx-auto w-full max-w-[500px] sm:max-w-[650px] md:max-w-[750px] lg:max-w-[860px] overflow-hidden rounded-[22px]">
               <img
                 src={timelineFrames[activeFrameIndex]}
                 alt=""

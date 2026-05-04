@@ -20,6 +20,11 @@ function getPreferredTheme(): ThemeMode {
 function applyTheme(theme: ThemeMode) {
   if (typeof document === "undefined") return;
   document.documentElement.dataset.theme = theme;
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
 }
 
 export function ThemeToggle({ className = "" }: { className?: string }) {

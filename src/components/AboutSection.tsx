@@ -7,7 +7,7 @@ import Link from "next/link";
 import RotatingText from "./ui/RotatingText";
 
 const visionCardClass =
-  "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[30px] bg-[#f4f1ea] will-change-transform sm:rounded-[38px]";
+  "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[30px] bg-[#f4f1ea] dark:bg-[#2a2420] will-change-transform sm:rounded-[38px]";
 
 const visionCards = [
   {
@@ -87,7 +87,7 @@ export function AboutSection() {
                     decoding="async"
                   />
                   <motion.div
-                    className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,253,243,0.04),rgba(37,31,34,0.18))]"
+                    className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,253,243,0.04),rgba(37,31,34,0.18))] dark:bg-[linear-gradient(145deg,rgba(30,25,20,0.3),rgba(100,80,60,0.15))]"
                     animate={{ opacity: isFocused ? 0.08 : 0.48 }}
                     transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                   />
@@ -158,7 +158,7 @@ export function AboutSection() {
               "Connecting 50,000+ Business Leaders Annually"
             ].map((item: string, idx: number) => (
               <li key={idx} className="flex items-center gap-3 text-foreground/80 font-semibold group">
-                <div className="w-6 h-6 rounded-full bg-indigo-500/10 flex items-center justify-center group-hover:bg-indigo-500 group-hover:text-white transition-all">
+                <div className="w-6 h-6 rounded-full bg-indigo-500/10 dark:bg-indigo-400/20 flex items-center justify-center group-hover:bg-indigo-500 dark:group-hover:bg-indigo-400 group-hover:text-white transition-all">
                   <ArrowRight className="w-3 h-3" />
                 </div>
                 {item}
@@ -173,10 +173,10 @@ export function AboutSection() {
             viewport={revealViewport}
             className="pt-4"
           >
-            <Link href="/about" className="group relative inline-flex px-8 py-4 bg-foreground text-background font-black text-sm uppercase tracking-widest rounded-full overflow-hidden transition-all hover:pr-12 active:scale-95">
+            <Link href="/about" className="group relative inline-flex px-8 py-4 bg-foreground dark:bg-indigo-600 text-background dark:text-white font-black text-sm uppercase tracking-widest rounded-full overflow-hidden transition-all hover:pr-12 active:scale-95">
               <span className="relative z-10 transition-all">Discover Our Story</span>
               <ArrowRight className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all w-5 h-5 z-10" />
-              <div className="absolute inset-0 bg-indigo-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+              <div className="absolute inset-0 bg-indigo-600 dark:bg-indigo-700 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
             </Link>
           </motion.div>
         </div>

@@ -60,6 +60,9 @@ export default function RootLayout({
     var stored = localStorage.getItem(key);
     var theme = (stored === 'light' || stored === 'dark') ? stored : 'light';
     document.documentElement.dataset.theme = theme;
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
   } catch (e) {}
 })();`}
         </Script>
