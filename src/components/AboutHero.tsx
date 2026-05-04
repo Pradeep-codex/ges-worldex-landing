@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion, useMotionTemplate, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function AboutHero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
@@ -21,6 +22,25 @@ export function AboutHero() {
   const glowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.1, 0.14, 0.2]);
   const imageFilter = useMotionTemplate`blur(${imageBlur}px) brightness(${imageBrightness}) saturate(${imageSaturate})`;
 
+  useEffect(() => {
+    const readTheme = () => {
+      const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+      setTheme(currentTheme);
+    };
+
+    readTheme();
+
+    const observer = new MutationObserver(readTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const heroImageSrc = theme === "dark" ? "/aboutHero-dark.png" : "/aboutHero-light.png";
+
   return (
     <section ref={sectionRef} className="relative -mt-20 h-[132vh] lg:-mt-24" style={{ backgroundColor: 'var(--about-hero-bg)' }}>
       <div className="sticky top-0 h-screen overflow-hidden">
@@ -30,7 +50,7 @@ export function AboutHero() {
             style={{ filter: imageFilter }}
           >
             <Image
-              src="/aboutHero.png"
+              src={heroImageSrc}
               alt="GES Worldex exhibition hero"
               fill
               priority
