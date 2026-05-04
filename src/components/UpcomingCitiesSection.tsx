@@ -159,12 +159,20 @@ export function UpcomingCitiesSection() {
       <div className="relative overflow-visible px-0 py-0 md:overflow-hidden md:rounded-[34px] md:bg-[linear-gradient(180deg,rgba(238,246,250,0.34)_0%,rgba(240,247,251,0.24)_48%,rgba(225,238,245,0.38)_100%)] md:px-7 md:py-8 md:shadow-[0_28px_70px_rgba(13,76,102,0.08)] lg:px-10 lg:py-10 [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(10,32,47,0.52)_0%,rgba(14,40,58,0.4)_48%,rgba(16,46,64,0.58)_100%)] [html[data-theme='dark']_&]:md:shadow-[0_28px_70px_rgba(4,18,34,0.24)]">
         <div className="pointer-events-none absolute inset-0 hidden md:block">
           <Image
-            src="/upcoming.png"
+            src="/upcoming-light.png"
             alt=""
             fill
             aria-hidden="true"
             sizes="100vw"
-            className="scale-[1.04] object-cover object-center opacity-[0.78] [html[data-theme='dark']_&]:opacity-[0.64]"
+            className="block scale-[1.04] object-cover object-center opacity-[0.78] [html[data-theme='dark']_&]:hidden"
+          />
+          <Image
+            src="/upcoming-dark.png"
+            alt=""
+            fill
+            aria-hidden="true"
+            sizes="100vw"
+            className="hidden scale-[1.04] object-cover object-center opacity-[0.64] [html[data-theme='dark']_&]:block"
           />
         </div>
         <div className="pointer-events-none absolute inset-0 hidden md:block md:bg-[linear-gradient(180deg,rgba(237,246,250,0.12)_0%,rgba(255,255,255,0.03)_22%,rgba(225,238,245,0.18)_100%),radial-gradient(circle_at_82%_18%,rgba(56,189,248,0.08),transparent_28%)] [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(10,32,47,0.2)_0%,rgba(14,40,58,0.05)_22%,rgba(16,46,64,0.3)_100%),radial-gradient(circle_at_82%_18%,rgba(34,211,238,0.08),transparent_28%)]" />

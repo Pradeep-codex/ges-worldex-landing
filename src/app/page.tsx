@@ -10,7 +10,6 @@ import { WhySwitchSection } from "@/components/WhySwitchSection";
 import { UpcomingCitiesSection } from "@/components/UpcomingCitiesSection";
 import { FeaturedVideoSection } from "@/components/FeaturedVideoSection";
 import { ImageGallerySection } from "@/components/ImageGallerySection";
-import { MasonryGallerySection } from "@/components/MasonryGallerySection";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 
 export default function Home() {
@@ -50,7 +49,6 @@ export default function Home() {
         <UpcomingCitiesSection />
         <FeaturedVideoSection />
         <ImageGallerySection />
-        <MasonryGallerySection />
       </main>
     </>
   );
