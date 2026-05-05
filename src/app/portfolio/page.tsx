@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { PortfolioIntro } from "@/components/PortfolioIntro";
-import { PortfolioExhibitionSections } from "@/components/PortfolioExhibitionSections";
+import { PortfolioShowcase } from "@/components/PortfolioShowcase";
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -11,8 +10,7 @@ export const metadata: Metadata = {
 export default function PortfolioPage() {
   return (
     <main className="relative min-h-screen overflow-x-hidden" aria-label="GES Worldex portfolio">
-      <PortfolioIntro />
-      <PortfolioExhibitionSections />
+      <PortfolioShowcase />
     </main>
   );
 }
