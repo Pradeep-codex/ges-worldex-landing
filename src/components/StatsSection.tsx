@@ -70,24 +70,29 @@ function StatTile({
   start: boolean;
 }) {
   return (
-    <div className="min-w-0 rounded-[18px] border border-white/75 bg-white/68 px-3 py-3 backdrop-blur-sm [html[data-theme='dark']_&]:border-slate-700/80 [html[data-theme='dark']_&]:bg-slate-900/72">
+    <div
+      className="min-w-0 rounded-[8px] border px-3 py-3 backdrop-blur-sm"
+      style={{
+        backgroundColor: "var(--about-card-bg)",
+        borderColor: "var(--about-card-border)",
+      }}
+    >
       <div className="flex items-center justify-between gap-3">
         <div
           className="h-9 w-1.5 rounded-full opacity-90"
-          style={{ background: accent }}
+          style={{ background: "linear-gradient(180deg,#9f7b28,#d8b766)" }}
         />
         <div className="min-w-0 flex-1">
           <div
-            className="welcome-display-font text-[1.95rem] font-black leading-none tracking-[-0.08em] text-transparent sm:text-[2.2rem]"
-            style={{
-              backgroundImage: accent,
-              WebkitBackgroundClip: "text",
-              backgroundClip: "text",
-            }}
+            className="welcome-display-font text-[1.95rem] font-black leading-none tracking-[-0.08em] sm:text-[2.2rem]"
+            style={{ color: "var(--about-text-primary)" }}
           >
             <CountUp end={end} suffix={suffix} start={start} />
           </div>
-          <div className="mt-1 truncate text-[0.7rem] font-black uppercase tracking-[0.24em] text-sky-700 sm:text-[0.78rem] [html[data-theme='dark']_&]:text-slate-300">
+          <div
+            className="mt-1 truncate text-[0.7rem] font-black uppercase tracking-[0.24em] sm:text-[0.78rem]"
+            style={{ color: "var(--about-text-secondary)" }}
+          >
             {label}
           </div>
         </div>
@@ -110,22 +115,27 @@ function CompactStat({
   start: boolean;
 }) {
   return (
-    <div className="rounded-[20px] border border-sky-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(241,245,249,0.98)_100%)] px-3.5 py-3 shadow-[0_16px_32px_rgba(148,163,184,0.18)] [html[data-theme='dark']_&]:border-slate-700/80 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(30,41,59,0.94)_0%,rgba(51,65,85,0.94)_100%)] [html[data-theme='dark']_&]:shadow-[0_16px_32px_rgba(2,6,23,0.22)]">
+    <div
+      className="rounded-[8px] border px-3.5 py-3 shadow-[0_16px_32px_rgba(47,35,24,0.08)]"
+      style={{
+        backgroundColor: "var(--about-card-bg)",
+        borderColor: "var(--about-card-border)",
+      }}
+    >
       <div
         className="h-1.5 w-12 rounded-full opacity-95"
-        style={{ background: accent }}
+        style={{ background: "linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)" }}
       />
       <div
-        className="welcome-display-font mt-2.5 text-[1.38rem] font-black leading-none tracking-[-0.07em] text-transparent sm:text-[1.56rem]"
-        style={{
-          backgroundImage: accent,
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-        }}
+        className="welcome-display-font mt-2.5 text-[1.38rem] font-black leading-none tracking-[-0.07em] sm:text-[1.56rem]"
+        style={{ color: "var(--about-text-primary)" }}
       >
         <CountUp end={end} suffix={suffix} start={start} />
       </div>
-      <div className="mt-1.5 text-[0.62rem] font-black uppercase tracking-[0.2em] text-slate-600 sm:text-[0.68rem] [html[data-theme='dark']_&]:text-slate-300">
+      <div
+        className="mt-1.5 text-[0.62rem] font-black uppercase tracking-[0.2em] sm:text-[0.68rem]"
+        style={{ color: "var(--about-text-secondary)" }}
+      >
         {label}
       </div>
     </div>
@@ -136,13 +146,19 @@ function MobileStatsDetails({ animateNumbers }: { animateNumbers: boolean }) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <div className="inline-flex rounded-full border border-slate-700 bg-slate-900 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.24em] text-slate-300">
+        <div className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-[0.62rem] font-black uppercase tracking-[0.24em] text-transparent">
           Exhibition Metrics
         </div>
-        <h2 className="welcome-display-font max-w-[12ch] text-[1.52rem] font-black leading-[0.94] tracking-[-0.03em] text-slate-950 sm:text-[1.72rem] [html[data-theme='dark']_&]:text-slate-100">
+        <h2
+          className="welcome-display-font max-w-[12ch] text-[1.52rem] font-black leading-[0.94] tracking-[-0.03em] sm:text-[1.72rem]"
+          style={{ color: "var(--about-text-primary)" }}
+        >
           Bigger Reach, Stronger Visibility
         </h2>
-        <p className="max-w-[34ch] text-[0.8rem] leading-relaxed text-slate-600 sm:text-[0.86rem] [html[data-theme='dark']_&]:text-slate-400">
+        <p
+          className="max-w-[34ch] text-[0.8rem] leading-relaxed sm:text-[0.86rem]"
+          style={{ color: "var(--about-text-secondary)" }}
+        >
           Bigger reach, sharper brand presence, stronger product discovery.
         </p>
       </div>
@@ -204,17 +220,19 @@ function StatsBand({
 
         <div className="hidden lg:flex lg:flex-col lg:justify-center lg:gap-4">
           <div className="max-w-[620px] space-y-2.5">
-            <h2
-              className="welcome-display-font max-w-[11ch] text-[2.05rem] font-black leading-[0.92] tracking-[-0.035em] text-transparent sm:text-[2.35rem] lg:text-[2.65rem]"
-              style={{
-                backgroundImage: "linear-gradient(95deg, #1d4ed8 0%, #06b6d4 55%, #2563eb 100%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-              }}
-            >
+            <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-sm font-black uppercase tracking-[0.2em] text-transparent">
               Exhibition Metrics
+            </p>
+            <h2
+              className="welcome-display-font max-w-[13ch] text-[2.05rem] font-black leading-[0.92] tracking-[-0.035em] sm:text-[2.35rem] lg:text-[2.65rem]"
+              style={{ color: "var(--about-text-primary)" }}
+            >
+              Bigger reach, sharper brand presence, stronger product discovery.
             </h2>
-            <p className="max-w-[30ch] text-[0.95rem] leading-relaxed text-sky-900/70 sm:text-[1rem] [html[data-theme='dark']_&]:text-slate-400">
+            <p
+              className="max-w-[30ch] text-[0.95rem] leading-relaxed sm:text-[1rem]"
+              style={{ color: "var(--about-text-secondary)" }}
+            >
               Bigger reach, sharper brand presence, stronger product discovery.
             </p>
           </div>

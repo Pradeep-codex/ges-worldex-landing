@@ -205,17 +205,27 @@ export function WhySwitchSection() {
                 {sectionContent.highlights.map((stat, index) => (
                   <div
                     key={stat.label}
-                    className={`min-w-0 rounded-[20px] border border-sky-100/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(241,245,249,0.94)_100%)] px-3 py-3 shadow-[8px_8px_18px_rgba(148,163,184,0.14),-8px_-8px_18px_rgba(255,255,255,0.9),inset_1px_1px_0_rgba(255,255,255,0.85)] [html[data-theme='dark']_&]:border-slate-700/70 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(15,23,42,0.96)_0%,rgba(30,41,59,0.96)_100%)] [html[data-theme='dark']_&]:shadow-[8px_8px_18px_rgba(2,6,23,0.34),-6px_-6px_14px_rgba(51,65,85,0.14),inset_1px_1px_0_rgba(148,163,184,0.08)] ${
+                    className={`min-w-0 rounded-[8px] border px-3 py-3 shadow-[8px_8px_18px_rgba(47,35,24,0.08),-8px_-8px_18px_rgba(255,255,255,0.72)] ${
                       index === sectionContent.highlights.length - 1 && sectionContent.highlights.length % 2 !== 0
                         ? "col-span-2"
                         : ""
                     }`}
+                    style={{
+                      backgroundColor: "var(--about-card-bg)",
+                      borderColor: "var(--about-card-border)",
+                    }}
                   >
-                    <div className="mb-2 h-1.5 w-10 rounded-full bg-[linear-gradient(90deg,#38bdf8_0%,#2563eb_100%)] opacity-80" />
-                    <div className="welcome-display-font text-[1.1rem] font-black leading-none tracking-[-0.04em] text-slate-950 [html[data-theme='dark']_&]:text-slate-50">
+                    <div className="mb-2 h-1.5 w-10 rounded-full bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] opacity-90" />
+                    <div
+                      className="welcome-display-font text-[1.1rem] font-black leading-none tracking-[-0.04em]"
+                      style={{ color: "var(--about-text-primary)" }}
+                    >
                       {stat.value}
                     </div>
-                    <div className="mt-1 text-[0.64rem] font-black uppercase leading-tight tracking-[0.08em] text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+                    <div
+                      className="mt-1 text-[0.64rem] font-black uppercase leading-tight tracking-[0.08em]"
+                      style={{ color: "var(--about-text-secondary)" }}
+                    >
                       {stat.label}
                     </div>
                   </div>
@@ -281,13 +291,23 @@ export function WhySwitchSection() {
                   {content.highlights.map((stat) => (
                     <div
                       key={stat.label}
-                      className="min-w-0 rounded-[22px] border border-sky-100/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(241,245,249,0.94)_100%)] px-3 py-3 shadow-[8px_8px_18px_rgba(148,163,184,0.14),-8px_-8px_18px_rgba(255,255,255,0.9),inset_1px_1px_0_rgba(255,255,255,0.85)] md:px-4 md:py-4 [html[data-theme='dark']_&]:border-slate-700/70 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(15,23,42,0.96)_0%,rgba(30,41,59,0.96)_100%)] [html[data-theme='dark']_&]:shadow-[8px_8px_18px_rgba(2,6,23,0.34),-6px_-6px_14px_rgba(51,65,85,0.14),inset_1px_1px_0_rgba(148,163,184,0.08)]"
+                      className="min-w-0 rounded-[8px] border px-3 py-3 shadow-[8px_8px_18px_rgba(47,35,24,0.08),-8px_-8px_18px_rgba(255,255,255,0.72)] md:px-4 md:py-4"
+                      style={{
+                        backgroundColor: "var(--about-card-bg)",
+                        borderColor: "var(--about-card-border)",
+                      }}
                     >
-                      <div className="mb-2 h-1.5 w-10 rounded-full bg-[linear-gradient(90deg,#38bdf8_0%,#2563eb_100%)] opacity-80 md:mb-3 md:w-14" />
-                      <div className="welcome-display-font text-[1.15rem] font-black leading-none tracking-[-0.04em] text-slate-950 md:text-[1.5rem] [html[data-theme='dark']_&]:text-slate-50">
+                      <div className="mb-2 h-1.5 w-10 rounded-full bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] opacity-90 md:mb-3 md:w-14" />
+                      <div
+                        className="welcome-display-font text-[1.15rem] font-black leading-none tracking-[-0.04em] md:text-[1.5rem]"
+                        style={{ color: "var(--about-text-primary)" }}
+                      >
                         {stat.value}
                       </div>
-                      <div className="mt-1 text-[0.6rem] font-black uppercase leading-tight tracking-[0.08em] text-slate-500 md:text-[0.72rem] md:tracking-[0.18em] [html[data-theme='dark']_&]:text-slate-400">
+                      <div
+                        className="mt-1 text-[0.6rem] font-black uppercase leading-tight tracking-[0.08em] md:text-[0.72rem] md:tracking-[0.18em]"
+                        style={{ color: "var(--about-text-secondary)" }}
+                      >
                         {stat.label}
                       </div>
                     </div>
