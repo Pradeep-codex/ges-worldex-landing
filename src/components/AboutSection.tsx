@@ -36,6 +36,20 @@ const visionCards = [
   },
 ] as const;
 
+const visionPhrases = [
+  "Business Ecosystem",
+  "Industry Networking",
+  "Trade Synergy",
+  "Global Partnership",
+  "Market Linkage",
+  "Commerce Connection",
+  "Strategic Alliance",
+  "Business Impact",
+  "Growth-Driven",
+  "Industry Transformation",
+  "Opportunity-Driven",
+];
+
 export function AboutSection() {
   const [activeVisionGroup, setActiveVisionGroup] = useState<"primary" | "secondary">("primary");
   const revealViewport = { once: true, amount: 0.2 } as const;
@@ -129,11 +143,12 @@ export function AboutSection() {
               <span>We Build Powerful</span>
               <div className="flex">
                 <RotatingText
-                  texts={['Exhibitions', 'Trade Shows', 'Business Connections', 'Brand Showcases', 'Industry Platforms']}
-                  mainClassName="inline-flex rounded-xl px-3 py-1 sm:px-4 sm:py-2"
+                  texts={visionPhrases}
+                  mainClassName="inline-flex max-w-full rounded-xl px-3 py-1 sm:px-4 sm:py-2"
                   style={{
-                    backgroundColor: "var(--about-section-accent)",
-                    color: "var(--about-section-accent-text)",
+                    background: "linear-gradient(135deg, #2f2318 0%, #8d6a1e 48%, #d8b766 100%)",
+                    color: "#fffdf8",
+                    boxShadow: "0 18px 42px rgba(47, 35, 24, 0.18)",
                   }}
                   staggerFrom="last"
                   initial={{ y: "100%", opacity: 0 }}
@@ -143,13 +158,15 @@ export function AboutSection() {
                   splitLevelClassName="overflow-hidden"
                   transition={{ type: "spring", damping: 30, stiffness: 400 }}
                   rotationInterval={3500}
-                  splitBy="characters"
+                  splitBy="words"
                   auto
                   loop
                 />
               </div>
               <div>
-                <span className="welcome-gradient-text uppercase tracking-tighter">Experiences</span>
+                <span className="uppercase tracking-tighter" style={{ color: "var(--about-text-primary)" }}>
+                  Experiences
+                </span>
               </div>
             </h2>
           </motion.div>

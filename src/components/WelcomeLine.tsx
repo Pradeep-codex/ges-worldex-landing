@@ -7,8 +7,8 @@ export function WelcomeLine() {
   const reduceMotion = useReducedMotion();
 
   const prefix = useMemo(() => "Welcome to GES Worldex", []);
-  const separator = useMemo(() => "— ", []);
-  const suffix = useMemo(() => "-  Global Exhibitions and Services", []);
+  const separator = useMemo(() => " — ", []);
+  const suffix = useMemo(() => "Global Exhibitions and Services", []);
   const text = useMemo(() => `${prefix}${separator}${suffix}`, [prefix, separator, suffix]);
 
   const [count, setCount] = useState(0);
@@ -43,9 +43,10 @@ export function WelcomeLine() {
       <h2
         aria-label={text}
         className={
-          "welcome-display-font welcome-gradient-text text-left font-black tracking-tight whitespace-normal break-words " +
+          "welcome-display-font text-left font-black tracking-tight whitespace-normal break-words " +
           "leading-[1.2] md:leading-[1.1]"
         }
+        style={{ color: "var(--about-text-primary)" }}
       >
         <span className="sr-only">{text}</span>
         <span aria-hidden="true">

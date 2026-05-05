@@ -14,8 +14,8 @@
   --loader-color: #2f2318;
 
   /* banner dots */
-  --dot-active: rgba(199, 168, 255, 1);
-  --dot-shadow: rgba(199, 168, 255, 0.55);
+  --dot-active: #d8b766;
+  --dot-shadow: rgba(159, 123, 40, 0.55);
   --dot-inactive: rgba(47, 35, 24, 0.18);
 
   --pastel-1: #dff1ff;
@@ -68,8 +68,8 @@ html[data-theme="dark"] {
   --loader-color: #f3e7d4;
 
   /* banner dots (active should be light in dark mode) */
-  --dot-active: rgba(233, 226, 255, 1);
-  --dot-shadow: rgba(233, 226, 255, 0.55);
+  --dot-active: #d8b766;
+  --dot-shadow: rgba(216, 183, 102, 0.5);
   --dot-inactive: rgba(243, 231, 212, 0.14);
 
   --pastel-1: #2b3d5b;
@@ -164,10 +164,10 @@ html[data-theme="dark"] {
 body {
   background-color: var(--background);
   background-image:
-    radial-gradient(120% 90% at 12% 10%, rgba(223, 241, 255, 0.42) 0%, transparent 62%),
-    radial-gradient(110% 85% at 92% 14%, rgba(242, 230, 255, 0.38) 0%, transparent 58%),
-    radial-gradient(120% 95% at 82% 88%, rgba(230, 255, 244, 0.32) 0%, transparent 62%),
-    radial-gradient(110% 90% at 8% 86%, rgba(255, 240, 230, 0.32) 0%, transparent 62%);
+    radial-gradient(120% 90% at 12% 10%, rgba(255, 250, 240, 0.78) 0%, transparent 62%),
+    radial-gradient(110% 85% at 92% 14%, rgba(232, 214, 174, 0.42) 0%, transparent 58%),
+    radial-gradient(120% 95% at 82% 88%, rgba(216, 183, 102, 0.18) 0%, transparent 62%),
+    radial-gradient(110% 90% at 8% 86%, rgba(214, 192, 149, 0.22) 0%, transparent 62%);
   color: var(--foreground);
   font-family: var(--font-outfit), sans-serif;
   position: relative;
@@ -183,26 +183,24 @@ body::before {
   pointer-events: none;
 
   background:
-    radial-gradient(120% 90% at 12% 10%, rgba(223, 241, 255, 0.78) 0%, transparent 62%),
-    radial-gradient(110% 85% at 92% 14%, rgba(242, 230, 255, 0.72) 0%, transparent 58%),
-    radial-gradient(120% 95% at 82% 88%, rgba(230, 255, 244, 0.62) 0%, transparent 62%),
-    radial-gradient(110% 90% at 8% 86%, rgba(255, 240, 230, 0.62) 0%, transparent 62%),
+    radial-gradient(120% 90% at 12% 10%, rgba(255, 250, 240, 0.86) 0%, transparent 62%),
+    radial-gradient(110% 85% at 92% 14%, rgba(232, 214, 174, 0.48) 0%, transparent 58%),
+    radial-gradient(120% 95% at 82% 88%, rgba(216, 183, 102, 0.2) 0%, transparent 62%),
+    radial-gradient(110% 90% at 8% 86%, rgba(214, 192, 149, 0.24) 0%, transparent 62%),
     conic-gradient(
       from 210deg at 56% 44%,
-      rgba(242, 230, 255, 0.55) 0deg,
-      rgba(242, 230, 255, 0) 52deg,
-      rgba(223, 241, 255, 0.5) 96deg,
-      rgba(223, 241, 255, 0) 156deg,
-      rgba(230, 255, 244, 0.46) 210deg,
-      rgba(230, 255, 244, 0) 280deg,
-      rgba(255, 240, 230, 0.44) 330deg,
-      rgba(255, 240, 230, 0) 360deg
+      rgba(232, 214, 174, 0.38) 0deg,
+      rgba(232, 214, 174, 0) 70deg,
+      rgba(216, 183, 102, 0.22) 130deg,
+      rgba(216, 183, 102, 0) 210deg,
+      rgba(255, 250, 240, 0.42) 290deg,
+      rgba(255, 250, 240, 0) 360deg
     ),
     repeating-linear-gradient(
       135deg,
-      rgba(17, 21, 33, 0.07) 0px,
-      rgba(17, 21, 33, 0) 8px,
-      rgba(17, 21, 33, 0.04) 16px
+      rgba(47, 35, 24, 0.045) 0px,
+      rgba(47, 35, 24, 0) 8px,
+      rgba(159, 123, 40, 0.035) 16px
     );
 
   opacity: 1;

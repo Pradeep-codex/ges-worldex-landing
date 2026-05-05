@@ -247,10 +247,10 @@ export function BannerSlider() {
               setDirection(index > current ? 1 : -1);
               setCurrent(index);
             }}
-            className={`w-5 h-5 md:w-7 md:h-7 rounded-full transition-all duration-300 relative flex items-center justify-center bg-background/65 border border-[color:var(--border)] backdrop-blur-xl ${
+            className={`w-5 h-5 md:w-7 md:h-7 rounded-full transition-all duration-300 relative flex items-center justify-center bg-[rgba(255,253,248,0.72)] border border-[rgba(159,123,40,0.22)] backdrop-blur-xl [html[data-theme='dark']_&]:bg-[#071018]/70 [html[data-theme='dark']_&]:border-white/10 ${
               current === index 
-              ? "shadow-[0_14px_40px_rgba(0,0,0,0.12)]" 
-              : "shadow-[0_12px_34px_rgba(0,0,0,0.10)]"
+              ? "shadow-[0_14px_40px_rgba(159,123,40,0.22)]" 
+              : "shadow-[0_12px_34px_rgba(47,35,24,0.10)]"
             }`}
           >
             <div 

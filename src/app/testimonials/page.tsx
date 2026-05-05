@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { NavRoutePage } from "@/components/NavRoutePage";
+import { TestimonialsPageContent } from "@/components/TestimonialsPageContent";
 
 export const metadata: Metadata = {
   title: "Testimonials",
@@ -7,12 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function TestimonialsPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Testimonials"
-      title="Trusted by exhibition teams and business leaders."
-      description="Read how exhibitors, visitors, and partners experience GES Worldex platforms across markets and industries."
-      points={["Exhibitor experiences", "Visitor outcomes", "Partner feedback"]}
-    />
-  );
+  return <TestimonialsPageContent />;
 }

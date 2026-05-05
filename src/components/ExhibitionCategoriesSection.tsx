@@ -8,6 +8,7 @@ const exhibitionCategories = [
   {
     id: "jewellery",
     title: "Gold Exhibitions",
+    titleLines: ["Gold", "Exhibitions"],
     eyebrow: "Luxury trade experiences",
     description:
       "High-value showcase environments for fine jewellery brands, gemstone houses, designers, and premium buyers.",
@@ -22,6 +23,7 @@ const exhibitionCategories = [
   {
     id: "silver",
     title: "Silver Exhibitions",
+    titleLines: ["Silver", "Exhibitions"],
     eyebrow: "Refined precious-metal showcases",
     description:
       "Purpose-built environments for sterling silver collections, artisanal craftsmanship, gifting brands, and high-intent trade buyers.",
@@ -35,53 +37,57 @@ const exhibitionCategories = [
   },
   {
     id: "construction",
-    title: "Construction & Build Expo",
+    title: "Construction & Build Exhibitions",
+    titleLines: ["Construction & Build", "Exhibitions"],
     eyebrow: "Built for industry scale",
     description:
-      "Sector-focused expos for infrastructure leaders, construction technologies, heavy materials, and project partnerships.",
+      "Sector-focused exhibitions for infrastructure leaders, construction technologies, heavy materials, and project partnerships.",
     image: "/exhibition/construction.png",
     accentClass:
       "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
-    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    mobileDotClass: "bg-[#9f7b28] [html[data-theme='dark']_&]:bg-[#d8b766]",
     badgeClass:
       "border-white/18 bg-black/20 text-white/80",
   },
   {
     id: "interior",
-    title: "Interior & Furniture Expo",
+    title: "Interior & Furniture Exhibitions",
+    titleLines: ["Interior & Furniture", "Exhibitions"],
     eyebrow: "Designed to inspire",
     description:
       "Immersive exhibition formats for furniture houses, decor brands, interior solutions, and design-led business discovery.",
     image: "/exhibition/interior-furniture.png",
     accentClass:
       "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
-    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    mobileDotClass: "bg-[#9f7b28] [html[data-theme='dark']_&]:bg-[#d8b766]",
     badgeClass:
       "border-white/18 bg-black/20 text-white/80",
   },
   {
     id: "auto",
-    title: "Auto & Mobility Expo",
+    title: "Auto & Mobility Exhibitions",
+    titleLines: ["Auto & Mobility", "Exhibitions"],
     eyebrow: "Movement-driven showcases",
     description:
       "Future-ready platforms for automotive brands, EV ecosystems, components, smart mobility, and transport innovation.",
     image: "/exhibition/auto.png",
     accentClass:
       "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
-    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    mobileDotClass: "bg-[#9f7b28] [html[data-theme='dark']_&]:bg-[#d8b766]",
     badgeClass:
       "border-white/18 bg-black/20 text-white/80",
   },
   {
     id: "lifestyle",
-    title: "Lifestyle & Trade Shows",
+    title: "Lifestyle & Trade Exhibitions",
+    titleLines: ["Lifestyle & Trade", "Exhibitions"],
     eyebrow: "Audience-first events",
     description:
       "Flexible trade-show experiences for consumer brands, lifestyle launches, curated retail, and broad-market engagement.",
     image: "/exhibition/lifestyle.png",
     accentClass:
       "from-slate-100/10 via-slate-200/8 to-slate-950/86 [box-shadow:inset_0_0_0_1px_rgba(255,255,255,0.08)]",
-    mobileDotClass: "bg-sky-600 [html[data-theme='dark']_&]:bg-sky-400",
+    mobileDotClass: "bg-[#9f7b28] [html[data-theme='dark']_&]:bg-[#d8b766]",
     badgeClass:
       "border-white/18 bg-black/20 text-white/80",
   },
@@ -212,13 +218,13 @@ export function ExhibitionCategoriesSection() {
       className="relative mx-auto w-full max-w-[1700px] px-4 pb-16 pt-6 md:px-8 md:pb-20 md:pt-8 lg:px-12 lg:pb-24 lg:pt-10"
       aria-labelledby="exhibition-categories-heading"
     >
-      <div className="relative px-0 py-0 md:overflow-hidden md:rounded-[34px] md:border md:border-slate-200/80 md:bg-[linear-gradient(180deg,rgba(248,250,252,0.96)_0%,rgba(255,255,255,1)_42%,rgba(241,245,249,0.98)_100%)] md:px-6 md:py-6 md:shadow-[0_36px_100px_rgba(15,23,42,0.08)] lg:px-8 lg:py-8 [html[data-theme='dark']_&]:md:border-slate-800/80 [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(2,6,23,0.98)_0%,rgba(15,23,42,0.98)_48%,rgba(17,24,39,0.98)_100%)] [html[data-theme='dark']_&]:md:shadow-[0_36px_100px_rgba(2,6,23,0.32)]">
-        <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_28%),radial-gradient(circle_at_82%_16%,rgba(14,165,233,0.1),transparent_24%)] md:block" />
+      <div className="relative px-0 py-0 md:overflow-hidden md:rounded-[34px] md:border md:border-[rgba(159,123,40,0.14)] md:bg-[linear-gradient(180deg,rgba(255,253,248,0.96)_0%,rgba(255,250,240,1)_42%,rgba(245,235,215,0.98)_100%)] md:px-6 md:py-6 md:shadow-[0_36px_100px_rgba(47,35,24,0.08)] lg:px-8 lg:py-8 [html[data-theme='dark']_&]:md:border-white/10 [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(7,16,24,0.98)_0%,rgba(13,24,31,0.98)_48%,rgba(22,31,37,0.98)_100%)] [html[data-theme='dark']_&]:md:shadow-[0_36px_100px_rgba(0,0,0,0.32)]">
+        <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(216,183,102,0.14),transparent_28%),radial-gradient(circle_at_82%_16%,rgba(159,123,40,0.1),transparent_24%)] md:block" />
 
         <div className="relative z-10 flex flex-col gap-8 lg:gap-10">
           <div className="flex flex-col gap-4">
             <div className="max-w-3xl space-y-4">
-              <div className="inline-flex items-center rounded-full border border-sky-200 bg-white/80 px-3 py-1 text-[0.66rem] font-black uppercase tracking-[0.24em] text-sky-700 backdrop-blur-sm [html[data-theme='dark']_&]:border-sky-400/20 [html[data-theme='dark']_&]:bg-slate-900/70 [html[data-theme='dark']_&]:text-sky-200">
+              <div className="inline-flex items-center rounded-full border border-[rgba(159,123,40,0.18)] bg-white/80 px-3 py-1 text-[0.66rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] backdrop-blur-sm [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[#071018]/70 [html[data-theme='dark']_&]:text-[#d8b766]">
                 Our Exhibitions
               </div>
               <div className="space-y-3">
@@ -253,7 +259,7 @@ export function ExhibitionCategoriesSection() {
                   onBlur={canHover ? () => setHoveredId(null) : undefined}
                   onClick={() => setActiveId(category.id)}
                   aria-pressed={activeId === category.id}
-                  className="group relative flex h-[540px] min-w-0 cursor-pointer overflow-hidden rounded-[28px] border border-white/20 text-left outline-none ring-0 focus-visible:ring-2 focus-visible:ring-sky-400"
+                  className="group relative flex h-[540px] min-w-0 cursor-pointer overflow-hidden rounded-[28px] border border-white/20 text-left outline-none ring-0 focus-visible:ring-2 focus-visible:ring-[#d8b766]"
                   animate={{
                     flexGrow: expanded ? 3.4 : 0.9,
                     filter: expanded ? "saturate(1) brightness(1)" : "saturate(0.84) brightness(0.86)",
@@ -289,8 +295,12 @@ export function ExhibitionCategoriesSection() {
                       }}
                       transition={{ duration: reduceMotion ? 0 : 0.22 }}
                     >
-                      <div className="[writing-mode:vertical-rl] rotate-180 whitespace-nowrap text-[2rem] font-black uppercase leading-[0.8] tracking-[0.015em] text-white [text-shadow:0_10px_28px_rgba(0,0,0,0.6)]">
-                        {category.title}
+                      <div className="[writing-mode:vertical-rl] rotate-180 whitespace-nowrap text-[2rem] font-black uppercase leading-[0.82] tracking-[0.015em] text-white [text-shadow:0_10px_28px_rgba(0,0,0,0.6)]">
+                        {category.titleLines.map((line) => (
+                          <span key={line} className="block">
+                            {line}
+                          </span>
+                        ))}
                       </div>
                     </motion.div>
 
@@ -306,7 +316,11 @@ export function ExhibitionCategoriesSection() {
                         >
                           <div className="space-y-3 bg-[linear-gradient(180deg,rgba(2,6,23,0)_0%,rgba(2,6,23,0.74)_14%,rgba(2,6,23,0.96)_100%)] px-6 pb-6 pt-12">
                             <h3 className="welcome-display-font w-full text-[2.35rem] font-black leading-[0.95] tracking-[-0.04em] text-white">
-                              {category.title}
+                              {category.titleLines.map((line) => (
+                                <span key={line} className="block">
+                                  {line}
+                                </span>
+                              ))}
                             </h3>
                             <p className="w-full text-[1rem] leading-relaxed text-white/82">
                               {category.description}
@@ -345,7 +359,11 @@ export function ExhibitionCategoriesSection() {
                   />
                   <div className="min-w-0 space-y-1">
                     <div className="text-[1rem] font-black leading-snug text-slate-900 [html[data-theme='dark']_&]:text-slate-100">
-                      {category.title}
+                      {category.titleLines.map((line) => (
+                        <span key={line} className="block">
+                          {line}
+                        </span>
+                      ))}
                     </div>
                     <div className="text-[0.82rem] leading-relaxed text-slate-600 [html[data-theme='dark']_&]:text-slate-400">
                       {category.eyebrow}
@@ -359,13 +377,13 @@ export function ExhibitionCategoriesSection() {
       </div>
 
       <div className="mt-8 md:mt-10 lg:mt-12">
-        <div className="rounded-[30px] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.94)_0%,rgba(248,250,252,0.96)_100%)] px-4 py-5 shadow-[0_28px_70px_rgba(15,23,42,0.07)] md:px-6 md:py-6 lg:px-8 [html[data-theme='dark']_&]:border-slate-800/80 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(2,6,23,0.92)_0%,rgba(15,23,42,0.96)_100%)]">
+        <div className="rounded-[30px] border border-[rgba(159,123,40,0.14)] bg-[linear-gradient(180deg,rgba(255,253,248,0.94)_0%,rgba(245,235,215,0.96)_100%)] px-4 py-5 shadow-[0_28px_70px_rgba(47,35,24,0.07)] md:px-6 md:py-6 lg:px-8 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.92)_0%,rgba(13,24,31,0.96)_100%)]">
           <div className="mb-5 flex flex-col gap-2 md:mb-6">
-            <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-sky-700 [html[data-theme='dark']_&]:text-sky-300">
+            <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]">
               Exhibition Highlights
             </div>
             <h3 className="welcome-display-font max-w-3xl text-[1.7rem] font-black leading-[0.94] tracking-[-0.03em] text-slate-950 md:text-[2.1rem] [html[data-theme='dark']_&]:text-slate-50">
-              A Visual Glimpse Into Our Expo Environments
+              A Visual Glimpse Into Our Exhibition Environments
             </h3>
           </div>
 
@@ -374,8 +392,8 @@ export function ExhibitionCategoriesSection() {
             onMouseEnter={() => setIsMarqueeHovered(true)}
             onMouseLeave={() => setIsMarqueeHovered(false)}
           >
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(90deg,rgba(248,250,252,1)_0%,rgba(248,250,252,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,rgba(2,6,23,1)_0%,rgba(2,6,23,0)_100%)]" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-10 bg-[linear-gradient(270deg,rgba(248,250,252,1)_0%,rgba(248,250,252,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(270deg,rgba(2,6,23,1)_0%,rgba(2,6,23,0)_100%)]" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(90deg,rgba(255,253,248,1)_0%,rgba(255,253,248,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-10 bg-[linear-gradient(270deg,rgba(255,253,248,1)_0%,rgba(255,253,248,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(270deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
             {reduceMotion ? (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
                 {exhibitionMarqueeImages.map((imageSrc, index) => (

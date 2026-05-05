@@ -140,7 +140,7 @@ export function WhySwitchSection() {
   const content = switchContent[mode];
 
   const toggleControls = (
-    <div className="inline-flex items-center rounded-full border border-slate-200/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.98)_0%,rgba(241,245,249,0.95)_100%)] p-1.5 shadow-[10px_10px_24px_rgba(148,163,184,0.18),-10px_-10px_22px_rgba(255,255,255,0.95),inset_1px_1px_0_rgba(255,255,255,0.9)] backdrop-blur-md [html[data-theme='dark']_&]:border-slate-800 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(15,23,42,0.98)_0%,rgba(30,41,59,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(2,6,23,0.4),-8px_-8px_18px_rgba(51,65,85,0.16),inset_1px_1px_0_rgba(148,163,184,0.08)]">
+    <div className="inline-flex items-center rounded-full border border-[rgba(159,123,40,0.16)] bg-[linear-gradient(180deg,rgba(255,253,248,0.98)_0%,rgba(245,235,215,0.95)_100%)] p-1.5 shadow-[10px_10px_24px_rgba(47,35,24,0.1),-10px_-10px_22px_rgba(255,255,255,0.8),inset_1px_1px_0_rgba(255,255,255,0.9)] backdrop-blur-md [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.98)_0%,rgba(22,31,37,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(0,0,0,0.4),inset_1px_1px_0_rgba(255,255,255,0.08)]">
       <button
         type="button"
         onClick={() => setMode("exhibit")}
@@ -153,7 +153,7 @@ export function WhySwitchSection() {
         {mode === "exhibit" ? (
           <motion.span
             layoutId="why-switch-pill"
-            className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(224,242,254,1)_0%,rgba(186,230,253,1)_100%)] shadow-[inset_2px_2px_4px_rgba(255,255,255,0.85),inset_-4px_-4px_10px_rgba(125,211,252,0.45)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(30,41,59,1)_0%,rgba(51,65,85,1)_100%)] [html[data-theme='dark']_&]:shadow-[inset_1px_1px_0_rgba(148,163,184,0.12),inset_-4px_-4px_10px_rgba(2,6,23,0.28)]"
+            className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,250,240,1)_0%,rgba(216,183,102,0.54)_100%)] shadow-[inset_2px_2px_4px_rgba(255,255,255,0.85),inset_-4px_-4px_10px_rgba(159,123,40,0.25)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(47,35,24,1)_0%,rgba(159,123,40,0.42)_100%)] [html[data-theme='dark']_&]:shadow-[inset_1px_1px_0_rgba(255,255,255,0.12),inset_-4px_-4px_10px_rgba(0,0,0,0.28)]"
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
           />
         ) : null}
@@ -172,7 +172,7 @@ export function WhySwitchSection() {
         {mode === "visit" ? (
           <motion.span
             layoutId="why-switch-pill"
-            className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(224,242,254,1)_0%,rgba(186,230,253,1)_100%)] shadow-[inset_2px_2px_4px_rgba(255,255,255,0.85),inset_-4px_-4px_10px_rgba(125,211,252,0.45)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(30,41,59,1)_0%,rgba(51,65,85,1)_100%)] [html[data-theme='dark']_&]:shadow-[inset_1px_1px_0_rgba(148,163,184,0.12),inset_-4px_-4px_10px_rgba(2,6,23,0.28)]"
+            className="absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,250,240,1)_0%,rgba(216,183,102,0.54)_100%)] shadow-[inset_2px_2px_4px_rgba(255,255,255,0.85),inset_-4px_-4px_10px_rgba(159,123,40,0.25)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(47,35,24,1)_0%,rgba(159,123,40,0.42)_100%)] [html[data-theme='dark']_&]:shadow-[inset_1px_1px_0_rgba(255,255,255,0.12),inset_-4px_-4px_10px_rgba(0,0,0,0.28)]"
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
           />
         ) : null}
@@ -183,14 +183,14 @@ export function WhySwitchSection() {
 
   return (
     <section className="relative mx-auto w-full max-w-[1700px] px-4 py-16 md:px-8 md:py-20 lg:px-12 lg:py-24">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(59,130,246,0.25),transparent)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(159,123,40,0.25),transparent)]" />
 
       <div className="space-y-12 md:hidden">
         {(Object.entries(switchContent) as [SwitchMode, (typeof switchContent)[SwitchMode]][]).map(
           ([sectionMode, sectionContent]) => (
             <div key={sectionMode} className="space-y-5">
               <div className="space-y-3">
-                <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-sky-700 [html[data-theme='dark']_&]:text-sky-300">
+                <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]">
                   {sectionContent.eyebrow}
                 </div>
                 <h2 className="welcome-display-font max-w-[14ch] text-[2rem] font-black leading-[0.94] tracking-[-0.04em] text-slate-950 [html[data-theme='dark']_&]:text-slate-50">
@@ -241,7 +241,7 @@ export function WhySwitchSection() {
                       key={`${sectionMode}-${point.title}`}
                       className="flex items-start gap-3 border-b border-slate-200/80 pb-3 [html[data-theme='dark']_&]:border-slate-800/80"
                     >
-                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-[inset_1px_1px_0_rgba(255,255,255,0.85)] [html[data-theme='dark']_&]:bg-slate-800 [html[data-theme='dark']_&]:text-sky-300">
+                      <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[rgba(159,123,40,0.12)] text-[#9f7b28] shadow-[inset_1px_1px_0_rgba(255,255,255,0.85)] [html[data-theme='dark']_&]:bg-white/10 [html[data-theme='dark']_&]:text-[#d8b766]">
                         <Icon className="h-4 w-4" />
                       </div>
                       <div className="min-w-0 text-[1rem] font-black leading-snug text-slate-900 [html[data-theme='dark']_&]:text-slate-100">
@@ -276,7 +276,7 @@ export function WhySwitchSection() {
             >
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end">
                 <div className="space-y-4">
-                  <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-sky-700 [html[data-theme='dark']_&]:text-sky-300">
+                  <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]">
                     {content.eyebrow}
                   </div>
                   <h2 className="welcome-display-font max-w-[14ch] text-[2.1rem] font-black leading-[0.92] tracking-[-0.04em] text-slate-950 md:text-[2.8rem] lg:max-w-[12ch] lg:text-[3.4rem] [html[data-theme='dark']_&]:text-slate-50">
@@ -322,22 +322,22 @@ export function WhySwitchSection() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.24, delay: index * 0.05 }}
-                    className="h-full rounded-[24px] bg-[linear-gradient(180deg,rgba(255,255,255,0.94)_0%,rgba(241,245,249,0.9)_100%)] px-4 py-3 shadow-[10px_10px_22px_rgba(148,163,184,0.14),-10px_-10px_20px_rgba(255,255,255,0.88),inset_1px_1px_0_rgba(255,255,255,0.82)] md:grid md:grid-cols-[auto_1fr] md:items-start md:gap-4 md:rounded-[28px] md:px-4 md:py-4 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(15,23,42,0.96)_0%,rgba(30,41,59,0.96)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_22px_rgba(2,6,23,0.34),-8px_-8px_18px_rgba(51,65,85,0.12),inset_1px_1px_0_rgba(148,163,184,0.08)]"
+                    className="h-full rounded-[24px] bg-[linear-gradient(180deg,rgba(255,253,248,0.96)_0%,rgba(245,235,215,0.9)_100%)] px-4 py-3 shadow-[10px_10px_22px_rgba(47,35,24,0.09),-10px_-10px_20px_rgba(255,255,255,0.8),inset_1px_1px_0_rgba(255,255,255,0.82)] md:grid md:grid-cols-[auto_1fr] md:items-start md:gap-4 md:rounded-[28px] md:px-4 md:py-4 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.96)_0%,rgba(22,31,37,0.96)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_22px_rgba(0,0,0,0.34),inset_1px_1px_0_rgba(255,255,255,0.08)]"
                   >
                     {(() => {
                       const Icon = pointIcons[point.icon];
                       return (
-                        <div className="hidden h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-[inset_1px_1px_0_rgba(255,255,255,0.85)] md:flex [html[data-theme='dark']_&]:bg-slate-800 [html[data-theme='dark']_&]:text-sky-300">
+                        <div className="hidden h-11 w-11 items-center justify-center rounded-2xl bg-[rgba(159,123,40,0.12)] text-[#9f7b28] shadow-[inset_1px_1px_0_rgba(255,255,255,0.85)] md:flex [html[data-theme='dark']_&]:bg-white/10 [html[data-theme='dark']_&]:text-[#d8b766]">
                           <Icon className="h-4.5 w-4.5" />
                         </div>
                       );
                     })()}
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-[0.72rem] font-black uppercase tracking-[0.18em] text-sky-700 [html[data-theme='dark']_&]:text-sky-300">
+                        <span className="text-[0.72rem] font-black uppercase tracking-[0.18em] text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]">
                           {String(index + 1).padStart(2, "0")}
                         </span>
-                        <div className="h-px flex-1 bg-slate-200 [html[data-theme='dark']_&]:bg-slate-700" />
+                        <div className="h-px flex-1 bg-[rgba(159,123,40,0.18)] [html[data-theme='dark']_&]:bg-white/10" />
                       </div>
                       <div className="text-[1rem] font-black leading-snug text-slate-900 [html[data-theme='dark']_&]:text-slate-100">
                         {point.title}
