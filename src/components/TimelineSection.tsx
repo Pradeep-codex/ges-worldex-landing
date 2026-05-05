@@ -128,18 +128,24 @@ export function TimelineSection() {
     const progressDistance = window.innerWidth >= 1024 ? 960 : 760;
 
     const updateTimelineProgress = (deltaY: number) => {
-      const currentScrollY = window.scrollY;
       const sectionTop = sectionTopRef.current;
+      const sectionRect = sectionRef.current?.getBoundingClientRect();
       const progress = progressRef.current;
+      const isNearViewportTop = sectionRect
+        ? sectionRect.top <= 180 && sectionRect.top >= -180
+        : false;
+      const hasEnoughVisibleArea = sectionRect
+        ? sectionRect.bottom >= window.innerHeight * 0.35
+        : false;
       const canEnterFromTop =
         deltaY > 0 &&
-        currentScrollY >= sectionTop - 4 &&
-        currentScrollY <= sectionTop + 60 &&
+        isNearViewportTop &&
+        hasEnoughVisibleArea &&
         progress < 1;
       const canReEnterFromBottom =
         deltaY < 0 &&
-        currentScrollY <= sectionTop + 4 &&
-        currentScrollY >= sectionTop - 60 &&
+        isNearViewportTop &&
+        hasEnoughVisibleArea &&
         progress > 0;
       const canAdvanceWhilePinned =
         pinStateRef.current &&
