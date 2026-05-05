@@ -55,9 +55,21 @@ export function PortfolioIntro() {
                 ["400+", "Projects delivered"],
                 ["20+", "Strategic markets"],
               ].map(([value, label]) => (
-                <div key={label} className="rounded-[8px] border border-white/14 bg-white/10 p-4 text-white backdrop-blur-md">
-                  <div className="text-2xl font-black md:text-3xl">{value}</div>
-                  <div className="mt-1 text-[0.68rem] font-bold uppercase leading-snug tracking-[0.16em] text-white/68">
+                <div
+                  key={label}
+                  className="rounded-[8px] border p-4 backdrop-blur-md"
+                  style={{
+                    backgroundColor: "rgba(255, 253, 248, 0.9)",
+                    borderColor: "var(--about-card-border)",
+                  }}
+                >
+                  <div className="text-2xl font-black md:text-3xl" style={{ color: "var(--about-text-primary)" }}>
+                    {value}
+                  </div>
+                  <div
+                    className="mt-1 text-[0.68rem] font-bold uppercase leading-snug tracking-[0.16em]"
+                    style={{ color: "var(--about-text-secondary)" }}
+                  >
                     {label}
                   </div>
                 </div>

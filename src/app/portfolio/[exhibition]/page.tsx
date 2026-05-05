@@ -178,20 +178,30 @@ export default async function PortfolioDetailPage({
             </div>
 
             {Object.keys(featuredStats).length > 0 ? (
-              <div className="rounded-[28px] bg-white p-6 shadow-[0_18px_60px_rgba(15,23,42,0.06)] [html[data-theme='dark']_&]:bg-slate-950">
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.22em] text-[color:var(--accent)]">
+              <div
+                className="rounded-[28px] p-6 shadow-[0_18px_60px_rgba(15,23,42,0.06)]"
+                style={{ backgroundColor: "var(--about-card-bg)" }}
+              >
+                <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-[0.68rem] font-black uppercase tracking-[0.22em] text-transparent">
                   Cumulative Impact
                 </p>
                 <div className="mt-5 grid gap-3">
                   {Object.entries(featuredStats).map(([label, value]) => (
                     <div
                       key={label}
-                      className="rounded-[18px] bg-[color:var(--accent-soft)] px-4 py-4"
+                      className="rounded-[8px] border px-4 py-4"
+                      style={{
+                        backgroundColor: "var(--about-card-bg)",
+                        borderColor: "var(--about-card-border)",
+                      }}
                     >
-                      <div className="text-3xl font-black leading-none text-slate-950">
+                      <div className="text-3xl font-black leading-none" style={{ color: "var(--about-text-primary)" }}>
                         {value.toLocaleString("en-IN")}
                       </div>
-                      <div className="mt-2 text-[0.66rem] font-black uppercase tracking-[0.12em] text-slate-600">
+                      <div
+                        className="mt-2 text-[0.66rem] font-black uppercase tracking-[0.12em]"
+                        style={{ color: "var(--about-text-secondary)" }}
+                      >
                         {label}
                       </div>
                     </div>
@@ -258,12 +268,19 @@ export default async function PortfolioDetailPage({
                           {metrics.map(({ label, value }) => (
                             <div
                               key={label}
-                              className="rounded-[18px] border border-slate-200/70 bg-slate-50 px-4 py-4 [html[data-theme='dark']_&]:border-slate-800 [html[data-theme='dark']_&]:bg-slate-900/70"
+                              className="rounded-[8px] border px-4 py-4"
+                              style={{
+                                backgroundColor: "var(--about-card-bg)",
+                                borderColor: "var(--about-card-border)",
+                              }}
                             >
-                              <div className="text-[2rem] font-black leading-none text-slate-950 [html[data-theme='dark']_&]:text-slate-50">
+                              <div className="text-[2rem] font-black leading-none" style={{ color: "var(--about-text-primary)" }}>
                                 {value.toLocaleString("en-IN")}
                               </div>
-                              <div className="mt-2 text-[0.66rem] font-black uppercase leading-snug tracking-[0.12em] text-slate-500">
+                              <div
+                                className="mt-2 text-[0.66rem] font-black uppercase leading-snug tracking-[0.12em]"
+                                style={{ color: "var(--about-text-secondary)" }}
+                              >
                                 {label}
                               </div>
                             </div>
