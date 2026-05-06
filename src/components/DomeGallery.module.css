@@ -28,13 +28,13 @@
 .root::before {
   top: 0;
   height: 110px;
-  background: linear-gradient(180deg, rgba(248, 251, 253, 0.98) 0%, rgba(248, 251, 253, 0) 100%);
+  background: linear-gradient(180deg, rgba(242, 229, 202, 0.98) 0%, rgba(242, 229, 202, 0) 100%);
 }
 
 .root::after {
   bottom: 0;
   height: 130px;
-  background: linear-gradient(0deg, rgba(248, 251, 253, 0.98) 0%, rgba(248, 251, 253, 0) 100%);
+  background: linear-gradient(0deg, rgba(242, 229, 202, 0.98) 0%, rgba(242, 229, 202, 0) 100%);
 }
 
 :global(html[data-theme="dark"]) .root::before {

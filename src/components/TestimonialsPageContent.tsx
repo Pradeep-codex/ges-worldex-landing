@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
-import { ArrowRight, BadgeCheck, Building2, Quote, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, Quote } from "lucide-react";
 
 type Testimonial = {
   company: string;
@@ -181,45 +182,50 @@ export function TestimonialsPageContent() {
       };
 
   return (
-    <main className="overflow-x-clip">
-      <section className="mx-auto w-full max-w-[1700px] px-4 pb-10 pt-10 sm:px-5 md:px-8 md:pb-16 md:pt-16 lg:px-12 lg:pb-20 lg:pt-24">
+    <main className="-mt-20 overflow-x-clip lg:-mt-24">
+      <section className="pb-0 pt-0">
         <motion.div
           {...motionProps}
-          className="relative overflow-hidden rounded-[22px] border p-5 shadow-[0_28px_90px_rgba(47,35,24,0.10)] sm:rounded-[26px] sm:p-6 md:p-9 lg:rounded-[30px] lg:p-12"
+          className="relative min-h-[480px] overflow-hidden sm:min-h-[560px] lg:min-h-[640px]"
           style={{
-            background:
-              "radial-gradient(90% 120% at 86% 12%, rgba(216,183,102,0.22) 0%, transparent 54%), var(--about-card-bg)",
-            borderColor: "var(--about-card-border)",
+            clipPath: "polygon(0 0,100% 0,100% 82%,82% 88%,61% 93%,38% 90%,18% 95%,0 89%)",
           }}
         >
-          <div className="absolute right-[-80px] top-[-110px] h-64 w-64 rounded-full border border-[rgba(159,123,40,0.18)]" />
-          <div className="absolute bottom-[-110px] left-[-90px] h-72 w-72 rounded-full border border-[rgba(159,123,40,0.12)]" />
+          <Image
+            src="/testimonials-light.png"
+            alt="Testimonials banner showcasing premium exhibition moments"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center [html[data-theme='dark']_&]:hidden"
+          />
+          <Image
+            src="/testimonial-dark.png"
+            alt="Testimonials banner showcasing premium exhibition moments"
+            fill
+            priority
+            sizes="100vw"
+            className="hidden object-cover object-center [html[data-theme='dark']_&]:block"
+          />
 
-          <div className="relative max-w-5xl space-y-6">
-              <div className="inline-flex max-w-full items-center gap-2 rounded-full border px-3.5 py-2 text-[0.62rem] font-black uppercase tracking-[0.18em] sm:px-4 sm:text-[0.68rem] sm:tracking-[0.2em]"
-                style={{
-                  borderColor: "var(--about-card-border)",
-                  color: "#9f7b28",
-                  backgroundColor: "rgba(159, 123, 40, 0.08)",
-                }}
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                Testimonials
-              </div>
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(249,241,221,0.94)_0%,rgba(249,241,221,0.84)_30%,rgba(249,241,221,0.54)_56%,rgba(249,241,221,0.18)_78%,rgba(249,241,221,0.02)_100%)] [html[data-theme='dark']_&]:hidden" />
+          <div className="absolute inset-0 hidden [html[data-theme='dark']_&]:block [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,rgba(6,7,9,0.92)_0%,rgba(6,7,9,0.82)_28%,rgba(6,7,9,0.5)_56%,rgba(6,7,9,0.18)_78%,rgba(6,7,9,0.04)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_26%,rgba(216,183,102,0.12),transparent_26%),radial-gradient(circle_at_74%_18%,rgba(255,255,255,0.22),transparent_20%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_20%_26%,rgba(216,183,102,0.18),transparent_26%),radial-gradient(circle_at_74%_18%,rgba(255,255,255,0.08),transparent_20%)]" />
 
-              <h1
-                className="welcome-display-font max-w-5xl text-[clamp(2.45rem,12vw,4.4rem)] font-black leading-[0.94] tracking-tight md:text-[clamp(4.4rem,7vw,6rem)]"
-                style={{ color: "var(--about-text-primary)" }}
-              >
+          <div className="relative z-10 flex min-h-[480px] w-full items-end px-4 pb-24 pt-24 sm:min-h-[560px] sm:px-5 sm:pb-28 sm:pt-28 md:px-8 md:pb-32 md:pt-32 lg:min-h-[640px] lg:px-12 lg:pb-36">
+            <div className="max-w-[42rem] space-y-5 md:space-y-6">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.32em] text-[#2F2417] sm:text-[0.76rem] [html[data-theme='dark']_&]:text-white/68">
+                Visitor & exhibitor reflections
+              </p>
+
+              <h1 className="welcome-display-font max-w-[12ch] text-[clamp(2.8rem,10vw,6.15rem)] font-black leading-[0.9] tracking-[-0.04em] text-[#2F2417] [html[data-theme='dark']_&]:text-white">
                 Trusted voices from our exhibition floors.
               </h1>
 
-              <p
-                className="max-w-3xl text-[0.95rem] leading-relaxed sm:text-base md:text-lg"
-                style={{ color: "var(--about-text-secondary)" }}
-              >
+              <p className="max-w-2xl text-[0.98rem] leading-relaxed text-[#2F2417] sm:text-base md:text-lg md:leading-8 [html[data-theme='dark']_&]:text-white/78">
                 Experiences from exhibitors and visitors across GES Worldex platforms, shaped around meaningful business discovery, premium presentation, and dependable event execution.
               </p>
+            </div>
           </div>
         </motion.div>
       </section>

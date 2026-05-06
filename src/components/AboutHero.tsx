@@ -89,9 +89,6 @@ export function AboutHero() {
                   Talk To Our Team
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
-                <p className="hidden text-xs font-bold uppercase tracking-[0.22em] sm:block" style={{ color: 'var(--about-text-secondary)' }}>
-                  Scroll down
-                </p>
               </div>
             </div>
           </div>

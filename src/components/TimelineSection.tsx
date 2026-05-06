@@ -147,14 +147,20 @@ export function TimelineSection() {
 
   const renderTimelineContent = (mobileKeyPrefix: string) => (
     <div className="mx-auto flex h-full w-full max-w-[1720px] flex-col px-3 pb-6 pt-0 sm:px-4 sm:pb-8 sm:pt-1 md:px-8 md:pb-10 md:pt-2 lg:px-12">
-      <div className="relative z-40 pb-1 pt-4 sm:pb-4 sm:pt-8 md:pb-5 md:pt-10">
-        <div className="flex justify-start sm:justify-center">
+      <div className="relative z-40 pb-3 pt-4 sm:pb-5 sm:pt-8 md:pb-6 md:pt-10">
+        <div className="mx-auto flex max-w-4xl flex-col items-start gap-3 sm:items-center sm:text-center">
           <h2
-            className="text-base font-black uppercase tracking-[0.22em] sm:text-lg md:text-xl lg:text-2xl"
+            className="text-[1.45rem] font-black tracking-[-0.04em] sm:text-[1.9rem] md:text-[2.4rem] lg:text-[3.15rem]"
             style={{ color: "var(--about-text-primary)" }}
           >
-            Our Journey
+            The GES Worldex Growth Story
           </h2>
+          <p
+            className="max-w-3xl text-sm leading-relaxed sm:text-[0.98rem] md:text-[1.08rem] lg:text-[1.16rem]"
+            style={{ color: "var(--about-text-secondary)" }}
+          >
+            A timeline of milestones that shaped GES Worldex into a trusted exhibition company, built through consistent execution, industry insight, and long-term business relationships.
+          </p>
         </div>
       </div>
 

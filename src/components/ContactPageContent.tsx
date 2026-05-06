@@ -114,7 +114,7 @@ export function ContactPageContent() {
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-12 w-full rounded-[16px] border bg-white/60 px-4 text-sm font-semibold outline-none transition focus:border-[#9f7b28]"
+                className="h-12 w-full rounded-[16px] border bg-white/60 px-4 text-sm font-semibold outline-none transition placeholder:text-slate-400 focus:border-[#9f7b28] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-slate-900/88 [html[data-theme='dark']_&]:text-slate-50 [html[data-theme='dark']_&]:placeholder:text-slate-500"
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
                 placeholder="Your name"
                 autoComplete="name"
@@ -126,7 +126,7 @@ export function ContactPageContent() {
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 w-full rounded-[16px] border bg-white/60 px-4 text-sm font-semibold outline-none transition focus:border-[#9f7b28]"
+                  className="h-12 w-full rounded-[16px] border bg-white/60 px-4 text-sm font-semibold outline-none transition placeholder:text-slate-400 focus:border-[#9f7b28] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-slate-900/88 [html[data-theme='dark']_&]:text-slate-50 [html[data-theme='dark']_&]:placeholder:text-slate-500"
                   style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
                   placeholder="name@company.com"
                   autoComplete="email"
@@ -136,7 +136,7 @@ export function ContactPageContent() {
                 <input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="h-12 w-full rounded-[16px] border bg-white/60 px-4 text-sm font-semibold outline-none transition focus:border-[#9f7b28]"
+                  className="h-12 w-full rounded-[16px] border bg-white/60 px-4 text-sm font-semibold outline-none transition placeholder:text-slate-400 focus:border-[#9f7b28] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-slate-900/88 [html[data-theme='dark']_&]:text-slate-50 [html[data-theme='dark']_&]:placeholder:text-slate-500"
                   style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
                   placeholder="+91 XXXXX XXXXX"
                   autoComplete="tel"
@@ -148,7 +148,7 @@ export function ContactPageContent() {
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="min-h-[140px] w-full resize-none rounded-[18px] border bg-white/60 px-4 py-3 text-sm font-semibold outline-none transition focus:border-[#9f7b28]"
+                className="min-h-[140px] w-full resize-none rounded-[18px] border bg-white/60 px-4 py-3 text-sm font-semibold outline-none transition placeholder:text-slate-400 focus:border-[#9f7b28] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-slate-900/88 [html[data-theme='dark']_&]:text-slate-50 [html[data-theme='dark']_&]:placeholder:text-slate-500"
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
                 placeholder="Tell us what you are looking for..."
               />
@@ -236,24 +236,14 @@ function InlineContactRow({
   value: string;
   href?: string;
 }) {
-  const Wrapper = href ? "a" : "div";
-  const wrapperProps = href
-    ? {
-        href,
-        target: href.startsWith("http") ? "_blank" : undefined,
-        rel: href.startsWith("http") ? "noreferrer" : undefined,
-      }
-    : {};
-
-  return (
-    <Wrapper
-      {...(wrapperProps as any)}
-      className="group flex items-start gap-3 rounded-[18px] border px-4 py-3 transition-colors hover:border-[rgba(159,123,40,0.35)]"
-      style={{
-        borderColor: "var(--about-card-border)",
-        backgroundColor: "rgba(255, 253, 248, 0.6)",
-      }}
-    >
+  const sharedClassName =
+    "group flex items-start gap-3 rounded-[18px] border px-4 py-3 transition-colors hover:border-[rgba(159,123,40,0.35)]";
+  const sharedStyle = {
+    borderColor: "var(--about-card-border)",
+    backgroundColor: "var(--about-card-bg)",
+  } as const;
+  const content = (
+    <>
       <span className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(159,123,40,0.12)] text-[#9f7b28]">
         <Icon className="h-4.5 w-4.5" />
       </span>
@@ -265,6 +255,26 @@ function InlineContactRow({
           {value}
         </span>
       </span>
-    </Wrapper>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={href.startsWith("http") ? "_blank" : undefined}
+        rel={href.startsWith("http") ? "noreferrer" : undefined}
+        className={sharedClassName}
+        style={sharedStyle}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <div className={sharedClassName} style={sharedStyle}>
+      {content}
+    </div>
   );
 }
