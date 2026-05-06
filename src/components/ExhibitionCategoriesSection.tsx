@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { portfolioExhibitions } from "@/lib/portfolio";
 
 const exhibitionCategories = [
   {
@@ -93,14 +95,11 @@ const exhibitionCategories = [
   },
 ] as const;
 
-const exhibitionMarqueeImages = [
-  "/exhibition/expo1.jpg",
-  "/exhibition/expo2.jpg",
-  "/exhibition/expo3.jpg",
-  "/exhibition/expo4.jpg",
-  "/exhibition/expo5.jpg",
-  "/exhibition/expo6.jpg",
-] as const;
+const exhibitionHighlights = portfolioExhibitions.map((exhibition) => ({
+  id: exhibition.id,
+  title: exhibition.title,
+  imageSrc: exhibition.image,
+}));
 
 export function ExhibitionCategoriesSection() {
   const [activeId, setActiveId] = useState<(typeof exhibitionCategories)[number]["id"]>(
@@ -396,14 +395,14 @@ export function ExhibitionCategoriesSection() {
             <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-10 bg-[linear-gradient(270deg,rgba(255,253,248,1)_0%,rgba(255,253,248,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(270deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
             {reduceMotion ? (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-                {exhibitionMarqueeImages.map((imageSrc, index) => (
-                  <button
-                    key={imageSrc}
-                    type="button"
+                {exhibitionHighlights.map((item, index) => (
+                  <Link
+                    key={item.id}
+                    href={`/portfolio#${item.id}`}
                     className="group relative aspect-[4/3] overflow-hidden rounded-[22px] border border-white/50 text-left lg:cursor-pointer [html[data-theme='dark']_&]:border-white/8"
                   >
                     <Image
-                      src={imageSrc}
+                      src={item.imageSrc}
                       alt={`Exhibition showcase ${index + 1}`}
                       fill
                       sizes="(min-width: 1280px) 14vw, (min-width: 768px) 28vw, 44vw"
@@ -413,23 +412,23 @@ export function ExhibitionCategoriesSection() {
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.1)_0%,rgba(2,6,23,0.36)_42%,rgba(2,6,23,0.74)_100%)] opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100" />
                     <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(2,6,23,0)_0%,rgba(2,6,23,0.9)_100%)] px-4 pb-4 pt-10 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100">
                       <div className="inline-flex rounded-full bg-white/14 px-3 py-1.5 text-[0.72rem] font-black uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                        Know More
+                        View In Portfolio
                       </div>
                     </div>
-                  </button>
+                  </Link>
                 ))}
               </div>
             ) : (
               <div className="relative overflow-hidden">
                 <div ref={marqueeTrackRef} className="flex w-max gap-9 will-change-transform">
-                  {[...exhibitionMarqueeImages, ...exhibitionMarqueeImages].map((imageSrc, index) => (
-                    <button
-                      key={`${imageSrc}-${index}`}
-                      type="button"
+                  {[...exhibitionHighlights, ...exhibitionHighlights].map((item, index) => (
+                    <Link
+                      key={`${item.id}-${index}`}
+                      href={`/portfolio#${item.id}`}
                       className="group relative aspect-[4/3] w-[96px] shrink-0 overflow-hidden rounded-[22px] border border-white/50 text-left lg:cursor-pointer md:w-[180px] xl:w-[210px] [html[data-theme='dark']_&]:border-white/8"
                     >
                       <Image
-                        src={imageSrc}
+                        src={item.imageSrc}
                         alt={`Exhibition showcase ${index + 1}`}
                         fill
                         sizes="(min-width: 1280px) 19vw, (min-width: 768px) 28vw, 62vw"
@@ -439,10 +438,10 @@ export function ExhibitionCategoriesSection() {
                       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.1)_0%,rgba(2,6,23,0.38)_42%,rgba(2,6,23,0.76)_100%)] opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100" />
                       <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(2,6,23,0)_0%,rgba(2,6,23,0.9)_100%)] px-4 pb-4 pt-10 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100">
                         <div className="inline-flex rounded-full bg-white/14 px-3 py-1.5 text-[0.72rem] font-black uppercase tracking-[0.18em] text-white backdrop-blur-sm">
-                          Know More
+                          View In Portfolio
                         </div>
                       </div>
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>

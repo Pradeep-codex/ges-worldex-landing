@@ -199,7 +199,7 @@ function MobilePortfolioSection({
   );
 
   return (
-    <article className="overflow-hidden" style={sectionStyle}>
+    <article id={`show-${exhibition.id}`} className="overflow-hidden scroll-mt-[110px]" style={sectionStyle}>
       <div className="px-3 pb-4">
         <div className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-[color:var(--portfolio-accent)]">
           {exhibition.label}
@@ -417,6 +417,12 @@ export function PortfolioShowcase() {
 
   const handleExhibitionChange = (index: number) => {
     setActiveExhibitionIndex(index);
+    setHoveredExhibitionIndex(null);
+
+    const exhibitionId = portfolioExhibitions[index]?.id;
+    if (exhibitionId) {
+      window.history.replaceState(null, "", `#${exhibitionId}`);
+    }
 
     const contentTop = contentTopRef.current;
     if (!contentTop) {
@@ -435,6 +441,46 @@ export function PortfolioShowcase() {
       current.map((value, index) => (index === showIndex ? editionIndex : value)),
     );
   };
+
+  useEffect(() => {
+    const applyHashSelection = () => {
+      const raw = window.location.hash ? window.location.hash.slice(1) : "";
+      const hash = decodeURIComponent(raw);
+      if (!hash) {
+        return;
+      }
+
+      const idx = portfolioExhibitions.findIndex((item) => item.id === hash);
+      if (idx < 0) {
+        return;
+      }
+
+      setActiveExhibitionIndex(idx);
+      setHoveredExhibitionIndex(null);
+
+      // Mobile renders all sections, so we can scroll to the anchor.
+      // Desktop renders a single detail panel; the anchor is rendered for the active show below.
+      window.setTimeout(() => {
+        const contentTop = contentTopRef.current;
+        if (!contentTop) return;
+
+        // On mobile/tablet we have a real anchor per show.
+        // On desktop we scroll to the content top so the active panel is aligned correctly.
+        const mobileAnchor = document.getElementById(`show-${hash}`);
+        if (mobileAnchor) {
+          mobileAnchor.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        const targetTop = window.scrollY + contentTop.getBoundingClientRect().top - 96;
+        window.scrollTo({ top: Math.max(targetTop, 0), behavior: "smooth" });
+      }, 50);
+    };
+
+    applyHashSelection();
+    window.addEventListener("hashchange", applyHashSelection);
+    return () => window.removeEventListener("hashchange", applyHashSelection);
+  }, []);
 
   useEffect(() => {
     let frame = 0;
