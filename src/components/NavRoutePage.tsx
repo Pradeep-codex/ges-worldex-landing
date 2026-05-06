@@ -35,7 +35,7 @@ export function NavRoutePage({
           </p>
           <Link
             href={ctaHref}
-            className="group inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-4 text-sm font-black uppercase tracking-widest text-background transition-all hover:bg-indigo-600 active:scale-95"
+            className="group inline-flex items-center gap-3 rounded-full bg-[#2f2318] px-7 py-4 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-[#9f7b28] active:scale-95 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018] [html[data-theme='dark']_&]:hover:bg-[#f0d188]"
           >
             {ctaLabel}
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

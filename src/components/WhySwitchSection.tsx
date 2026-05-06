@@ -140,7 +140,7 @@ export function WhySwitchSection() {
   const content = switchContent[mode];
 
   const toggleControls = (
-    <div className="inline-flex items-center rounded-full border border-[rgba(159,123,40,0.16)] bg-[linear-gradient(180deg,rgba(255,253,248,0.98)_0%,rgba(245,235,215,0.95)_100%)] p-1.5 shadow-[10px_10px_24px_rgba(47,35,24,0.1),-10px_-10px_22px_rgba(255,255,255,0.8),inset_1px_1px_0_rgba(255,255,255,0.9)] backdrop-blur-md [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.98)_0%,rgba(22,31,37,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(0,0,0,0.4),inset_1px_1px_0_rgba(255,255,255,0.08)]">
+    <div className="inline-flex items-center rounded-full border border-[rgba(159,123,40,0.16)] bg-[linear-gradient(180deg,rgba(255,253,248,0.98)_0%,rgba(245,235,215,0.95)_100%)] p-1.5 shadow-[0_18px_46px_rgba(47,35,24,0.16),inset_1px_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.98)_0%,rgba(22,31,37,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(0,0,0,0.4),inset_1px_1px_0_rgba(255,255,255,0.08)]">
       <button
         type="button"
         onClick={() => setMode("exhibit")}
@@ -205,7 +205,7 @@ export function WhySwitchSection() {
                 {sectionContent.highlights.map((stat, index) => (
                   <div
                     key={stat.label}
-                    className={`min-w-0 rounded-[8px] border px-3 py-3 shadow-[8px_8px_18px_rgba(47,35,24,0.08),-8px_-8px_18px_rgba(255,255,255,0.72)] ${
+                    className={`min-w-0 rounded-[8px] border px-3 py-3 shadow-[0_16px_34px_rgba(47,35,24,0.12),inset_1px_1px_0_rgba(255,255,255,0.78)] ${
                       index === sectionContent.highlights.length - 1 && sectionContent.highlights.length % 2 !== 0
                         ? "col-span-2"
                         : ""
@@ -291,7 +291,7 @@ export function WhySwitchSection() {
                   {content.highlights.map((stat) => (
                     <div
                       key={stat.label}
-                      className="min-w-0 rounded-[8px] border px-3 py-3 shadow-[8px_8px_18px_rgba(47,35,24,0.08),-8px_-8px_18px_rgba(255,255,255,0.72)] md:px-4 md:py-4"
+                      className="min-w-0 rounded-[8px] border px-3 py-3 shadow-[0_16px_34px_rgba(47,35,24,0.12),inset_1px_1px_0_rgba(255,255,255,0.78)] md:px-4 md:py-4"
                       style={{
                         backgroundColor: "var(--about-card-bg)",
                         borderColor: "var(--about-card-border)",
@@ -322,7 +322,7 @@ export function WhySwitchSection() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.24, delay: index * 0.05 }}
-                    className="h-full rounded-[24px] bg-[linear-gradient(180deg,rgba(255,253,248,0.96)_0%,rgba(245,235,215,0.9)_100%)] px-4 py-3 shadow-[10px_10px_22px_rgba(47,35,24,0.09),-10px_-10px_20px_rgba(255,255,255,0.8),inset_1px_1px_0_rgba(255,255,255,0.82)] md:grid md:grid-cols-[auto_1fr] md:items-start md:gap-4 md:rounded-[28px] md:px-4 md:py-4 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.96)_0%,rgba(22,31,37,0.96)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_22px_rgba(0,0,0,0.34),inset_1px_1px_0_rgba(255,255,255,0.08)]"
+                    className="h-full rounded-[24px] bg-[linear-gradient(180deg,rgba(255,253,248,0.96)_0%,rgba(245,235,215,0.9)_100%)] px-4 py-3 shadow-[0_22px_54px_rgba(47,35,24,0.14),inset_1px_1px_0_rgba(255,255,255,0.78)] md:grid md:grid-cols-[auto_1fr] md:items-start md:gap-4 md:rounded-[28px] md:px-4 md:py-4 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.96)_0%,rgba(22,31,37,0.96)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_22px_rgba(0,0,0,0.34),inset_1px_1px_0_rgba(255,255,255,0.08)]"
                   >
                     {(() => {
                       const Icon = pointIcons[point.icon];

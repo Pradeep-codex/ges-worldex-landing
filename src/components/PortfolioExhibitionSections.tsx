@@ -61,7 +61,7 @@ export function PortfolioExhibitionSections() {
 
                     <Link
                       href={`/portfolio/${exhibition.id}`}
-                      className="group inline-flex w-fit items-center gap-3 rounded-full bg-slate-950 px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-sky-700 active:scale-95 [html[data-theme='dark']_&]:bg-white [html[data-theme='dark']_&]:text-slate-950 [html[data-theme='dark']_&]:hover:bg-sky-200"
+                      className="group inline-flex w-fit items-center gap-3 rounded-full bg-[#2f2318] px-6 py-3.5 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-[#9f7b28] active:scale-95 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018] [html[data-theme='dark']_&]:hover:bg-[#f0d188]"
                     >
                       Explore Editions
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

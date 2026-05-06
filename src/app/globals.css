@@ -161,6 +161,90 @@ html[data-theme="dark"] {
   font-family: var(--font-display), var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
 }
 
+.ges-cta-primary,
+.ges-cta-secondary {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  transition:
+    color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    transform 180ms ease;
+}
+
+.ges-cta-primary {
+  background: #2f2318;
+  color: #fffdf8;
+  box-shadow: 0 16px 34px rgba(47, 35, 24, 0.14);
+}
+
+.ges-cta-secondary {
+  border: 1px solid rgba(159, 123, 40, 0.22);
+  background: rgba(255, 253, 248, 0.72);
+  color: #2f2318;
+  box-shadow: 0 12px 28px rgba(47, 35, 24, 0.08);
+}
+
+.ges-cta-primary::before,
+.ges-cta-secondary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, #9f7b28, #d8b766, #8d6a1e);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms ease;
+}
+
+.ges-cta-primary:hover,
+.ges-cta-secondary:hover {
+  color: #fffdf8;
+  border-color: transparent;
+  box-shadow: 0 20px 44px rgba(159, 123, 40, 0.24);
+}
+
+.ges-cta-primary:hover::before,
+.ges-cta-secondary:hover::before {
+  transform: scaleX(1);
+}
+
+.ges-cta-primary:active,
+.ges-cta-secondary:active {
+  transform: scale(0.96);
+}
+
+html[data-theme="dark"] .ges-cta-primary {
+  background: #d8b766;
+  color: #071018;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme="dark"] .ges-cta-secondary {
+  border-color: rgba(216, 183, 102, 0.24);
+  background: rgba(255, 255, 255, 0.06);
+  color: #f3e7d4;
+}
+
+html[data-theme="dark"] .ges-cta-primary::before,
+html[data-theme="dark"] .ges-cta-secondary::before {
+  background: linear-gradient(90deg, #f0d188, #d8b766, #9f7b28);
+}
+
+html[data-theme="dark"] .ges-cta-primary:hover,
+html[data-theme="dark"] .ges-cta-secondary:hover {
+  color: #071018;
+}
+
 body {
   background-color: var(--background);
   background-image:

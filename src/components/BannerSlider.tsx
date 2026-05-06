@@ -210,7 +210,7 @@ export function BannerSlider() {
                         transition={{ delay: 0.8, duration: 0.8 }}
                         className="pt-4"
                       >
-                        <button className="group flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-sm uppercase tracking-widest rounded-full hover:bg-slate-200 transition-all active:scale-95">
+                        <button className="group flex items-center gap-3 rounded-full bg-[#2f2318] px-8 py-4 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-[#9f7b28] active:scale-95 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018] [html[data-theme='dark']_&]:hover:bg-[#f0d188]">
                           Register for access
                           <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </button>

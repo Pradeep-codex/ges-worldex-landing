@@ -13,10 +13,10 @@ export const metadata: Metadata = {
 };
 
 const metrics = [
-  { value: "12K+", label: "Exhibitors" },
-  { value: "3K+", label: "Brands" },
-  { value: "50K+", label: "Products" },
-  { value: "500K+", label: "Visitors" },
+  { value: "400+", label: "Exhibitions" },
+  { value: "4K+", label: "Brands" },
+  { value: "10M+", label: "Products" },
+  { value: "100K+", label: "Visitors" },
 ];
 
 export default function AboutPage() {
@@ -40,8 +40,13 @@ export default function AboutPage() {
             <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-sm font-black uppercase tracking-[0.2em] text-transparent">
               Exhibition Metrics
             </p>
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-black tracking-tight" style={{ color: 'var(--about-text-primary)' }}>
-              Bigger reach, sharper brand presence, stronger product discovery.
+            <h2
+              className="text-xl font-black tracking-tight sm:text-2xl md:text-3xl lg:text-5xl"
+              style={{ color: "var(--about-text-primary)" }}
+            >
+              <span className="block">Expand Your Reach.</span>
+              <span className="block">Elevate Your Brand.</span>
+              <span className="block">Multiply Opportunities.</span>
             </h2>
           </div>
 

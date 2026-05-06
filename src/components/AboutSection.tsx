@@ -65,7 +65,7 @@ export function AboutSection() {
   return (
     <section
       id="about"
-      className="relative z-0 isolate mx-auto mt-10 w-full max-w-[1700px] overflow-x-clip rounded-[32px] border px-4 pt-12 pb-6 md:mt-14 md:px-8 md:pt-16 md:pb-10 lg:mt-20 lg:px-12 lg:pt-28 lg:pb-20"
+      className="relative z-10 isolate mx-auto mt-10 w-full max-w-[1700px] overflow-x-clip rounded-[32px] border px-4 pt-12 pb-6 md:mt-14 md:px-8 md:pt-16 md:pb-10 lg:mt-20 lg:px-12 lg:pt-28 lg:pb-20"
       style={{
         backgroundColor: "var(--about-section-bg)",
         backgroundImage: "var(--about-section-overlay)",
@@ -200,7 +200,7 @@ export function AboutSection() {
                 style={{ color: "var(--about-text-primary)" }}
               >
                 <div
-                  className="flex h-6 w-6 items-center justify-center rounded-full text-[var(--about-section-accent)] transition-all group-hover:bg-[var(--about-section-chip-hover)] group-hover:text-white"
+                  className="flex h-6 w-6 items-center justify-center rounded-full text-[var(--about-section-accent)] transition-all group-hover:bg-[var(--about-section-chip-hover)] group-hover:text-[#2f2318] [html[data-theme='dark']_&]:group-hover:text-[#071018]"
                   style={{ backgroundColor: "var(--about-section-chip-bg)" }}
                 >
                   <ArrowRight className="w-3 h-3" />
@@ -219,18 +219,11 @@ export function AboutSection() {
           >
             <Link
               href="/about"
-              className="group relative inline-flex overflow-hidden rounded-full px-8 py-4 text-sm font-black uppercase tracking-widest transition-all hover:pr-12 active:scale-95"
-              style={{
-                backgroundColor: "var(--about-section-button-bg)",
-                color: "var(--about-section-button-text)",
-              }}
+              className="group relative z-10 inline-flex pointer-events-auto items-center gap-3 overflow-hidden rounded-full bg-[#2f2318] px-8 py-4 text-sm font-black uppercase tracking-widest text-white shadow-[0_18px_42px_rgba(47,35,24,0.16)] transition-transform active:scale-95 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018]"
             >
-              <span className="relative z-10 transition-all">Discover Our Story</span>
-              <ArrowRight className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all w-5 h-5 z-10" />
-              <div
-                className="absolute inset-0 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-                style={{ backgroundColor: "var(--about-section-button-hover)" }}
-              />
+              <span className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-[#9f7b28] transition-transform duration-300 group-hover:scale-x-100 [html[data-theme='dark']_&]:bg-[#f0d188]" />
+              <span className="relative z-10">Discover Our Story</span>
+              <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </motion.div>
         </div>

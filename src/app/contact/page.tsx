@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { NavRoutePage } from "@/components/NavRoutePage";
+import { ContactPageContent } from "@/components/ContactPageContent";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -7,14 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Contact"
-      title="Let’s talk about your next exhibition move."
-      description="Reach the GES Worldex team for exhibitor participation, visitor guidance, partnerships, sponsorships, and event support."
-      points={["Exhibitor inquiries", "Visitor support", "Partnership conversations"]}
-      ctaLabel="Email GES Worldex"
-      ctaHref="mailto:info@gesindiaexh.com"
-    />
-  );
+  return <ContactPageContent />;
 }
+

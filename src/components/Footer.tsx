@@ -25,6 +25,11 @@ const serviceLinks = [
   "Brand Activations",
 ];
 
+const officeAddress =
+  "225 14th Cross, Sampige Rd, opposite Saibaba Temple, Malleshwaram, Bengaluru, Karnataka 560003";
+const officeMapsUrl =
+  "https://www.google.com/maps/place/ges+worldex+india+pvt.+ltd./@13.004581,77.5685899,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae1624efa9c1ef:0x317e7a5909a91afa!8m2!3d13.004581!4d77.5711648!16s%2Fg%2F11j0bvh277?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D";
+
 export function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-[color:var(--border)] bg-white/62 backdrop-blur-xl [html[data-theme='dark']_&]:bg-[#11182b]/82">
@@ -60,11 +65,11 @@ export function Footer() {
                 info@gesindiaexh.com
               </a>
               <a
-                href="tel:+919999999999"
+                href="tel:+9199450 12123"
                 className="inline-flex items-center gap-2 rounded-2xl border border-[#8fd6e7]/40 bg-white/68 px-4 py-3 text-sm font-semibold text-[#0c3e55] transition-colors hover:bg-white/88 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-white/6 [html[data-theme='dark']_&]:text-[#e7f6ff]"
               >
                 <Phone className="h-4 w-4" />
-                +91 99999 99999
+                +91 99450 12123
               </a>
             </div>
           </div>
@@ -78,10 +83,12 @@ export function Footer() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="inline-flex items-center gap-2 text-[#17384c] transition-colors hover:text-[#0da0c9] [html[data-theme='dark']_&]:text-[#d6e6fb] [html[data-theme='dark']_&]:hover:text-cyan-300"
+                  className="group inline-flex w-fit items-center gap-2 text-[#17384c] transition-colors hover:text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d6e6fb] [html[data-theme='dark']_&]:hover:text-[#d8b766]"
                 >
                   <ArrowUpRight className="h-3.5 w-3.5" />
-                  {link.label}
+                  <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">
+                    {link.label}
+                  </span>
                 </Link>
               ))}
             </div>
@@ -108,10 +115,16 @@ export function Footer() {
               Reach Us
             </p>
             <div className="mt-5 space-y-4">
-              <div className="flex items-start gap-3 text-sm leading-6 text-[#24475b] md:text-[0.96rem] [html[data-theme='dark']_&]:text-[#d6e6fb]">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#0f87aa]" />
-                <span>India based exhibition and trade show partner serving premium business events.</span>
-              </div>
+              <a
+                href={officeMapsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-start gap-3 text-sm leading-6 text-[#24475b] transition-colors hover:text-[#9f7b28] md:text-[0.96rem] [html[data-theme='dark']_&]:text-[#d6e6fb] [html[data-theme='dark']_&]:hover:text-[#d8b766]"
+                aria-label="Open GES Worldex office location in Google Maps"
+              >
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#9f7b28] transition-transform group-hover:-translate-y-0.5" />
+                <span>{officeAddress}.</span>
+              </a>
               <a
                 href="https://gesworldex.com"
                 target="_blank"

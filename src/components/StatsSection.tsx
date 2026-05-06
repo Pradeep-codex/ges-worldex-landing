@@ -84,13 +84,13 @@ function StatTile({
         />
         <div className="min-w-0 flex-1">
           <div
-            className="welcome-display-font text-[1.95rem] font-black leading-none tracking-[-0.08em] sm:text-[2.2rem]"
+            className="welcome-display-font text-[1.55rem] font-black leading-none tracking-[-0.06em] sm:text-[1.72rem] xl:text-[1.9rem]"
             style={{ color: "var(--about-text-primary)" }}
           >
             <CountUp end={end} suffix={suffix} start={start} />
           </div>
           <div
-            className="mt-1 truncate text-[0.7rem] font-black uppercase tracking-[0.24em] sm:text-[0.78rem]"
+            className="mt-1 text-[0.64rem] font-black uppercase leading-tight tracking-[0.12em] sm:text-[0.68rem] xl:text-[0.72rem]"
             style={{ color: "var(--about-text-secondary)" }}
           >
             {label}
@@ -127,13 +127,13 @@ function CompactStat({
         style={{ background: "linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)" }}
       />
       <div
-        className="welcome-display-font mt-2.5 text-[1.38rem] font-black leading-none tracking-[-0.07em] sm:text-[1.56rem]"
+        className="welcome-display-font mt-2.5 text-[1.14rem] font-black leading-none tracking-[-0.05em] sm:text-[1.32rem]"
         style={{ color: "var(--about-text-primary)" }}
       >
         <CountUp end={end} suffix={suffix} start={start} />
       </div>
       <div
-        className="mt-1.5 text-[0.62rem] font-black uppercase tracking-[0.2em] sm:text-[0.68rem]"
+        className="mt-1.5 text-[0.6rem] font-black uppercase leading-tight tracking-[0.12em] sm:text-[0.66rem]"
         style={{ color: "var(--about-text-secondary)" }}
       >
         {label}
@@ -168,28 +168,28 @@ function MobileStatsDetails({ animateNumbers }: { animateNumbers: boolean }) {
       <div className="grid grid-cols-2 gap-2">
         <CompactStat
           accent="linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%)"
-          end={12}
-          suffix="K+"
-          label="Exhibitors"
+          end={400}
+          suffix="+"
+          label="Exhibitions"
           start={animateNumbers}
         />
         <CompactStat
           accent="linear-gradient(180deg,#0284c7 0%,#06b6d4 100%)"
-          end={3}
+          end={4}
           suffix="K+"
           label="Brands"
           start={animateNumbers}
         />
         <CompactStat
           accent="linear-gradient(180deg,#2563eb 0%,#0891b2 100%)"
-          end={50}
-          suffix="K+"
+          end={10}
+          suffix="M+"
           label="Products"
           start={animateNumbers}
         />
         <CompactStat
           accent="linear-gradient(180deg,#1d4ed8 0%,#0ea5e9 100%)"
-          end={500}
+          end={100}
           suffix="K+"
           label="Visitors"
           start={animateNumbers}
@@ -241,31 +241,31 @@ function StatsBand({
             </p>
           </div>
 
-          <div className="grid max-w-[560px] grid-cols-2 gap-2.5 lg:grid-cols-4">
+          <div className="grid max-w-[720px] grid-cols-2 gap-2.5 lg:grid-cols-4">
             <StatTile
               accent="linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%)"
-              end={12}
-              suffix="K+"
-              label="Exhibitors"
+              end={400}
+              suffix="+"
+              label="Exhibitions"
               start={animateNumbers}
             />
             <StatTile
               accent="linear-gradient(180deg,#0284c7 0%,#06b6d4 100%)"
-              end={3}
+              end={4}
               suffix="K+"
               label="Brands"
               start={animateNumbers}
             />
             <StatTile
               accent="linear-gradient(180deg,#2563eb 0%,#0891b2 100%)"
-              end={50}
-              suffix="K+"
+              end={10}
+              suffix="M+"
               label="Products"
               start={animateNumbers}
             />
             <StatTile
               accent="linear-gradient(180deg,#1d4ed8 0%,#0ea5e9 100%)"
-              end={500}
+              end={100}
               suffix="K+"
               label="Visitors"
               start={animateNumbers}
@@ -273,7 +273,7 @@ function StatsBand({
           </div>
         </div>
 
-        <div className="relative hidden min-h-[190px] items-end justify-center lg:flex lg:justify-end">
+        <div className="relative z-0 hidden min-h-[190px] items-end justify-center lg:flex lg:justify-end">
           <div
             className="relative w-full max-w-[420px] overflow-visible transition-[transform,opacity] duration-700 ease-out lg:max-w-[520px]"
             style={{
@@ -284,7 +284,7 @@ function StatsBand({
             }}
           >
             <div
-              className="absolute inset-x-[-2%] bottom-[-64px] hidden lg:block"
+              className="pointer-events-none absolute inset-x-[-2%] bottom-[-64px] hidden lg:block"
               style={{ height: `${DESKTOP_IMAGE_HEIGHT}px` }}
             >
               <Image
@@ -337,7 +337,7 @@ export function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative mx-auto w-full max-w-[1700px] px-4 pb-20 pt-6 md:px-8 md:pb-24 md:pt-8 lg:px-12 lg:pb-28 lg:pt-10"
+      className="relative z-0 mx-auto mt-8 w-full max-w-[1700px] px-4 pb-20 pt-6 md:mt-12 md:px-8 md:pb-24 md:pt-8 lg:mt-16 lg:px-12 lg:pb-28 lg:pt-10"
       aria-label="Statistics section"
     >
       <StatsBand animateNumbers={hasEntered} isVisible={hasEntered} />

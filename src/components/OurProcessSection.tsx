@@ -44,7 +44,10 @@ export function OurProcessSection() {
             <div className="grid gap-3">
               {processHighlights.map((item) => (
                 <div key={item} className="flex items-center gap-3 text-sm font-bold md:text-base" style={{ color: 'var(--about-text-primary)' }}>
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#e6d3a7]" style={{ backgroundColor: 'rgba(199, 162, 74, 0.14)' }}>
+                  <span
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]"
+                    style={{ backgroundColor: 'rgba(159, 123, 40, 0.14)' }}
+                  >
                     <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                   <span>{item}</span>

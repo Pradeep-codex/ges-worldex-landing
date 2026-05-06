@@ -84,7 +84,7 @@ export function AboutHero() {
               <div className="flex flex-col items-start gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <Link
                   href="/contact"
-                  className="group inline-flex items-center gap-2 sm:gap-3 rounded-full bg-[#15212a] dark:bg-indigo-600 px-5 py-3 sm:px-7 sm:py-4 text-xs sm:text-sm font-black uppercase tracking-[0.22em] text-white transition-all hover:bg-[#9f7b28] active:scale-95"
+                  className="group inline-flex items-center gap-2 sm:gap-3 rounded-full bg-[#2f2318] px-5 py-3 text-xs font-black uppercase tracking-[0.22em] text-white transition-all hover:bg-[#9f7b28] active:scale-95 sm:px-7 sm:py-4 sm:text-sm [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018] [html[data-theme='dark']_&]:hover:bg-[#f0d188]"
                 >
                   Talk To Our Team
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

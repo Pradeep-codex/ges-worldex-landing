@@ -24,14 +24,15 @@ export function PortfolioIntro() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="#portfolio-exhibitions"
-              className="group inline-flex items-center gap-3 rounded-full bg-slate-950 px-7 py-4 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-sky-700 active:scale-95 [html[data-theme='dark']_&]:bg-white [html[data-theme='dark']_&]:text-slate-950 [html[data-theme='dark']_&]:hover:bg-sky-200"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#2f2318] px-7 py-4 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-[#9f7b28] active:scale-95 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018] [html[data-theme='dark']_&]:hover:bg-[#f0d188]"
             >
               Explore Work
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center rounded-full border border-slate-300 bg-white/70 px-7 py-4 text-sm font-black uppercase tracking-widest text-slate-800 backdrop-blur-sm transition-all hover:border-sky-300 hover:text-sky-700 active:scale-95 [html[data-theme='dark']_&]:border-slate-700 [html[data-theme='dark']_&]:bg-slate-900/60 [html[data-theme='dark']_&]:text-slate-100 [html[data-theme='dark']_&]:hover:border-sky-400"
+              className="inline-flex items-center rounded-full border px-7 py-4 text-sm font-black uppercase tracking-widest backdrop-blur-sm transition-all hover:border-[#9f7b28] active:scale-95"
+              style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
             >
               Start Inquiry
             </Link>
