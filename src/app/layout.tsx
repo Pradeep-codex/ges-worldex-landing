@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { defaultSeo, siteUrl } from "@/lib/seo";
 import { Header } from "@/components/Header";
@@ -50,23 +49,9 @@ export default function RootLayout({
     <html
       lang="en"
       className="h-full antialiased"
+      data-theme="light"
       suppressHydrationWarning
     >
-      <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`(function(){
-  try {
-    var key = 'ges-theme';
-    var stored = localStorage.getItem(key);
-    var theme = (stored === 'light' || stored === 'dark') ? stored : 'light';
-    document.documentElement.dataset.theme = theme;
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    }
-  } catch (e) {}
-})();`}
-        </Script>
-      </head>
       <body className="min-h-full flex flex-col bg-background">
         <FloatingBlobs />
         <Header />

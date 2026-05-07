@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function ManagingDirectorSection() {
   return (
     <section className="px-3 sm:px-4 py-12 sm:py-16 md:px-8 md:py-20 lg:px-12 lg:py-24" style={{ backgroundColor: 'var(--about-bg-light)' }}>
@@ -11,19 +13,14 @@ export function ManagingDirectorSection() {
               borderColor: 'var(--about-card-border)',
             }}
           >
-            <div className="absolute inset-0 grid place-items-center p-6 text-center">
-              <div className="space-y-3 rounded-[24px] border border-dashed px-6 py-10" style={{ borderColor: 'var(--about-card-border)' }}>
-                <div className="text-xs font-black uppercase tracking-[0.28em]" style={{ color: 'var(--about-text-secondary)' }}>
-                  MD Portrait Space
-                </div>
-                <div className="text-sm font-semibold leading-7" style={{ color: 'var(--about-text-primary)' }}>
-                  Add the Managing Director image here.
-                </div>
-                <div className="text-xs leading-6" style={{ color: 'var(--about-text-secondary)' }}>
-                  This block is reserved for a portrait or signature image.
-                </div>
-              </div>
-            </div>
+            <Image
+              src="/md-profile.png"
+              alt="Managing Director of GES Worldex"
+              fill
+              sizes="(min-width: 1024px) 42vw, (min-width: 640px) 70vw, 100vw"
+              className="object-cover object-center"
+              priority={false}
+            />
           </div>
         </div>
 

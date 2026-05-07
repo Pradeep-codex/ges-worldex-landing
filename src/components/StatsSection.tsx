@@ -3,9 +3,6 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const MOBILE_IMAGE_HEIGHT = 280;
-const DESKTOP_IMAGE_HEIGHT = 650;
-
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
@@ -206,16 +203,12 @@ function StatsBand({
   animateNumbers: boolean;
   isVisible: boolean;
 }) {
-  const imageTransform = isVisible
-    ? "translateY(58%) scale(1.08)"
-    : "translateY(calc(58% + 40px)) scale(0.92)";
-
   return (
     <div className="relative overflow-visible rounded-[26px] border border-[rgba(23,19,13,0.1)] bg-[linear-gradient(135deg,rgba(255,253,248,0.98)_0%,rgba(250,244,231,0.98)_55%,rgba(241,230,205,0.98)_100%)] shadow-[0_24px_70px_rgba(47,35,24,0.1)] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,rgba(7,16,24,0.96)_0%,rgba(13,24,31,0.98)_55%,rgba(22,31,37,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[0_24px_70px_rgba(0,0,0,0.36)]">
       <div className="pointer-events-none absolute inset-0 rounded-[30px] bg-[radial-gradient(circle_at_top_left,rgba(255,250,240,0.94),transparent_36%),radial-gradient(circle_at_82%_18%,rgba(216,183,102,0.22),transparent_30%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_top_left,rgba(216,183,102,0.12),transparent_34%),radial-gradient(circle_at_82%_18%,rgba(159,123,40,0.1),transparent_28%)]" />
       <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(159,123,40,0.6),rgba(216,183,102,0.2),transparent)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,transparent,rgba(216,183,102,0.34),rgba(159,123,40,0.12),transparent)]" />
 
-      <div className="relative z-10 grid gap-5 px-4 py-4 sm:px-5 sm:py-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(300px,0.75fr)] lg:items-end lg:gap-4 lg:px-7 lg:py-5 xl:px-8">
+      <div className="relative z-10 grid gap-5 px-4 py-4 sm:px-5 sm:py-5 md:grid-cols-[minmax(0,1fr)_minmax(250px,0.72fr)] md:items-end md:gap-1 md:px-6 md:py-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.95fr)] lg:gap-2 lg:px-7 xl:grid-cols-[minmax(0,1fr)_minmax(560px,0.95fr)] xl:px-8">
         <div className="space-y-4 lg:hidden">
           <MobileStatsDetails animateNumbers={animateNumbers} />
         </div>
@@ -273,27 +266,29 @@ function StatsBand({
           </div>
         </div>
 
-        <div className="relative z-0 hidden min-h-[190px] items-end justify-center lg:flex lg:justify-end">
+        <div className="relative z-30 hidden min-h-[170px] items-end justify-start overflow-visible md:flex lg:min-h-[190px]">
           <div
-            className="relative w-full max-w-[420px] overflow-visible transition-[transform,opacity] duration-700 ease-out lg:max-w-[520px]"
-            style={{
-              height: `${MOBILE_IMAGE_HEIGHT}px`,
-              opacity: isVisible ? 1 : 0,
-              transform: imageTransform,
-              transformOrigin: "bottom center",
-            }}
+            className={`relative h-[220px] w-full max-w-[420px] origin-top-center overflow-visible transition-[transform,opacity] duration-700 ease-out md:max-w-[460px] lg:h-[280px] lg:max-w-[620px] xl:max-w-[760px] ${
+              isVisible
+                ? "translate-x-[5%] translate-y-[-2%] scale-[0.78] opacity-100 lg:translate-x-[3%] lg:translate-y-[-8%] lg:scale-[1.08] xl:translate-x-[2%] xl:translate-y-[-10%] xl:scale-[1.22]"
+                : "translate-x-[5%] translate-y-[calc(-2%_-_36px)] scale-[0.68] opacity-0 lg:translate-x-[3%] lg:translate-y-[calc(-8%_-_40px)] lg:scale-[0.92] xl:translate-x-[2%] xl:translate-y-[calc(-10%_-_40px)] xl:scale-[1.02]"
+            }`}
           >
             <div
-              className="pointer-events-none absolute inset-x-[-2%] bottom-[-64px] hidden lg:block"
-              style={{ height: `${DESKTOP_IMAGE_HEIGHT}px` }}
+              className="pointer-events-none absolute inset-x-[-10%] top-[-125px] hidden h-[500px] md:block lg:inset-x-[-14%] lg:top-[-185px] lg:h-[650px] xl:top-[-210px] xl:h-[700px]"
             >
-              <Image
-                src="/stat-img.png"
-                alt="GES Worldex exhibition render"
-                fill
-                sizes="(min-width: 1280px) 36vw, (min-width: 1024px) 32vw, 100vw"
-                className="object-contain object-bottom"
-              />
+              <div className="relative h-full w-full">
+                <div className="absolute inset-y-0 left-8 right-8 lg:left-12 lg:right-12 xl:left-16 xl:right-16">
+                  <Image
+                    src="/stats-exhibition-model-2026.png"
+                    alt="GES Worldex exhibition render"
+                    fill
+                    sizes="(min-width: 1280px) 46vw, (min-width: 1024px) 42vw, (min-width: 768px) 36vw, 0vw"
+                    className="object-contain object-bottom"
+                    style={{ objectPosition: "45% bottom" }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -337,7 +332,7 @@ export function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-0 mx-auto mt-8 w-full max-w-[1700px] px-4 pb-20 pt-6 md:mt-12 md:px-8 md:pb-24 md:pt-8 lg:mt-16 lg:px-12 lg:pb-28 lg:pt-10"
+      className="relative z-20 mx-auto mt-8 w-full max-w-[1700px] overflow-visible px-4 pb-20 pt-6 md:mt-12 md:px-8 md:pb-24 md:pt-8 lg:mt-16 lg:px-12 lg:pb-28 lg:pt-10"
       aria-label="Statistics section"
     >
       <StatsBand animateNumbers={hasEntered} isVisible={hasEntered} />

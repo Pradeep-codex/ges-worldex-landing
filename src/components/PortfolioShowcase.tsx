@@ -1,7 +1,8 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { motion } from "framer-motion";
+import type { Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
@@ -28,6 +29,24 @@ const metricMeta: Record<string, { label: string; note: string }> = {
   stalls: { label: "Stalls", note: "Built and managed" },
   hostedBuyers: { label: "Hosted buyers", note: "Curated attendance" },
   jewelleryDesigns: { label: "Designs", note: "On showcase" },
+};
+
+const galleryImageVariants: Variants = {
+  enter: (slideDirection: number) => ({
+    x: slideDirection > 0 ? "7%" : "-7%",
+    opacity: 0,
+    scale: 1.03,
+  }),
+  center: {
+    x: "0%",
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (slideDirection: number) => ({
+    x: slideDirection > 0 ? "-7%" : "7%",
+    opacity: 0,
+    scale: 0.985,
+  }),
 };
 
 function extractYear(date: string) {
@@ -70,14 +89,48 @@ function EditionGallery({
   images: string[];
   title: string;
 }) {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const totalImages = images.length;
+  const imageKey = images.join("|");
+  const [{ index: activeImageIndex, direction }, setSlideState] = useState({
+    index: 0,
+    direction: 1,
+  });
+  const visibleImageIndex = totalImages > 0 ? Math.min(activeImageIndex, totalImages - 1) : 0;
+
+  const showImage = (nextIndex: number) => {
+    if (totalImages <= 0) {
+      return;
+    }
+
+    setSlideState((current) => {
+      const normalizedIndex = (nextIndex + totalImages) % totalImages;
+      let nextDirection = normalizedIndex > current.index ? 1 : -1;
+
+      if (current.index === totalImages - 1 && normalizedIndex === 0) {
+        nextDirection = 1;
+      }
+
+      if (current.index === 0 && normalizedIndex === totalImages - 1) {
+        nextDirection = -1;
+      }
+
+      return {
+        index: normalizedIndex,
+        direction: nextDirection,
+      };
+    });
+  };
+
   const goToPreviousImage = () => {
-    setActiveImageIndex((current) => (current - 1 + totalImages) % totalImages);
+    showImage(activeImageIndex - 1);
   };
   const goToNextImage = () => {
-    setActiveImageIndex((current) => (current + 1) % totalImages);
+    showImage(activeImageIndex + 1);
   };
+
+  useEffect(() => {
+    setSlideState({ index: 0, direction: 1 });
+  }, [imageKey]);
 
   useEffect(() => {
     if (totalImages <= 1) {
@@ -85,8 +138,11 @@ function EditionGallery({
     }
 
     const timer = window.setInterval(() => {
-      setActiveImageIndex((current) => (current + 1) % totalImages);
-    }, 1800);
+      setSlideState((current) => ({
+        index: (current.index + 1) % totalImages,
+        direction: 1,
+      }));
+    }, 3200);
 
     return () => window.clearInterval(timer);
   }, [totalImages]);
@@ -94,23 +150,28 @@ function EditionGallery({
   return (
     <div className="space-y-4 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:space-y-3">
       <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] bg-[color:var(--portfolio-accent-soft)] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:aspect-[16/7]">
-        <motion.div
-          className="flex h-full"
-          animate={{ x: `${activeImageIndex * -100}%` }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {images.map((image, index) => (
-            <div key={`${image}-${index}`} className="relative h-full min-w-full">
+        <AnimatePresence initial={false} custom={direction} mode="popLayout">
+          {images[visibleImageIndex] ? (
+            <motion.div
+              key={`${images[visibleImageIndex]}-${visibleImageIndex}`}
+              custom={direction}
+              className="absolute inset-0"
+              variants={galleryImageVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
+            >
               <Image
-                src={image}
-                alt={`${title} gallery ${index + 1}`}
+                src={images[visibleImageIndex]}
+                alt={`${title} gallery ${visibleImageIndex + 1}`}
                 fill
                 sizes="(min-width: 1024px) 44vw, 92vw"
                 className="object-cover"
               />
-            </div>
-          ))}
-        </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
 
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.04)_0%,rgba(10,10,10,0.18)_100%)]" />
       </div>
@@ -134,7 +195,7 @@ function EditionGallery({
                 <button
                   key={`${image}-dot-${index}`}
                   type="button"
-                  onClick={() => setActiveImageIndex(index)}
+                  onClick={() => showImage(index)}
                   className="h-2.5 rounded-full transition-all duration-300"
                   aria-label={`Show ${title} gallery image ${index + 1}`}
                   style={{
@@ -583,9 +644,7 @@ export function PortfolioShowcase() {
               <div className="space-y-2">
                 {portfolioExhibitions.map((item, index) => {
                   const isActive = index === activeExhibitionIndex;
-                  const isHighlighted =
-                    hoveredExhibitionIndex === index ||
-                    (hoveredExhibitionIndex == null && isActive);
+                  const isHovered = hoveredExhibitionIndex === index;
 
                   return (
                     <button
@@ -596,40 +655,58 @@ export function PortfolioShowcase() {
                       onMouseLeave={() => setHoveredExhibitionIndex(null)}
                       onFocus={() => setHoveredExhibitionIndex(index)}
                       onBlur={() => setHoveredExhibitionIndex(null)}
-                      className="group relative w-full cursor-pointer overflow-hidden px-3 py-3 text-left transition-colors duration-300"
+                      className="group relative isolate w-full cursor-pointer overflow-hidden px-3 py-3 text-left transition-colors duration-300"
                     >
-                      {isHighlighted ? (
+                      {isActive ? (
                         <motion.div
                           layoutId="portfolio-sidebar-highlight"
-                          className="absolute inset-0"
+                          className="pointer-events-none absolute inset-0 z-0"
                           style={{
                             background:
-                              "linear-gradient(135deg, color-mix(in srgb, var(--portfolio-accent) 16%, white), color-mix(in srgb, var(--portfolio-accent) 4%, transparent) 68%)",
-                            border: "1px solid color-mix(in srgb, var(--portfolio-accent) 38%, transparent)",
+                              "linear-gradient(135deg, color-mix(in srgb, var(--portfolio-accent) 24%, transparent), color-mix(in srgb, var(--portfolio-accent) 6%, transparent) 70%)",
+                            border: "1px solid color-mix(in srgb, var(--portfolio-accent) 64%, transparent)",
+                            boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--portfolio-accent) 12%, transparent)",
                           }}
                           transition={{ type: "spring", stiffness: 360, damping: 30, mass: 0.8 }}
                         />
                       ) : null}
 
-                      <div className="flex items-start justify-between gap-3">
+                      <div
+                        className={`pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 ease-out ${
+                          isHovered && !isActive ? "opacity-100" : "opacity-0"
+                        }`}
+                        style={{
+                          background:
+                            "linear-gradient(135deg, color-mix(in srgb, var(--portfolio-accent) 14%, transparent), color-mix(in srgb, var(--portfolio-accent) 4%, transparent) 72%)",
+                          border: "1px solid color-mix(in srgb, var(--portfolio-accent) 30%, transparent)",
+                        }}
+                      />
+
+                      <div className="relative z-10 flex items-start justify-between gap-3">
                         <div className="relative z-10 min-w-0">
                           <div
                             className={`text-[1rem] font-semibold leading-snug transition-colors duration-300 ${
-                              isHighlighted
+                              isActive
                                 ? "text-[color:var(--portfolio-accent)]"
                                 : "text-slate-900 group-hover:text-[color:var(--portfolio-accent)] [html[data-theme='dark']_&]:text-slate-100"
                             }`}
                           >
                             {item.title}
                           </div>
-                          <div className="mt-1 text-[0.72rem] font-black uppercase tracking-[0.16em] text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+                          <div
+                            className={`mt-1 text-[0.72rem] font-black uppercase tracking-[0.16em] transition-colors duration-300 ${
+                              isActive
+                                ? "text-slate-800 [html[data-theme='dark']_&]:text-slate-50"
+                                : "text-slate-500 [html[data-theme='dark']_&]:text-slate-400"
+                            }`}
+                          >
                             {item.editions.length > 0 ? `${item.editions.length} Editions` : "Coming soon"}
                           </div>
                         </div>
 
                         <div
                           className={`mt-1 shrink-0 text-[0.72rem] font-black transition-colors duration-300 ${
-                            isHighlighted
+                            isActive
                               ? "text-[color:var(--portfolio-accent)]"
                               : "text-slate-400 group-hover:text-[color:var(--portfolio-accent)]"
                           }`}
@@ -640,10 +717,10 @@ export function PortfolioShowcase() {
 
                       <div
                         className={`relative z-10 mt-3 h-px w-full transition-all duration-300 ${
-                          isHighlighted ? "opacity-100" : "opacity-55 group-hover:opacity-100"
+                          isActive ? "opacity-100" : "opacity-55 group-hover:opacity-100"
                         }`}
                         style={{
-                          background: isHighlighted
+                          background: isActive
                             ? "linear-gradient(90deg,var(--portfolio-accent),rgba(159,123,40,0.12))"
                             : "linear-gradient(90deg,rgba(148,163,184,0.45),rgba(148,163,184,0.08))",
                         }}
