@@ -292,6 +292,16 @@ body::before {
   transition: filter 450ms ease, opacity 450ms ease;
 }
 
+body:has([data-hero-shell="demo"]) > .floating-blobs,
+body:has([data-hero-shell="demo"]) > header,
+body:has([data-hero-shell="demo"]) > footer {
+  display: none !important;
+}
+
+body:has([data-hero-shell="demo"]) > main {
+  margin-top: 0 !important;
+}
+
 html[data-theme="dark"] body {
   background-image: none;
 }

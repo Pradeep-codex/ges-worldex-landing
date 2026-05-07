@@ -1,8 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import type { Variants } from "framer-motion";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
@@ -21,6 +20,8 @@ const compactFormatter = new Intl.NumberFormat("en-IN", {
 });
 const DESKTOP_SIDEBAR_TOP = 96;
 const DESKTOP_BREAKPOINT = 1024;
+const EDITION_GALLERY_INTERVAL_MS = 4200;
+const EDITION_GALLERY_TRANSITION = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
 
 const metricMeta: Record<string, { label: string; note: string }> = {
   visitors: { label: "Visitors", note: "Across editions" },
@@ -29,24 +30,6 @@ const metricMeta: Record<string, { label: string; note: string }> = {
   stalls: { label: "Stalls", note: "Built and managed" },
   hostedBuyers: { label: "Hosted buyers", note: "Curated attendance" },
   jewelleryDesigns: { label: "Designs", note: "On showcase" },
-};
-
-const galleryImageVariants: Variants = {
-  enter: (slideDirection: number) => ({
-    x: slideDirection > 0 ? "7%" : "-7%",
-    opacity: 0,
-    scale: 1.03,
-  }),
-  center: {
-    x: "0%",
-    opacity: 1,
-    scale: 1,
-  },
-  exit: (slideDirection: number) => ({
-    x: slideDirection > 0 ? "-7%" : "7%",
-    opacity: 0,
-    scale: 0.985,
-  }),
 };
 
 function extractYear(date: string) {
@@ -90,47 +73,39 @@ function EditionGallery({
   title: string;
 }) {
   const totalImages = images.length;
-  const imageKey = images.join("|");
-  const [{ index: activeImageIndex, direction }, setSlideState] = useState({
-    index: 0,
-    direction: 1,
-  });
-  const visibleImageIndex = totalImages > 0 ? Math.min(activeImageIndex, totalImages - 1) : 0;
+  const carouselImages =
+    totalImages > 1 ? [images[totalImages - 1], ...images, images[0]] : images;
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [displayedIndex, setDisplayedIndex] = useState(totalImages > 1 ? 1 : 0);
+  const [isResettingTrack, setIsResettingTrack] = useState(false);
 
   const showImage = (nextIndex: number) => {
     if (totalImages <= 0) {
       return;
     }
 
-    setSlideState((current) => {
-      const normalizedIndex = (nextIndex + totalImages) % totalImages;
-      let nextDirection = normalizedIndex > current.index ? 1 : -1;
-
-      if (current.index === totalImages - 1 && normalizedIndex === 0) {
-        nextDirection = 1;
-      }
-
-      if (current.index === 0 && normalizedIndex === totalImages - 1) {
-        nextDirection = -1;
-      }
-
-      return {
-        index: normalizedIndex,
-        direction: nextDirection,
-      };
-    });
+    const normalizedIndex = (nextIndex + totalImages) % totalImages;
+    setActiveImageIndex(normalizedIndex);
+    setDisplayedIndex(totalImages > 1 ? normalizedIndex + 1 : normalizedIndex);
   };
 
   const goToPreviousImage = () => {
-    showImage(activeImageIndex - 1);
-  };
-  const goToNextImage = () => {
-    showImage(activeImageIndex + 1);
+    if (totalImages <= 1) {
+      return;
+    }
+
+    setDisplayedIndex((current) => current - 1);
+    setActiveImageIndex((current) => (current - 1 + totalImages) % totalImages);
   };
 
-  useEffect(() => {
-    setSlideState({ index: 0, direction: 1 });
-  }, [imageKey]);
+  const goToNextImage = () => {
+    if (totalImages <= 1) {
+      return;
+    }
+
+    setDisplayedIndex((current) => current + 1);
+    setActiveImageIndex((current) => (current + 1) % totalImages);
+  };
 
   useEffect(() => {
     if (totalImages <= 1) {
@@ -138,11 +113,9 @@ function EditionGallery({
     }
 
     const timer = window.setInterval(() => {
-      setSlideState((current) => ({
-        index: (current.index + 1) % totalImages,
-        direction: 1,
-      }));
-    }, 3200);
+      setDisplayedIndex((current) => current + 1);
+      setActiveImageIndex((current) => (current + 1) % totalImages);
+    }, EDITION_GALLERY_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
   }, [totalImages]);
@@ -150,28 +123,58 @@ function EditionGallery({
   return (
     <div className="space-y-4 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:space-y-3">
       <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] bg-[color:var(--portfolio-accent-soft)] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:aspect-[16/7]">
-        <AnimatePresence initial={false} custom={direction} mode="popLayout">
-          {images[visibleImageIndex] ? (
-            <motion.div
-              key={`${images[visibleImageIndex]}-${visibleImageIndex}`}
-              custom={direction}
-              className="absolute inset-0"
-              variants={galleryImageVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.78, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Image
-                src={images[visibleImageIndex]}
-                alt={`${title} gallery ${visibleImageIndex + 1}`}
-                fill
-                sizes="(min-width: 1024px) 44vw, 92vw"
-                className="object-cover"
-              />
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+        <motion.div
+          className="flex h-full"
+          animate={{ x: `${displayedIndex * -100}%` }}
+          transition={isResettingTrack ? { duration: 0 } : EDITION_GALLERY_TRANSITION}
+          onAnimationComplete={() => {
+            if (totalImages <= 1) {
+              return;
+            }
+
+            if (displayedIndex === 0) {
+              setIsResettingTrack(true);
+              setDisplayedIndex(totalImages);
+              window.requestAnimationFrame(() => {
+                setIsResettingTrack(false);
+              });
+              return;
+            }
+
+            if (displayedIndex === totalImages + 1) {
+              setIsResettingTrack(true);
+              setDisplayedIndex(1);
+              window.requestAnimationFrame(() => {
+                setIsResettingTrack(false);
+              });
+            }
+          }}
+        >
+          {carouselImages.map((image, index) => (
+            <div key={`${image}-${index}`} className="relative h-full min-w-full">
+              {(() => {
+                const realIndex =
+                  totalImages > 1
+                    ? index === 0
+                      ? totalImages - 1
+                      : index === carouselImages.length - 1
+                        ? 0
+                        : index - 1
+                    : index;
+
+                return (
+                  <Image
+                    src={image}
+                    alt={`${title} gallery ${realIndex + 1}`}
+                    fill
+                    sizes="(min-width: 1024px) 44vw, 92vw"
+                    className="object-cover"
+                  />
+                );
+              })()}
+            </div>
+          ))}
+        </motion.div>
 
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.04)_0%,rgba(10,10,10,0.18)_100%)]" />
       </div>
@@ -354,6 +357,7 @@ function MobilePortfolioSection({
               </div>
 
               <EditionGallery
+                key={`${activeEdition.name}-${previewImages.join("|")}`}
                 accent={exhibition.theme.accent}
                 images={previewImages}
                 title={activeEdition.name}
@@ -364,6 +368,7 @@ function MobilePortfolioSection({
       ) : (
         <div className="space-y-4 px-0 pb-6">
           <EditionGallery
+            key={`${exhibition.id}-${previewImages.join("|")}`}
             accent={exhibition.theme.accent}
             images={previewImages}
             title={exhibition.title}
@@ -852,10 +857,11 @@ export function PortfolioShowcase() {
                       </div>
 
                       <div className="[@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:order-2">
-                        <EditionGallery
-                          accent={exhibition.theme.accent}
-                          images={previewImages}
-                          title={edition.name}
+                      <EditionGallery
+                        key={`${edition.name}-${previewImages.join("|")}`}
+                        accent={exhibition.theme.accent}
+                        images={previewImages}
+                        title={edition.name}
                         />
                       </div>
                     </div>
