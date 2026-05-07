@@ -70,12 +70,30 @@ function EditionGallery({
   images: string[];
   title: string;
 }) {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const totalImages = images.length;
+  const carouselImages =
+    totalImages > 1 ? [images[totalImages - 1], ...images, images[0]] : images;
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [displayedIndex, setDisplayedIndex] = useState(totalImages > 1 ? 1 : 0);
+  const [isResettingTrack, setIsResettingTrack] = useState(false);
+  const SLIDE_INTERVAL_MS = 4200;
+  const SLIDE_TRANSITION = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
+
   const goToPreviousImage = () => {
+    if (totalImages <= 1) {
+      return;
+    }
+
+    setDisplayedIndex((current) => current - 1);
     setActiveImageIndex((current) => (current - 1 + totalImages) % totalImages);
   };
+
   const goToNextImage = () => {
+    if (totalImages <= 1) {
+      return;
+    }
+
+    setDisplayedIndex((current) => current + 1);
     setActiveImageIndex((current) => (current + 1) % totalImages);
   };
 
@@ -85,25 +103,48 @@ function EditionGallery({
     }
 
     const timer = window.setInterval(() => {
+      setDisplayedIndex((current) => current + 1);
       setActiveImageIndex((current) => (current + 1) % totalImages);
-    }, 1800);
+    }, SLIDE_INTERVAL_MS);
 
     return () => window.clearInterval(timer);
-  }, [totalImages]);
+  }, [SLIDE_INTERVAL_MS, totalImages]);
 
   return (
     <div className="space-y-4 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:space-y-3">
       <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] bg-[color:var(--portfolio-accent-soft)] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:aspect-[16/7]">
         <motion.div
           className="flex h-full"
-          animate={{ x: `${activeImageIndex * -100}%` }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          animate={{ x: `${displayedIndex * -100}%` }}
+          transition={isResettingTrack ? { duration: 0 } : SLIDE_TRANSITION}
+          onAnimationComplete={() => {
+            if (totalImages <= 1) {
+              return;
+            }
+
+            if (displayedIndex === 0) {
+              setIsResettingTrack(true);
+              setDisplayedIndex(totalImages);
+              window.requestAnimationFrame(() => {
+                setIsResettingTrack(false);
+              });
+              return;
+            }
+
+            if (displayedIndex === totalImages + 1) {
+              setIsResettingTrack(true);
+              setDisplayedIndex(1);
+              window.requestAnimationFrame(() => {
+                setIsResettingTrack(false);
+              });
+            }
+          }}
         >
-          {images.map((image, index) => (
+          {carouselImages.map((image, index) => (
             <div key={`${image}-${index}`} className="relative h-full min-w-full">
               <Image
                 src={image}
-                alt={`${title} gallery ${index + 1}`}
+                alt={`${title} gallery ${((index - 1 + totalImages) % totalImages) + 1}`}
                 fill
                 sizes="(min-width: 1024px) 44vw, 92vw"
                 className="object-cover"
@@ -134,7 +175,10 @@ function EditionGallery({
                 <button
                   key={`${image}-dot-${index}`}
                   type="button"
-                  onClick={() => setActiveImageIndex(index)}
+                  onClick={() => {
+                    setActiveImageIndex(index);
+                    setDisplayedIndex(index + 1);
+                  }}
                   className="h-2.5 rounded-full transition-all duration-300"
                   aria-label={`Show ${title} gallery image ${index + 1}`}
                   style={{
