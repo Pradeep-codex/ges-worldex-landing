@@ -396,13 +396,21 @@ export function PortfolioShowcase() {
     portfolioExhibitions.map(() => 0),
   );
   const [sidebarStyle, setSidebarStyle] = useState<CSSProperties>({});
+  const [sidebarActiveStyle, setSidebarActiveStyle] = useState<CSSProperties>({ opacity: 0 });
+  const [sidebarHoverStyle, setSidebarHoverStyle] = useState<CSSProperties>({ opacity: 0 });
   const contentTopRef = useRef<HTMLDivElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const sidebarTrackRef = useRef<HTMLElement | null>(null);
   const sidebarPanelRef = useRef<HTMLDivElement | null>(null);
+  const sidebarListRef = useRef<HTMLDivElement | null>(null);
+  const sidebarItemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const exhibition = portfolioExhibitions[activeExhibitionIndex];
   const editionCount = exhibition.editions.length;
   const maxSummaryCards = 5;
+  const sidebarLineStyle =
+    hoveredExhibitionIndex != null && hoveredExhibitionIndex !== activeExhibitionIndex
+      ? { ...sidebarHoverStyle, opacity: 1 }
+      : sidebarActiveStyle;
 
   const summaryCards = useMemo(() => {
     const totals = exhibition.editions.reduce<Record<string, number>>((acc, edition) => {
@@ -612,6 +620,54 @@ export function PortfolioShowcase() {
     };
   }, [activeExhibitionIndex]);
 
+  useEffect(() => {
+    let frame = 0;
+
+    const updateSidebarHighlights = () => {
+      const list = sidebarListRef.current;
+      const activeItem = sidebarItemRefs.current[activeExhibitionIndex];
+
+      if (!list || !activeItem) {
+        setSidebarActiveStyle({ opacity: 0 });
+        setSidebarHoverStyle({ opacity: 0 });
+        return;
+      }
+
+      setSidebarActiveStyle({
+        top: `${activeItem.offsetTop}px`,
+        height: `${activeItem.offsetHeight}px`,
+        opacity: 1,
+      });
+
+      const hoverItem =
+        hoveredExhibitionIndex == null ? null : sidebarItemRefs.current[hoveredExhibitionIndex];
+
+      if (!hoverItem || hoveredExhibitionIndex === activeExhibitionIndex) {
+        setSidebarHoverStyle((current) => ({ ...current, opacity: 0 }));
+        return;
+      }
+
+      setSidebarHoverStyle({
+        top: `${hoverItem.offsetTop}px`,
+        height: `${hoverItem.offsetHeight}px`,
+        opacity: 1,
+      });
+    };
+
+    const scheduleUpdate = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(updateSidebarHighlights);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [activeExhibitionIndex, hoveredExhibitionIndex]);
+
   return (
     <section
       ref={sectionRef}
@@ -646,47 +702,40 @@ export function PortfolioShowcase() {
             </div>
 
             <div className="mt-4 flex-1 overflow-y-auto pr-1">
-              <div className="space-y-2">
+              <div ref={sidebarListRef} className="relative space-y-2 pb-1">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 z-10 w-[2px] bg-[linear-gradient(180deg,#f0c680_0%,#d0923e_100%)] transition-[top,height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={sidebarLineStyle}
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 right-0 z-0 bg-[linear-gradient(130deg,rgba(244,224,195,0.96)_0%,rgba(236,207,167,0.95)_58%,rgba(226,189,145,0.93)_100%)] shadow-[0_18px_34px_rgba(62,41,22,0.16)] transition-[top,height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] [html[data-theme='dark']_&]:bg-[linear-gradient(130deg,rgba(67,52,35,0.88)_0%,rgba(49,38,27,0.86)_52%,rgba(36,29,22,0.92)_100%)] [html[data-theme='dark']_&]:shadow-[0_18px_34px_rgba(0,0,0,0.28)]"
+                  style={sidebarActiveStyle}
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 right-0 z-[1] bg-[rgba(166,125,82,0.16)] transition-[top,height,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] [html[data-theme='dark']_&]:bg-[rgba(216,183,102,0.1)]"
+                  style={sidebarHoverStyle}
+                />
+
                 {portfolioExhibitions.map((item, index) => {
                   const isActive = index === activeExhibitionIndex;
-                  const isHovered = hoveredExhibitionIndex === index;
 
                   return (
                     <button
                       key={item.id}
+                      ref={(node) => {
+                        sidebarItemRefs.current[index] = node;
+                      }}
                       type="button"
                       onClick={() => handleExhibitionChange(index)}
                       onMouseEnter={() => setHoveredExhibitionIndex(index)}
                       onMouseLeave={() => setHoveredExhibitionIndex(null)}
                       onFocus={() => setHoveredExhibitionIndex(index)}
                       onBlur={() => setHoveredExhibitionIndex(null)}
-                      className="group relative isolate w-full cursor-pointer overflow-hidden px-3 py-3 text-left transition-colors duration-300"
+                      className="group relative isolate z-[2] w-full cursor-pointer overflow-hidden px-3 py-3 text-left transition-colors duration-300"
                     >
-                      {isActive ? (
-                        <motion.div
-                          layoutId="portfolio-sidebar-highlight"
-                          className="pointer-events-none absolute inset-0 z-0"
-                          style={{
-                            background:
-                              "linear-gradient(135deg, color-mix(in srgb, var(--portfolio-accent) 24%, transparent), color-mix(in srgb, var(--portfolio-accent) 6%, transparent) 70%)",
-                            border: "1px solid color-mix(in srgb, var(--portfolio-accent) 64%, transparent)",
-                            boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--portfolio-accent) 12%, transparent)",
-                          }}
-                          transition={{ type: "spring", stiffness: 360, damping: 30, mass: 0.8 }}
-                        />
-                      ) : null}
-
-                      <div
-                        className={`pointer-events-none absolute inset-0 z-0 transition-opacity duration-300 ease-out ${
-                          isHovered && !isActive ? "opacity-100" : "opacity-0"
-                        }`}
-                        style={{
-                          background:
-                            "linear-gradient(135deg, color-mix(in srgb, var(--portfolio-accent) 14%, transparent), color-mix(in srgb, var(--portfolio-accent) 4%, transparent) 72%)",
-                          border: "1px solid color-mix(in srgb, var(--portfolio-accent) 30%, transparent)",
-                        }}
-                      />
-
                       <div className="relative z-10 flex items-start justify-between gap-3">
                         <div className="relative z-10 min-w-0">
                           <div
