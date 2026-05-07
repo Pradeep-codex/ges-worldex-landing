@@ -1,10 +1,11 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
-import { ArrowRight, BadgeCheck, Building2, Quote } from "lucide-react";
+import { ArrowRight, Quote } from "lucide-react";
 
 type Testimonial = {
   company: string;
@@ -24,6 +25,19 @@ type TestimonialSection = {
   testimonials: Testimonial[];
 };
 
+const testimonialImagePool = [
+  "/exhibition/expo1.jpg",
+  "/exhibition/expo2.jpg",
+  "/exhibition/expo3.jpg",
+  "/exhibition/expo4.jpg",
+  "/exhibition/expo5.jpg",
+  "/exhibition/expo6.jpg",
+  "/about-images/abt1.JPG",
+  "/about-images/abt2.JPG",
+  "/about-images/abt3.JPG",
+  "/about-images/abt4.JPG",
+];
+
 const testimonialSections: TestimonialSection[] = [
   {
     id: "sjs-exhibitors",
@@ -35,25 +49,53 @@ const testimonialSections: TestimonialSection[] = [
     tone: "white",
     testimonials: [
       {
-        company: "Aurum Jewels",
-        logo: "AJ",
-        person: "Rohan Mehta",
+        company: "Laxmi Chains",
+        logo: "LC",
+        person: "Mr. Bharath Mehta",
+        designation: "Managing Director",
+        text: `The first ever South Jewellery Show in January 2021 indicated how much the state needs its own B2B platform for the Jewellery trade. Though we were not a part of it, we heard from different sources that it was a great success. We started believing that SJS is the exhibition for Bengaluru and hence participated in the second edition. Our belief became true as it turned out to be another huge success. We will be a part of all the future editions of SJS.`,
+      },
+      {
+        company: "Mukti Gold Diamonds",
+        logo: "MG",
+        person: "Mr. Mahendra Jain",
+        designation: "Managing Director",
+        text: `Bengaluru is perfectly located in the heart of South India, and this is one of the main reasons for us to participate in the first edition. It turned out to be good for us. Subsequently we were a part of the second edition also, and the organizers pulled off another successful show. We intend to be a part of all SJS in future.`,
+      },
+      {
+        company: "Dharmesh Jewellers Pvt Ltd",
+        logo: "DJ",
+        person: "Mr. Ankit J Sanghvi",
+        designation: "Managing Director",
+        text: `The January 2021 show made us realise just how much has changed in the Jewellery trade in recent years. Just like their customers, even the jewellers from small towns are aware of global trends, so they are constantly looking for new innovations and adaptations of classic designs. We took part again in the August 2021 show, and what an exhibition it was. Hats off to the organizers for helping us get new clients from tier 3 and 4 towns.`,
+      },
+      {
+        company: "Mangaldeep Chains & Bangles",
+        logo: "MB",
+        person: "Mr. Kushal Sakaria Jain",
+        designation: "Exhibitor",
+        text: `Bengaluru is the new centre where a lot of manufacturers are creating new designs exclusively for South Indian consumers, so we did participate in both the editions. Trust me, both the shows gave us more than what we wanted. We are committed to SJS in all their future endeavours.`,
+      },
+      {
+        company: "Laxmi Diamonds",
+        logo: "LD",
+        person: "Mr. Chetan Kumar Mehta",
+        designation: "Managing Director",
+        text: `The jewellery market is getting transformed as a result of the lockdown experience. We have already been getting many inquiries from potential clients in smaller towns based on our online marketing. This never happened before. We are confident that a physical show like South Jewellery Show will help us meet an even larger number of such potential business partners.`,
+      },
+      {
+        company: "Mehta Gold Pvt Ltd",
+        logo: "MG",
+        person: "Mr. Sandeep Mehta",
         designation: "Director",
-        text: "SJS gave our team a refined platform to meet serious retailers and distributors. The visitor quality, planning support, and on-ground coordination were exactly what a jewellery exhibition should feel like.",
+        text: `Gold prices have moderated, jobs are slowly coming back and consumer demand is on the upswing. So everyone in the industry is looking forward to the South Jewellery Show to provide a further boost to the business. It is well timed to enable us to be prepared for the all important marriage season that is coming soon.`,
       },
       {
-        company: "Navya Ornaments",
-        logo: "NO",
-        person: "Priya Nair",
-        designation: "Business Head",
-        text: "The show environment was premium, organized, and highly relevant for our category. We were able to showcase new collections with confidence and connect with buyers who understood our product line.",
-      },
-      {
-        company: "Kriti Gold Works",
-        logo: "KG",
-        person: "Arvind Shah",
+        company: "SK Jewels",
+        logo: "SK",
+        person: "Mr. Suresh Kumar Ganna",
         designation: "Managing Partner",
-        text: "GES Worldex brought clarity to every stage, from booth planning to visitor movement. SJS helped us create meaningful conversations instead of just footfall.",
+        text: `It was really exciting to be a part of the South Jewellery Show as a participant and even more as a support to the organizers. I personally realized that we invested time, money, and trust in the right set of organizers. Kudos to Sreekanth and team. We came out victorious again in the second edition, which was more challenging than the first. All the best and keep doing the best in future also.`,
       },
     ],
   },
@@ -67,25 +109,32 @@ const testimonialSections: TestimonialSection[] = [
     tone: "ivory",
     testimonials: [
       {
-        company: "Royal Retail Jewellers",
-        logo: "RR",
-        person: "Sneha Kapoor",
-        designation: "Procurement Lead",
-        text: "The floor was easy to navigate and the exhibitor mix was strong. We discovered fresh collections, compared suppliers quickly, and returned with clear purchase conversations.",
+        company: "Neelkanth Jewellers",
+        logo: "NJ",
+        person: "Mr. Ram",
+        designation: "Managing Director",
+        text: `We have been in the business for quite some time now, and we have well established contacts for all the traditional types of jewellery. But we are constantly on the lookout for manufacturers of newer styles that appeal to the younger, more cosmopolitan consumer. We will be at the South Jewellery Show to meet potential suppliers of these products.`,
       },
       {
-        company: "Southline Jewellery Mart",
-        logo: "SJ",
-        person: "Karthik Rao",
-        designation: "Owner",
-        text: "SJS saves time for serious buyers. The exhibition brings the right brands together, and the overall experience feels organized, premium, and business focused.",
+        company: "Bhima Jewellery",
+        logo: "BJ",
+        person: "Dr. B. Govindan",
+        designation: "Chairman",
+        text: `SJS showcases the best jewellery manufactured in the country. It also provides opportunity for networking, knowledge sharing, and exchange of information which benefits the industry as a whole.`,
       },
       {
-        company: "Ritika Gems",
-        logo: "RG",
-        person: "Maya Iyer",
-        designation: "Category Buyer",
-        text: "We came looking for new design directions and dependable suppliers. The show helped us shortlist both, with a professional setting that made meetings productive.",
+        company: "Kamakhya Jewels Pvt Ltd",
+        logo: "KJ",
+        person: "Mr. Manoj Kumar Jha",
+        designation: "Managing Director",
+        text: `A high end jewellery show was much required in Bengaluru. SJS has filled that vacuum by showing consistency in all its editions. One should definitely visit this special show, where you can find a special bouquet of South Indian jewellery.`,
+      },
+      {
+        company: "Vaibhav Jewelers",
+        logo: "VJ",
+        person: "Mr. Suresh Addanki",
+        designation: "Managing Director",
+        text: `The South Jewellery Show is a unique B2B jewellery exhibition held on a grand scale which gives immense opportunities for jewellers in South India to plan their inventory with latest designs and fine workmanship. Every year there is something different and we are hoping to be a part of all editions of SJS.`,
       },
     ],
   },
@@ -99,25 +148,53 @@ const testimonialSections: TestimonialSection[] = [
     tone: "white",
     testimonials: [
       {
-        company: "Sterling House",
-        logo: "SH",
-        person: "Vikram Jain",
-        designation: "Founder",
-        text: "SSI has become a serious growth platform for silver jewellery brands. The scale, buyer turnout, and operational discipline made our participation worthwhile across editions.",
+        company: "Navkar Sterling Silver",
+        logo: "NS",
+        person: "Mr. Abay Ranka",
+        designation: "Proprietor",
+        text: `We are very excited about bringing the entire Silver Industry under one roof. The show comes as a boon to the Silver Industry as it grows to new heights.`,
       },
       {
-        company: "Silver Craft Studio",
-        logo: "SC",
-        person: "Ananya Menon",
-        designation: "Creative Director",
-        text: "The exhibition gave our collections the right stage. Buyers were engaged, the booth experience was smooth, and the overall presentation matched the premium nature of our brand.",
+        company: "Anmol Jewellers",
+        logo: "AJ",
+        person: "Mr. Kishore Roonwal",
+        designation: "Proprietor",
+        text: `We are very happy that we participated in SSI. We have come in contact with many new customers from across India.`,
       },
       {
-        company: "Moksha Silver",
-        logo: "MS",
-        person: "Dev Patel",
-        designation: "Sales Director",
-        text: "GES Worldex understands the business rhythm of an exhibition. SSI helped us expand retailer conversations while keeping the event experience clean and professionally managed.",
+        company: "Purple Jewels Pvt. Ltd.",
+        logo: "PJ",
+        person: "Mr. Nitesh Uttam Chand Jain",
+        designation: "Managing Director",
+        text: `SSI Bangalore was a very well organised show. We had lots of serious buyers visiting us, and owners of stores who do not visit us in other shows also came to our stall because they were not distracted by gold and diamonds.`,
+      },
+      {
+        company: "Moments 925 Silver India",
+        logo: "M9",
+        person: "Mr. Rakesh Kumar",
+        designation: "Managing Partner",
+        text: `There is a growing interest in silver jewellery and articles. We were looking for the right platform to develop our network of clients in new parts of the country, and then came SSI. We realized in no time that there is no better way to reach these regions than by regularly participating in SSI.`,
+      },
+      {
+        company: "Sangeeta Boochra",
+        logo: "SB",
+        person: "Mr. Abineet",
+        designation: "Managing Partner",
+        text: `We are preparing to unveil many new collections at the Silver Show of India. It is our experience that many smaller jewellers are somewhat cautious when placing advance orders and often need to replenish stocks. SSI proved to be an ideal platform for connecting suppliers and retailers when it was most needed.`,
+      },
+      {
+        company: "Rajat Emporium",
+        logo: "RE",
+        person: "Mr. Yogesh Kotari",
+        designation: "Managing Partner",
+        text: `Earlier, only the bigger names among retailers stocked silver jewellery, but now times have changed. Because of the high demand for silver products, new retailers have emerged to fill the void. The Silver Show of India helped us make contact with new jewellers who want to enter silver jewellery retail or expand their silver section.`,
+      },
+      {
+        company: "Suman Silver",
+        logo: "SS",
+        person: "Mr. Rajesh",
+        designation: "Managing Partner",
+        text: `I have always wondered why there were no major trade shows on silver, and I am overjoyed that the Silver Show of India has been launched. There are many newer manufacturers in the Silver Industry, and SSI provided us the perfect platform to showcase our designs to the world.`,
       },
     ],
   },
@@ -131,25 +208,32 @@ const testimonialSections: TestimonialSection[] = [
     tone: "ivory",
     testimonials: [
       {
-        company: "Urban Silver Boutique",
-        logo: "US",
-        person: "Neeraj Kulkarni",
-        designation: "Retail Partner",
-        text: "SSI made product discovery efficient. We met suppliers across design, pricing, and production capacity, all within a layout that was easy to understand.",
+        company: "Malabar Gold & Diamonds",
+        logo: "MD",
+        person: "Malabar Gold & Diamonds",
+        designation: "SSI Visitor",
+        text: `The first two editions of SSI were great. It was good to be back in a B2B show such as SSI.`,
       },
       {
-        company: "Heritage Jewels",
-        logo: "HJ",
-        person: "Farah Ansari",
-        designation: "Merchandising Manager",
-        text: "The show had a strong balance of established names and emerging collections. It felt premium without losing the practical focus buyers need.",
+        company: "Abaran Timeless Jewellery Pvt. Ltd.",
+        logo: "AT",
+        person: "Mr. Pratap Kamat",
+        designation: "Visitor",
+        text: `SSI was a great opportunity to meet new suppliers of silver jewellery and articles. The show was a big surprise.`,
       },
       {
-        company: "Shree Traders",
-        logo: "ST",
-        person: "Manish Agarwal",
-        designation: "Owner",
-        text: "We returned with new vendor connections and a sharper view of market trends. SSI is now part of our planning calendar because the trade value is clear.",
+        company: "Joyalukkas India Ltd",
+        logo: "JI",
+        person: "Joyalukkas India Ltd",
+        designation: "SSI Visitor",
+        text: `SSI presented us with a good opportunity to speak directly with our existing suppliers and new vendors. We cannot wait for the next edition to be held in Mumbai.`,
+      },
+      {
+        company: "GRT Jewellers (India) Private Limited",
+        logo: "GRT",
+        person: "Mr. Anand",
+        designation: "SSI Visitor",
+        text: `Our staff found SSI an invaluable platform where they can boost their knowledge and expertise on silver jewellery and articles.`,
       },
     ],
   },
@@ -160,13 +244,22 @@ const sectionVariants: Variants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 22 },
-  visible: { opacity: 1, y: 0 },
-};
-
 const revealTransition: Transition = { duration: 0.55, ease: "easeOut" };
-const cardTransition: Transition = { duration: 0.45, ease: "easeOut" };
+const MARQUEE_SPEED = 42;
+const MARQUEE_SMOOTHING = 0.1;
+
+function getTestimonialImage(sectionId: string, index: number) {
+  const seed = Array.from(sectionId).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return testimonialImagePool[(seed + index * 3) % testimonialImagePool.length];
+}
+
+function getCompactTestimonialText(text: string) {
+  if (text.length <= 118) {
+    return text;
+  }
+
+  return `${text.slice(0, 115).trimEnd()}...`;
+}
 
 export function TestimonialsPageContent() {
   const reduceMotion = useReducedMotion();
@@ -275,32 +368,109 @@ function TestimonialBand({
   section: TestimonialSection;
   reduceMotion: boolean;
 }) {
-  const bandBackground =
-    section.tone === "ivory"
-      ? "linear-gradient(180deg, rgba(159,123,40,0.06), rgba(255,253,248,0.5))"
-      : "transparent";
+  const [isHovered, setIsHovered] = useState(false);
+  const [repeatCount, setRepeatCount] = useState(2);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const singleSetRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const lastFrameTimeRef = useRef<number | null>(null);
+  const offsetRef = useRef(0);
+  const currentSpeedRef = useRef(reduceMotion ? 0 : MARQUEE_SPEED);
+  const marqueeCopies = reduceMotion ? [0] : Array.from({ length: repeatCount }, (_, index) => index);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      return;
+    }
+
+    const measure = () => {
+      const containerWidth = containerRef.current?.offsetWidth ?? 0;
+      const singleSetWidth = singleSetRef.current?.offsetWidth ?? 0;
+
+      if (containerWidth <= 0 || singleSetWidth <= 0) {
+        return;
+      }
+
+      const copiesNeeded = Math.max(2, Math.ceil(containerWidth / singleSetWidth) + 1);
+      setRepeatCount(copiesNeeded);
+      offsetRef.current %= singleSetWidth;
+    };
+
+    measure();
+
+    const resizeObserver = new ResizeObserver(() => {
+      measure();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    if (singleSetRef.current) {
+      resizeObserver.observe(singleSetRef.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [reduceMotion, section.testimonials.length]);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      if (trackRef.current) {
+        trackRef.current.style.transform = "translate3d(0, 0, 0)";
+      }
+      return;
+    }
+
+    const track = trackRef.current;
+
+    if (!track) {
+      return;
+    }
+
+    const animate = (time: number) => {
+      if (lastFrameTimeRef.current === null) {
+        lastFrameTimeRef.current = time;
+      }
+
+      const deltaSeconds = (time - lastFrameTimeRef.current) / 1000;
+      lastFrameTimeRef.current = time;
+
+      const singleSetWidth = singleSetRef.current?.offsetWidth ?? 0;
+
+      if (singleSetWidth <= 0) {
+        frameRef.current = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      const targetSpeed = isHovered ? 0 : MARQUEE_SPEED;
+      const smoothingFactor = 1 - Math.pow(1 - MARQUEE_SMOOTHING, deltaSeconds * 60);
+
+      currentSpeedRef.current += (targetSpeed - currentSpeedRef.current) * smoothingFactor;
+      offsetRef.current = (offsetRef.current + currentSpeedRef.current * deltaSeconds) % singleSetWidth;
+      track.style.transform = `translate3d(-${offsetRef.current}px, 0, 0)`;
+
+      frameRef.current = window.requestAnimationFrame(animate);
+    };
+
+    frameRef.current = window.requestAnimationFrame(animate);
+
+    return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+      }
+      frameRef.current = null;
+      lastFrameTimeRef.current = null;
+    };
+  }, [isHovered, reduceMotion]);
 
   return (
-    <section id={section.id} className="py-10 md:py-16 lg:py-20" style={{ background: bandBackground }}>
+    <section id={section.id} className="pt-10 pb-4 md:pt-16 md:pb-6 lg:pt-20 lg:pb-8">
       <div className="mx-auto w-full max-w-[1700px] px-4 sm:px-5 md:px-8 lg:px-12">
-        <motion.div
-          initial={reduceMotion ? false : "hidden"}
-          whileInView={reduceMotion ? undefined : "visible"}
-          viewport={{ once: true, amount: 0.18 }}
-          variants={sectionVariants}
-          transition={revealTransition}
-          className="mb-7 grid gap-5 md:mb-9 lg:grid-cols-[0.78fr_1fr] lg:items-end"
-        >
+        <div className="mb-7 space-y-4 md:mb-9 md:space-y-5">
           <div className="space-y-3">
-            <div className="inline-flex max-w-full items-center gap-2 rounded-full px-3 py-1.5 text-[0.62rem] font-black uppercase tracking-[0.16em] sm:text-[0.68rem] sm:tracking-[0.18em]"
-              style={{
-                backgroundColor: "rgba(159, 123, 40, 0.1)",
-                color: "#9f7b28",
-              }}
-            >
-              <BadgeCheck className="h-3.5 w-3.5" />
-              {section.show} {section.type}
-            </div>
             <h2 className="welcome-display-font text-3xl font-black leading-tight sm:text-4xl md:text-5xl" style={{ color: "var(--about-text-primary)" }}>
               {section.title}
             </h2>
@@ -309,67 +479,83 @@ function TestimonialBand({
           <p className="max-w-3xl text-[0.95rem] leading-relaxed sm:text-base md:text-lg" style={{ color: "var(--about-text-secondary)" }}>
             {section.subtitle}
           </p>
-        </motion.div>
+        </div>
 
-        <div className="grid gap-4 md:grid-cols-2 md:gap-5 xl:grid-cols-3">
-          {section.testimonials.map((testimonial, index) => (
-            <motion.article
-              key={`${section.id}-${testimonial.company}`}
-              initial={reduceMotion ? false : "hidden"}
-              whileInView={reduceMotion ? undefined : "visible"}
-              viewport={{ once: true, amount: 0.2 }}
-              variants={cardVariants}
-              transition={{ ...cardTransition, delay: reduceMotion ? 0 : index * 0.08 }}
-              className="group flex min-h-0 flex-col rounded-[20px] border p-4 shadow-[0_18px_60px_rgba(47,35,24,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_26px_80px_rgba(47,35,24,0.12)] sm:p-5 md:min-h-[340px] md:rounded-[24px] md:p-6 xl:min-h-[360px]"
-              style={{
-                backgroundColor: "var(--about-card-bg)",
-                borderColor: "var(--about-card-border)",
-              }}
+        <div
+          ref={containerRef}
+          className="relative"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onFocusCapture={() => setIsHovered(true)}
+          onBlurCapture={() => setIsHovered(false)}
+        >
+          <div
+            className={reduceMotion ? "overflow-x-auto pb-3 pt-14" : "overflow-hidden pt-14"}
+            style={{
+              maskImage: "linear-gradient(90deg, transparent 0, black 6%, black 94%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(90deg, transparent 0, black 6%, black 94%, transparent 100%)",
+            }}
+          >
+            <div
+              ref={trackRef}
+              className="flex w-max flex-nowrap will-change-transform"
             >
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[linear-gradient(135deg,#9f7b28,#d8b766)] text-sm font-black text-white shadow-[0_14px_34px_rgba(159,123,40,0.22)] sm:h-12 sm:w-12 sm:rounded-[16px]">
-                    {testimonial.logo}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="break-words text-base font-black leading-tight sm:text-lg" style={{ color: "var(--about-text-primary)" }}>
-                      {testimonial.company}
-                    </h3>
-                    <div className="mt-1 flex items-center gap-1.5 text-xs font-bold" style={{ color: "var(--about-text-muted)" }}>
-                      <Building2 className="h-3.5 w-3.5 text-[#9f7b28]" />
-                      Trade participant
-                    </div>
-                  </div>
-                </div>
-
-                <span
-                  className="w-fit shrink-0 rounded-full px-3 py-1.5 text-[0.6rem] font-black uppercase tracking-[0.12em] sm:text-[0.62rem] sm:tracking-[0.14em]"
-                  style={{
-                    backgroundColor: "rgba(159, 123, 40, 0.1)",
-                    color: "#9f7b28",
-                  }}
+              {marqueeCopies.map((copyIndex) => (
+                <div
+                  key={`${section.id}-copy-${copyIndex}`}
+                  ref={copyIndex === 0 ? singleSetRef : undefined}
+                  className="flex flex-nowrap gap-4 pr-4 md:gap-5 md:pr-5"
+                  aria-hidden={copyIndex > 0}
                 >
-                  {section.show} / {section.type}
-                </span>
-              </div>
+                  {section.testimonials.map((testimonial, index) => (
+                    <article
+                      key={`${section.id}-${testimonial.company}-${copyIndex}-${index}`}
+                      className="group relative mt-10 flex min-h-[300px] w-[min(76vw,16.5rem)] shrink-0 flex-col rounded-[22px] border border-[#ebe4d8] bg-[#fffdfa] px-4 pb-4 pt-18 transition-all duration-300 hover:-translate-y-1 sm:min-h-[295px] sm:w-[17rem] sm:px-5 sm:pb-5 sm:pt-16 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[#101922]"
+                    >
+                      <div className="absolute left-1/2 top-0 h-28 w-28 -translate-x-1/2 -translate-y-[42%] rounded-full bg-[#fffdfa] sm:h-36 sm:w-36 sm:-translate-y-[50%] [html[data-theme='dark']_&]:bg-[#101922]" />
 
-              <div className="my-6 flex flex-1 flex-col justify-center md:my-7">
-                <Quote className="mb-4 h-7 w-7 text-[#d8b766] sm:h-8 sm:w-8" />
-                <p className="text-[0.95rem] font-semibold leading-relaxed sm:text-base" style={{ color: "var(--about-text-primary)" }}>
-                  {testimonial.text}
-                </p>
-              </div>
+                      <div className="absolute left-1/2 top-0 flex h-24 w-24 -translate-x-1/2 -translate-y-[46%] items-center justify-center rounded-full bg-[#fffdfa] sm:h-32 sm:w-32 sm:-translate-y-[54%] [html[data-theme='dark']_&]:bg-[#101922]">
+                        <div className="relative h-[5.4rem] w-[5.4rem] overflow-hidden rounded-full border-[5px] border-[#fffdfa] sm:h-[7.2rem] sm:w-[7.2rem] sm:border-[6px] [html[data-theme='dark']_&]:border-[#101922]">
+                          <Image
+                            src={getTestimonialImage(section.id, index)}
+                            alt={`${testimonial.company} exhibition showcase`}
+                            fill
+                            sizes="(max-width: 640px) 86px, 116px"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                      </div>
 
-              <div className="border-t pt-4" style={{ borderColor: "var(--about-card-border)" }}>
-                <div className="text-base font-black" style={{ color: "var(--about-text-primary)" }}>
-                  {testimonial.person}
+                      <div className="mt-3 flex flex-1 flex-col text-left">
+                        <p className="text-[0.8rem] leading-[1.58] text-[#6b5743] sm:text-[0.82rem] [html[data-theme='dark']_&]:text-[#d8c2a8]">
+                          {getCompactTestimonialText(testimonial.text)}
+                        </p>
+                      </div>
+
+                      <div className="mt-auto pt-4 text-left">
+                        <div className="text-[0.9rem] font-black text-[#3a2a1b] [html[data-theme='dark']_&]:text-[#f3e7d4]">
+                          {testimonial.person}
+                        </div>
+                        <div className="mt-0.5 text-[0.72rem] leading-[1.45] font-semibold text-[#7a6855] [html[data-theme='dark']_&]:text-[#cdb79d]">
+                          {testimonial.company}
+                          {testimonial.designation ? ` - ${testimonial.designation}` : ""}
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex justify-end">
+                        <Quote className="h-8 w-8 fill-[#2f2318] text-[#2f2318] [html[data-theme='dark']_&]:fill-[#d8b766] [html[data-theme='dark']_&]:text-[#d8b766]" />
+                      </div>
+                    </article>
+                  ))}
                 </div>
-                <div className="mt-1 text-sm font-semibold" style={{ color: "var(--about-text-secondary)" }}>
-                  {testimonial.designation}
-                </div>
-              </div>
-            </motion.article>
-          ))}
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 md:mt-8">
+          <div className="h-px w-full bg-[linear-gradient(90deg,transparent_0%,rgba(159,123,40,0.16)_16%,rgba(159,123,40,0.42)_50%,rgba(159,123,40,0.16)_84%,transparent_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,transparent_0%,rgba(216,183,102,0.1)_16%,rgba(216,183,102,0.3)_50%,rgba(216,183,102,0.1)_84%,transparent_100%)]" />
+          <div className="mx-auto h-4 w-[42%] min-w-[10rem] rounded-full bg-[radial-gradient(circle,rgba(159,123,40,0.14)_0%,transparent_72%)] blur-md [html[data-theme='dark']_&]:bg-[radial-gradient(circle,rgba(216,183,102,0.12)_0%,transparent_72%)]" />
         </div>
       </div>
     </section>
