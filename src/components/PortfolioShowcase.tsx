@@ -389,11 +389,15 @@ function MobilePortfolioSection({
   );
 }
 
-export function PortfolioShowcase() {
+export function PortfolioShowcase({
+  exhibitions = portfolioExhibitions,
+}: {
+  exhibitions?: PortfolioExhibition[];
+}) {
   const [activeExhibitionIndex, setActiveExhibitionIndex] = useState(0);
   const [hoveredExhibitionIndex, setHoveredExhibitionIndex] = useState<number | null>(null);
   const [mobileEditionIndexes, setMobileEditionIndexes] = useState(() =>
-    portfolioExhibitions.map(() => 0),
+    exhibitions.map(() => 0),
   );
   const [sidebarStyle, setSidebarStyle] = useState<CSSProperties>({});
   const [sidebarActiveStyle, setSidebarActiveStyle] = useState<CSSProperties>({ opacity: 0 });
@@ -404,7 +408,7 @@ export function PortfolioShowcase() {
   const sidebarPanelRef = useRef<HTMLDivElement | null>(null);
   const sidebarListRef = useRef<HTMLDivElement | null>(null);
   const sidebarItemRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const exhibition = portfolioExhibitions[activeExhibitionIndex];
+  const exhibition = exhibitions[activeExhibitionIndex] ?? exhibitions[0] ?? portfolioExhibitions[0];
   const editionCount = exhibition.editions.length;
   const maxSummaryCards = 5;
   const isHoverHighlightVisible =
@@ -495,7 +499,7 @@ export function PortfolioShowcase() {
     setActiveExhibitionIndex(index);
     setHoveredExhibitionIndex(null);
 
-    const exhibitionId = portfolioExhibitions[index]?.id;
+    const exhibitionId = exhibitions[index]?.id;
     if (exhibitionId) {
       window.history.replaceState(null, "", `#${exhibitionId}`);
     }
@@ -526,7 +530,7 @@ export function PortfolioShowcase() {
         return;
       }
 
-      const idx = portfolioExhibitions.findIndex((item) => item.id === hash);
+      const idx = exhibitions.findIndex((item) => item.id === hash);
       if (idx < 0) {
         return;
       }
@@ -556,7 +560,7 @@ export function PortfolioShowcase() {
     applyHashSelection();
     window.addEventListener("hashchange", applyHashSelection);
     return () => window.removeEventListener("hashchange", applyHashSelection);
-  }, []);
+  }, [exhibitions]);
 
   useEffect(() => {
     let frame = 0;
@@ -679,12 +683,12 @@ export function PortfolioShowcase() {
       <div className="pointer-events-none absolute inset-x-10 top-0 h-56 bg-[radial-gradient(circle_at_center,rgba(212,180,101,0.16),transparent_68%)] blur-3xl" />
 
       <div className="relative -mx-3 space-y-8 lg:hidden">
-        {portfolioExhibitions.map((item, index) => (
+        {exhibitions.map((item, index) => (
           <MobilePortfolioSection
             key={item.id}
             exhibition={item}
             activeEditionIndex={mobileEditionIndexes[index] ?? 0}
-            isLast={index === portfolioExhibitions.length - 1}
+            isLast={index === exhibitions.length - 1}
             onEditionChange={(editionIndex) => handleMobileEditionChange(index, editionIndex)}
           />
         ))}
@@ -724,7 +728,7 @@ export function PortfolioShowcase() {
                   style={sidebarHoverStyle}
                 />
 
-                {portfolioExhibitions.map((item, index) => {
+                {exhibitions.map((item, index) => {
                   const isActive = index === activeExhibitionIndex;
 
                   return (

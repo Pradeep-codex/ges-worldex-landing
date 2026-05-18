@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { NavRoutePage } from "@/components/NavRoutePage";
+import { navPageFallbacks, mergeNavPageContent } from "@/lib/navPages";
+import { getGenericPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = { title: "Exhibitor Floor Plan" };
 
-export default function ExhibitorFloorPlanPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Exhibitors"
-      title="Floor plan"
-      description="Review exhibition layout planning and discover how booth placement, visitor flow, and category zones support better business conversations."
-      points={["Venue zoning", "Booth placement support", "Visitor flow planning"]}
-    />
-  );
+export default async function ExhibitorFloorPlanPage() {
+  const cms = await getGenericPageContent("exhibitors/floor-plan");
+  return <NavRoutePage {...mergeNavPageContent(navPageFallbacks["exhibitors/floor-plan"], cms)} />;
 }

@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { NavRoutePage } from "@/components/NavRoutePage";
+import { navPageFallbacks, mergeNavPageContent } from "@/lib/navPages";
+import { getGenericPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = { title: "Visitor Registration" };
 
-export default function VisitorRegistrationPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Visitors"
-      title="Visitor registration"
-      description="Register your interest and prepare for access to GES Worldex exhibition experiences."
-      points={["Visitor pass guidance", "Business profile support", "Event access preparation"]}
-    />
-  );
+export default async function VisitorRegistrationPage() {
+  const cms = await getGenericPageContent("visitors/registration");
+  return <NavRoutePage {...mergeNavPageContent(navPageFallbacks["visitors/registration"], cms)} />;
 }

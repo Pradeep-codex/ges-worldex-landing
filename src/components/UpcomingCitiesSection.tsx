@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArrowUpRight, Building2, CalendarDays, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import type { UpcomingCitiesSectionContent } from "@/sanity/lib/home";
 
 const cityCards = [
   {
@@ -32,10 +33,44 @@ const cityCards = [
   },
 ] as const;
 
+type CityCard = {
+  id: string;
+  city: string;
+  date: string;
+  venue: string;
+  copy: string;
+};
+
+function resolveUpcomingCities(content?: UpcomingCitiesSectionContent) {
+  const cities = content?.cities?.length
+    ? content.cities
+        .filter((city) => city.city)
+        .map((city, index) => {
+          const fallback = cityCards[index % cityCards.length];
+
+          return {
+            id: (city.city || fallback.city).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+            city: city.city || fallback.city,
+            date: city.date || fallback.date,
+            venue: city.venue || fallback.venue,
+            copy: city.copy || fallback.copy,
+          };
+        })
+    : cityCards;
+
+  return {
+    title: content?.title || "City Editions Crafted To Feel Premium",
+    description:
+      content?.description ||
+      "Explore a refined preview of upcoming event destinations with tactile flip cards designed to feel calm, premium, and intentional.",
+    cities,
+  };
+}
+
 function CompactDestinationCard({
   city,
   date,
-}: Pick<(typeof cityCards)[number], "city" | "date">) {
+}: Pick<CityCard, "city" | "date">) {
   return (
     <div className="rounded-[16px] border border-[rgba(159,123,40,0.14)] bg-[linear-gradient(145deg,rgba(255,253,248,0.96)_0%,rgba(245,235,215,0.94)_100%)] px-3.5 py-3 shadow-[0_12px_28px_rgba(47,35,24,0.08)] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(7,16,24,0.92)_0%,rgba(18,28,34,0.9)_100%)]">
       <div className="flex items-start justify-between gap-3">
@@ -71,7 +106,7 @@ function DestinationFlipCard({
   copy,
   date,
   venue,
-}: (typeof cityCards)[number]) {
+}: CityCard) {
   const [isHovered, setIsHovered] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const isFlipped = isHovered || isPinned;
@@ -153,7 +188,13 @@ function DestinationFlipCard({
   );
 }
 
-export function UpcomingCitiesSection() {
+export function UpcomingCitiesSection({
+  content,
+}: {
+  content?: UpcomingCitiesSectionContent;
+}) {
+  const resolvedContent = resolveUpcomingCities(content);
+
   return (
     <section className="relative mx-auto w-full max-w-[1700px] px-4 pb-20 pt-4 md:px-8 md:pb-24 md:pt-8 lg:px-12 lg:pb-28 lg:pt-10">
       <div className="relative overflow-visible px-0 py-0 md:overflow-hidden md:rounded-[34px] md:bg-[linear-gradient(180deg,rgba(255,253,248,0.58)_0%,rgba(250,244,231,0.42)_48%,rgba(232,214,174,0.38)_100%)] md:px-7 md:py-8 md:shadow-[0_28px_70px_rgba(47,35,24,0.08)] lg:px-10 lg:py-10 [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(7,16,24,0.82)_0%,rgba(13,24,31,0.72)_48%,rgba(22,31,37,0.78)_100%)] [html[data-theme='dark']_&]:md:shadow-[0_28px_70px_rgba(0,0,0,0.24)]">
@@ -188,21 +229,21 @@ export function UpcomingCitiesSection() {
             className="mx-auto max-w-[1100px] px-0 py-2 text-center md:px-6 md:py-3"
           >
             <h2 className="welcome-display-font mx-auto text-[1.7rem] font-black leading-[0.98] tracking-[-0.04em] text-[#2f2318] md:text-[2.55rem] md:whitespace-nowrap lg:text-[3rem] [html[data-theme='dark']_&]:text-[#f3e7d4]">
-              City Editions Crafted To Feel Premium
+              {resolvedContent.title}
             </h2>
             <p className="mx-auto mt-3 max-w-[58ch] text-[0.88rem] leading-relaxed text-[#6b5743] md:mt-4 md:text-[1rem] [html[data-theme='dark']_&]:text-[#d8c2a8]">
-              Explore a refined preview of upcoming event destinations with tactile flip cards designed to feel calm, premium, and intentional.
+              {resolvedContent.description}
             </p>
           </motion.div>
 
           <div className="mt-5 grid gap-2.5 md:hidden">
-            {cityCards.map((card) => (
+            {resolvedContent.cities.map((card) => (
               <CompactDestinationCard key={card.id} city={card.city} date={card.date} />
             ))}
           </div>
 
           <div className="mt-6 hidden gap-3 md:mt-10 md:grid md:grid-cols-2 md:gap-5 xl:grid-cols-3">
-            {cityCards.map((card, index) => (
+            {resolvedContent.cities.map((card, index) => (
               <motion.div
                 key={card.id}
                 initial={{ opacity: 0, y: 22 }}

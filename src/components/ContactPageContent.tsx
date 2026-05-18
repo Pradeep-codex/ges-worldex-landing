@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import type { ContactPageCmsContent } from "@/sanity/lib/pages";
 
 const officeAddress =
   "225 14th Cross, Sampige Rd, opposite Saibaba Temple, Malleshwaram, Bengaluru, Karnataka 560003";
@@ -13,7 +14,7 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-export function ContactPageContent() {
+export function ContactPageContent({ content }: { content?: ContactPageCmsContent | null }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -66,23 +67,23 @@ export function ContactPageContent() {
       <section className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
         <div className="space-y-6">
           <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-xs font-black uppercase tracking-[0.22em] text-transparent">
-            Contact
+            {content?.eyebrow || "Contact"}
           </p>
           <h1
             className="welcome-display-font max-w-[16ch] text-[clamp(2.35rem,7vw,4.6rem)] font-black leading-[0.95] tracking-tight"
             style={{ color: "var(--about-text-primary)" }}
           >
-            Let&apos;s talk about your next exhibition move.
+            {content?.title || "Let's talk about your next exhibition move."}
           </h1>
           <p className="max-w-2xl text-base leading-relaxed md:text-lg" style={{ color: "var(--about-text-secondary)" }}>
-            Share your query and the GES Worldex team will get back to you with the right information for exhibitors, visitors,
-            partnerships, and sponsorships.
+            {content?.description ||
+              "Share your query and the GES Worldex team will get back to you with the right information for exhibitors, visitors, partnerships, and sponsorships."}
           </p>
 
           <div className="grid gap-3 pt-2">
-            <InlineContactRow icon={Mail} label="Email" value="info@gesindiaexh.com" href="mailto:info@gesindiaexh.com" />
-            <InlineContactRow icon={Phone} label="Phone" value="+91 99450 12123" href="tel:+919945012123" />
-            <InlineContactRow icon={MapPin} label="Office" value={officeAddress} href={officeMapsUrl} />
+            <InlineContactRow icon={Mail} label="Email" value={content?.email || "info@gesindiaexh.com"} href={`mailto:${content?.email || "info@gesindiaexh.com"}`} />
+            <InlineContactRow icon={Phone} label="Phone" value={content?.phone || "+91 99450 12123"} href={`tel:${(content?.phone || "+91 99450 12123").replace(/[^\d+]/g, "")}`} />
+            <InlineContactRow icon={MapPin} label="Office" value={content?.officeAddress || officeAddress} href={content?.officeMapsUrl || officeMapsUrl} />
           </div>
         </div>
 
@@ -99,13 +100,13 @@ export function ContactPageContent() {
 
           <div className="relative space-y-3">
             <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-xs font-black uppercase tracking-[0.22em] text-transparent">
-              Contact Form
+              {content?.formTitle ? "Contact Form" : "Contact Form"}
             </p>
             <h2 className="text-3xl font-black leading-tight md:text-4xl" style={{ color: "var(--about-text-primary)" }}>
-              Send your query
+              {content?.formTitle || "Send your query"}
             </h2>
             <p className="text-base leading-relaxed" style={{ color: "var(--about-text-secondary)" }}>
-              Provide details and we&apos;ll route it to the right team member.
+              {content?.formDescription || "Provide details and we'll route it to the right team member."}
             </p>
           </div>
 
@@ -191,7 +192,7 @@ export function ContactPageContent() {
               </button>
 
               <Link
-                href="mailto:info@gesindiaexh.com"
+                href={`mailto:${content?.email || "info@gesindiaexh.com"}`}
                 className="inline-flex w-full items-center justify-center rounded-full border px-7 py-4 text-sm font-black uppercase tracking-widest transition-all hover:border-[#9f7b28] active:scale-95 sm:w-fit"
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
               >

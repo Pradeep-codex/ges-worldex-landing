@@ -5,7 +5,6 @@ import {
   Bed,
   Building2,
   ClipboardList,
-  FileText,
   Handshake,
   LayoutTemplate,
   MapPinned,
@@ -14,6 +13,7 @@ import {
   UsersRound,
   Wrench,
 } from "lucide-react";
+import type { GenericPageContent } from "@/sanity/lib/pages";
 
 const hubContent = {
   exhibitors: {
@@ -130,10 +130,38 @@ const hubContent = {
 
 type AudienceHubPageProps = {
   type: keyof typeof hubContent;
+  content?: GenericPageContent | null;
 };
 
-export function AudienceHubPage({ type }: AudienceHubPageProps) {
-  const content = hubContent[type];
+export function AudienceHubPage({ type, content: cmsContent }: AudienceHubPageProps) {
+  const fallbackContent = hubContent[type];
+  const content = {
+    ...fallbackContent,
+    eyebrow: cmsContent?.eyebrow || fallbackContent.eyebrow,
+    title: cmsContent?.title || fallbackContent.title,
+    description: cmsContent?.description || fallbackContent.description,
+    heroPoints: cmsContent?.cards?.length
+      ? cmsContent.cards
+          .slice(0, 3)
+          .map((card) => card.eyebrow || card.title)
+          .filter((point): point is string => Boolean(point))
+      : fallbackContent.heroPoints,
+    options: cmsContent?.cards?.length
+      ? cmsContent.cards
+          .filter((card) => card.title)
+          .map((card, index) => {
+            const fallbackOption = fallbackContent.options[index % fallbackContent.options.length];
+
+            return {
+              title: card.title as string,
+              href: card.link?.href || fallbackOption.href,
+              icon: fallbackOption.icon,
+              description: card.description || fallbackOption.description,
+              details: card.eyebrow ? [card.eyebrow] : fallbackOption.details,
+            };
+          })
+      : fallbackContent.options,
+  };
 
   return (
     <main className="mx-auto w-full max-w-[1700px] px-4 py-12 md:px-8 md:py-16 lg:px-12 lg:py-24">

@@ -16,6 +16,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
+import type { WhySectionContent } from "@/sanity/lib/home";
 
 const pointIcons = {
   expertise: BadgeCheck,
@@ -31,6 +32,31 @@ const pointIcons = {
   engaging: Sparkles,
   trusted: ShieldCheck,
 } as const;
+
+const pointIconKeys = Object.keys(pointIcons) as (keyof typeof pointIcons)[];
+
+type WhyPoint = {
+  icon: keyof typeof pointIcons;
+  title: string;
+  description: string;
+};
+
+type WhyHighlight = {
+  value: string;
+  label: string;
+};
+
+type SwitchContentItem = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  highlights: WhyHighlight[];
+  points: WhyPoint[];
+};
+
+type SwitchMode = "exhibit" | "visit";
+
+type SwitchContentMap = Record<SwitchMode, SwitchContentItem>;
 
 const switchContent = {
   exhibit: {
@@ -131,13 +157,55 @@ const switchContent = {
       },
     ],
   },
-} as const;
+} satisfies SwitchContentMap;
 
-type SwitchMode = keyof typeof switchContent;
+function resolveWhySection(content?: WhySectionContent): SwitchContentMap {
+  if (!content?.tabs?.length) {
+    return switchContent;
+  }
 
-export function WhySwitchSection() {
+  const nextContent: SwitchContentMap = {
+    exhibit: { ...switchContent.exhibit },
+    visit: { ...switchContent.visit },
+  };
+
+  content.tabs.forEach((tab) => {
+    if (tab.key !== "exhibit" && tab.key !== "visit") {
+      return;
+    }
+
+    const fallback = switchContent[tab.key];
+    nextContent[tab.key] = {
+      eyebrow: tab.eyebrow || fallback.eyebrow,
+      title: tab.title || fallback.title,
+      body: tab.body || fallback.body,
+      highlights: tab.highlights?.length
+        ? tab.highlights
+            .filter((highlight) => highlight.label)
+            .map((highlight) => ({
+              value: `${highlight.value ?? ""}${highlight.suffix ?? ""}`,
+              label: highlight.label as string,
+            }))
+        : fallback.highlights,
+      points: tab.points?.length
+        ? tab.points
+            .filter((point) => point.title)
+            .map((point, index) => ({
+              icon: pointIconKeys[index % pointIconKeys.length],
+              title: point.title as string,
+              description: point.description || fallback.points[index % fallback.points.length].description,
+            }))
+        : fallback.points,
+    } satisfies SwitchContentItem;
+  });
+
+  return nextContent;
+}
+
+export function WhySwitchSection({ content }: { content?: WhySectionContent }) {
+  const resolvedSwitchContent = resolveWhySection(content);
   const [mode, setMode] = useState<SwitchMode>("exhibit");
-  const content = switchContent[mode];
+  const activeContent = resolvedSwitchContent[mode];
 
   const toggleControls = (
     <div className="inline-flex items-center rounded-full border border-[rgba(159,123,40,0.16)] bg-[linear-gradient(180deg,rgba(255,253,248,0.98)_0%,rgba(245,235,215,0.95)_100%)] p-1.5 shadow-[0_18px_46px_rgba(47,35,24,0.16),inset_1px_1px_0_rgba(255,255,255,0.82)] backdrop-blur-md [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.98)_0%,rgba(22,31,37,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(0,0,0,0.4),inset_1px_1px_0_rgba(255,255,255,0.08)]">
@@ -186,7 +254,7 @@ export function WhySwitchSection() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(159,123,40,0.25),transparent)]" />
 
       <div className="space-y-12 md:hidden">
-        {(Object.entries(switchContent) as [SwitchMode, (typeof switchContent)[SwitchMode]][]).map(
+        {(Object.entries(resolvedSwitchContent) as [SwitchMode, (typeof resolvedSwitchContent)[SwitchMode]][]).map(
           ([sectionMode, sectionContent]) => (
             <div key={sectionMode} className="space-y-5">
               <div className="space-y-3">
@@ -277,18 +345,18 @@ export function WhySwitchSection() {
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-end">
                 <div className="space-y-4">
                   <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]">
-                    {content.eyebrow}
+                    {activeContent.eyebrow}
                   </div>
                   <h2 className="welcome-display-font max-w-[14ch] text-[2.1rem] font-black leading-[0.92] tracking-[-0.04em] text-slate-950 md:text-[2.8rem] lg:max-w-[12ch] lg:text-[3.4rem] [html[data-theme='dark']_&]:text-slate-50">
-                    {content.title}
+                    {activeContent.title}
                   </h2>
                   <p className="max-w-[62ch] text-[0.98rem] leading-relaxed text-slate-600 [html[data-theme='dark']_&]:text-slate-400">
-                    {content.body}
+                    {activeContent.body}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
-                  {content.highlights.map((stat) => (
+                  {activeContent.highlights.map((stat) => (
                     <div
                       key={stat.label}
                       className="min-w-0 rounded-[8px] border px-3 py-3 shadow-[0_16px_34px_rgba(47,35,24,0.12),inset_1px_1px_0_rgba(255,255,255,0.78)] md:px-4 md:py-4"
@@ -316,7 +384,7 @@ export function WhySwitchSection() {
               </div>
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {content.points.map((point, index) => (
+                {activeContent.points.map((point, index) => (
                   <motion.div
                     key={`${mode}-${point.title}`}
                     initial={{ opacity: 0, y: 16 }}

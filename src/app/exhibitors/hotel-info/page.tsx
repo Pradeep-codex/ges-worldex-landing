@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { NavRoutePage } from "@/components/NavRoutePage";
+import { navPageFallbacks, mergeNavPageContent } from "@/lib/navPages";
+import { getGenericPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = { title: "Exhibitor Hotel Info" };
 
-export default function ExhibitorHotelInfoPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Exhibitors"
-      title="Hotel info"
-      description="Find stay-related guidance for exhibitor teams attending GES Worldex exhibition programs."
-      points={["Recommended stay areas", "Team travel planning", "Venue access guidance"]}
-    />
-  );
+export default async function ExhibitorHotelInfoPage() {
+  const cms = await getGenericPageContent("exhibitors/hotel-info");
+  return <NavRoutePage {...mergeNavPageContent(navPageFallbacks["exhibitors/hotel-info"], cms)} />;
 }

@@ -5,6 +5,7 @@ import { OurProcessSection } from "@/components/OurProcessSection";
 import { ManagingDirectorSection } from "@/components/ManagingDirectorSection";
 import { VisionMottoSection } from "@/components/VisionMottoSection";
 import { TimelineSection } from "@/components/TimelineSection";
+import { getAboutPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = {
   title: "About GES Worldex",
@@ -19,12 +20,14 @@ const metrics = [
   { value: "100K+", label: "Visitors" },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const content = await getAboutPageContent();
+
   return (
     <main className="relative w-full overflow-x-clip" style={{ backgroundColor: 'var(--about-bg-light)' }}>
-      <AboutHero />
+      <AboutHero content={content?.hero} />
 
-      <OurStorySection />
+      <OurStorySection content={content?.story} />
 
       <TimelineSection />
 

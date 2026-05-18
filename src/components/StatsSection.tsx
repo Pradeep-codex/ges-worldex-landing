@@ -2,6 +2,57 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import type { HomeStatsSection } from "@/sanity/lib/home";
+
+type StatItem = {
+  end: number;
+  suffix?: string;
+  label: string;
+};
+
+type StatsContent = {
+  eyebrow: string;
+  headline: string[];
+  description: string;
+  stats: StatItem[];
+};
+
+const defaultStatsContent: StatsContent = {
+  eyebrow: "Exhibition Metrics",
+  headline: [
+    "Expand Your Reach.",
+    "Elevate Your Brand.",
+    "Multiply Opportunities.",
+  ],
+  description: "A Platform that's Built for Scale, Visibility & Business Impact.",
+  stats: [
+    { end: 400, suffix: "+", label: "Exhibitions" },
+    { end: 4, suffix: "K+", label: "Brands" },
+    { end: 10, suffix: "M+", label: "Products" },
+    { end: 100, suffix: "K+", label: "Visitors" },
+  ],
+};
+
+function resolveStatsContent(content?: HomeStatsSection): StatsContent {
+  const stats =
+    content?.stats
+      ?.filter((stat) => typeof stat.value === "number" && stat.label)
+      .slice(0, 4)
+      .map((stat) => ({
+        end: stat.value as number,
+        suffix: stat.suffix,
+        label: stat.label as string,
+      })) ?? [];
+
+  return {
+    eyebrow: content?.eyebrow || defaultStatsContent.eyebrow,
+    headline: content?.headline?.length
+      ? content.headline.slice(0, 4)
+      : defaultStatsContent.headline,
+    description: content?.description || defaultStatsContent.description,
+    stats: stats.length ? stats : defaultStatsContent.stats,
+  };
+}
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
@@ -77,7 +128,7 @@ function StatTile({
       <div className="flex items-center justify-between gap-3">
         <div
           className="h-9 w-1.5 rounded-full opacity-90"
-          style={{ background: "linear-gradient(180deg,#9f7b28,#d8b766)" }}
+          style={{ background: accent }}
         />
         <div className="min-w-0 flex-1">
           <div
@@ -121,7 +172,7 @@ function CompactStat({
     >
       <div
         className="h-1.5 w-12 rounded-full opacity-95"
-        style={{ background: "linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)" }}
+        style={{ background: accent }}
       />
       <div
         className="welcome-display-font mt-2.5 text-[1.14rem] font-black leading-none tracking-[-0.05em] sm:text-[1.32rem]"
@@ -139,58 +190,48 @@ function CompactStat({
   );
 }
 
-function MobileStatsDetails({ animateNumbers }: { animateNumbers: boolean }) {
+function MobileStatsDetails({
+  animateNumbers,
+  content,
+}: {
+  animateNumbers: boolean;
+  content: StatsContent;
+}) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <div className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-[0.62rem] font-black uppercase tracking-[0.24em] text-transparent">
-          Exhibition Metrics
+          {content.eyebrow}
         </div>
         <h2
           className="welcome-display-font max-w-[16ch] text-[1.42rem] font-black leading-[0.98] tracking-[-0.03em] sm:text-[1.62rem]"
           style={{ color: "var(--about-text-primary)" }}
         >
-          <span className="block">Expand Your Reach.</span>
-          <span className="block">Elevate Your Brand.</span>
-          <span className="block">Multiply Opportunities.</span>
+          {content.headline.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
         </h2>
         <p
           className="max-w-[34ch] text-[0.9rem] font-semibold leading-relaxed sm:text-[0.98rem]"
           style={{ color: "var(--about-text-secondary)" }}
         >
-          A Platform that&apos;s Built for Scale, Visibility &amp; Business Impact.
+          {content.description}
         </p>
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <CompactStat
-          accent="linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%)"
-          end={400}
-          suffix="+"
-          label="Exhibitions"
-          start={animateNumbers}
-        />
-        <CompactStat
-          accent="linear-gradient(180deg,#0284c7 0%,#06b6d4 100%)"
-          end={4}
-          suffix="K+"
-          label="Brands"
-          start={animateNumbers}
-        />
-        <CompactStat
-          accent="linear-gradient(180deg,#2563eb 0%,#0891b2 100%)"
-          end={10}
-          suffix="M+"
-          label="Products"
-          start={animateNumbers}
-        />
-        <CompactStat
-          accent="linear-gradient(180deg,#1d4ed8 0%,#0ea5e9 100%)"
-          end={100}
-          suffix="K+"
-          label="Visitors"
-          start={animateNumbers}
-        />
+        {content.stats.map((stat, index) => (
+          <CompactStat
+            key={`${stat.label}-${index}`}
+            accent="linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)"
+            end={stat.end}
+            suffix={stat.suffix}
+            label={stat.label}
+            start={animateNumbers}
+          />
+        ))}
       </div>
     </div>
   );
@@ -198,9 +239,11 @@ function MobileStatsDetails({ animateNumbers }: { animateNumbers: boolean }) {
 
 function StatsBand({
   animateNumbers,
+  content,
   isVisible,
 }: {
   animateNumbers: boolean;
+  content: StatsContent;
   isVisible: boolean;
 }) {
   return (
@@ -210,59 +253,43 @@ function StatsBand({
 
       <div className="relative z-10 grid gap-5 px-4 py-4 sm:px-5 sm:py-5 md:grid-cols-[minmax(0,1fr)_minmax(250px,0.72fr)] md:items-end md:gap-1 md:px-6 md:py-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.95fr)] lg:gap-2 lg:px-7 xl:grid-cols-[minmax(0,1fr)_minmax(560px,0.95fr)] xl:px-8">
         <div className="space-y-4 lg:hidden">
-          <MobileStatsDetails animateNumbers={animateNumbers} />
+          <MobileStatsDetails animateNumbers={animateNumbers} content={content} />
         </div>
 
         <div className="hidden lg:flex lg:flex-col lg:justify-center lg:gap-4">
           <div className="max-w-[720px] space-y-2.5">
             <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-sm font-black uppercase tracking-[0.2em] text-transparent">
-              Exhibition Metrics
+              {content.eyebrow}
             </p>
             <h2
               className="welcome-display-font max-w-none text-[1.9rem] font-black leading-[0.95] tracking-[-0.03em] sm:text-[2.15rem] lg:text-[2.35rem]"
               style={{ color: "var(--about-text-primary)" }}
             >
-              <span className="block whitespace-nowrap">Expand Your Reach.</span>
-              <span className="block whitespace-nowrap">Elevate Your Brand.</span>
-              <span className="block whitespace-nowrap">Multiply Opportunities.</span>
+              {content.headline.map((line) => (
+                <span key={line} className="block whitespace-nowrap">
+                  {line}
+                </span>
+              ))}
             </h2>
             <p
               className="max-w-[42ch] text-base font-semibold leading-relaxed"
               style={{ color: "var(--about-text-secondary)" }}
             >
-              A Platform that&apos;s Built for Scale, Visibility &amp; Business Impact.
+              {content.description}
             </p>
           </div>
 
           <div className="grid max-w-[720px] grid-cols-2 gap-2.5 lg:grid-cols-4">
-            <StatTile
-              accent="linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%)"
-              end={400}
-              suffix="+"
-              label="Exhibitions"
-              start={animateNumbers}
-            />
-            <StatTile
-              accent="linear-gradient(180deg,#0284c7 0%,#06b6d4 100%)"
-              end={4}
-              suffix="K+"
-              label="Brands"
-              start={animateNumbers}
-            />
-            <StatTile
-              accent="linear-gradient(180deg,#2563eb 0%,#0891b2 100%)"
-              end={10}
-              suffix="M+"
-              label="Products"
-              start={animateNumbers}
-            />
-            <StatTile
-              accent="linear-gradient(180deg,#1d4ed8 0%,#0ea5e9 100%)"
-              end={100}
-              suffix="K+"
-              label="Visitors"
-              start={animateNumbers}
-            />
+            {content.stats.map((stat, index) => (
+              <StatTile
+                key={`${stat.label}-${index}`}
+                accent="linear-gradient(180deg,#9f7b28,#d8b766)"
+                end={stat.end}
+                suffix={stat.suffix}
+                label={stat.label}
+                start={animateNumbers}
+              />
+            ))}
           </div>
         </div>
 
@@ -297,9 +324,10 @@ function StatsBand({
   );
 }
 
-export function StatsSection() {
+export function StatsSection({ content }: { content?: HomeStatsSection }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [hasEntered, setHasEntered] = useState(false);
+  const resolvedContent = resolveStatsContent(content);
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -335,7 +363,11 @@ export function StatsSection() {
       className="relative z-20 mx-auto mt-8 w-full max-w-[1700px] overflow-visible px-4 pb-20 pt-6 md:mt-12 md:px-8 md:pb-24 md:pt-8 lg:mt-16 lg:px-12 lg:pb-28 lg:pt-10"
       aria-label="Statistics section"
     >
-      <StatsBand animateNumbers={hasEntered} isVisible={hasEntered} />
+      <StatsBand
+        animateNumbers={hasEntered}
+        content={resolvedContent}
+        isVisible={hasEntered}
+      />
     </section>
   );
 }

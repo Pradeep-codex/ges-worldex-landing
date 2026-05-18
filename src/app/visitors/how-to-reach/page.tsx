@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { NavRoutePage } from "@/components/NavRoutePage";
+import { navPageFallbacks, mergeNavPageContent } from "@/lib/navPages";
+import { getGenericPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = { title: "How to Reach Venue" };
 
-export default function HowToReachPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Visitors"
-      title="How to reach the venue"
-      description="Get practical guidance for reaching the exhibition venue and planning a smoother event-day arrival."
-      points={["Venue access", "Arrival planning", "Local travel guidance"]}
-    />
-  );
+export default async function HowToReachPage() {
+  const cms = await getGenericPageContent("visitors/how-to-reach");
+  return <NavRoutePage {...mergeNavPageContent(navPageFallbacks["visitors/how-to-reach"], cms)} />;
 }

@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { NavRoutePage } from "@/components/NavRoutePage";
+import { navPageFallbacks, mergeNavPageContent } from "@/lib/navPages";
+import { getGenericPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = { title: "Booth Application" };
 
-export default function BoothApplicationPage() {
-  return (
-    <NavRoutePage
-      eyebrow="Exhibitors"
-      title="Booth application"
-      description="Submit interest for exhibition space and start planning the right booth presence for your brand, products, and team."
-      points={["Booth size guidance", "Participation requirements", "Next-step coordination"]}
-    />
-  );
+export default async function BoothApplicationPage() {
+  const cms = await getGenericPageContent("exhibitors/booth-application");
+  return <NavRoutePage {...mergeNavPageContent(navPageFallbacks["exhibitors/booth-application"], cms)} />;
 }

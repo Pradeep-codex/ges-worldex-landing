@@ -2,8 +2,13 @@
 
 import { motion } from "framer-motion";
 import DomeGallery from "@/components/DomeGallery";
+import type { GallerySectionContent } from "@/sanity/lib/home";
 
-export function ImageGallerySection() {
+export function ImageGallerySection({
+  content,
+}: {
+  content?: GallerySectionContent;
+}) {
   return (
     <section className="relative mx-auto w-full max-w-[1700px] px-4 pb-24 pt-6 md:px-8 md:pb-28 md:pt-8 lg:px-12 lg:pb-32 lg:pt-10">
       <motion.div
@@ -14,7 +19,7 @@ export function ImageGallerySection() {
         className="mb-6 text-center md:mb-8"
       >
         <h2 className="mx-auto max-w-[12ch] text-[2rem] font-black uppercase tracking-[-0.06em] text-[#0d3142] sm:max-w-none sm:text-[2.6rem] md:text-[3.3rem] lg:text-[4.2rem] [html[data-theme='dark']_&]:text-white">
-          GES Worldex All Over The World
+          {content?.title || "GES Worldex All Over The World"}
         </h2>
       </motion.div>
 

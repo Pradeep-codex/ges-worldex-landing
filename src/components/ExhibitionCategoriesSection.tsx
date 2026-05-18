@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { portfolioExhibitions } from "@/lib/portfolio";
+import type { ExhibitionCategoriesSectionContent } from "@/sanity/lib/home";
 
 const exhibitionCategories = [
   {
@@ -95,15 +96,53 @@ const exhibitionCategories = [
   },
 ] as const;
 
+function resolveExhibitionCategories(content?: ExhibitionCategoriesSectionContent) {
+  const categories = content?.categories?.length
+    ? content.categories
+        .filter((category) => category.title)
+        .map((category, index) => {
+          const fallback = exhibitionCategories[index % exhibitionCategories.length];
+          const title = category.title || fallback.title;
+
+          return {
+            ...fallback,
+            id: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+            title,
+            titleLines: title.includes(" & ") ? title.split(" & ").map((line, lineIndex) => (lineIndex === 0 ? `${line} &` : line)) : [title],
+            eyebrow: category.eyebrow || fallback.eyebrow,
+            description: category.description || fallback.description,
+            image: category.image || fallback.image,
+          };
+        })
+    : exhibitionCategories;
+
+  return {
+    eyebrow: content?.eyebrow || "Our Exhibitions",
+    title: content?.title || "Categories We Bring To Life",
+    description:
+      content?.description ||
+      "We design and deliver sector-focused exhibition platforms that connect brands, buyers, partners, and industry decision-makers through purposeful trade environments.",
+    mobileDescription:
+      content?.description ||
+      "Our exhibition portfolio spans specialized sectors built to connect focused buyers, brands, suppliers, and decision-makers.",
+    categories,
+  };
+}
+
 const exhibitionHighlights = portfolioExhibitions.map((exhibition) => ({
   id: exhibition.id,
   title: exhibition.title,
   imageSrc: exhibition.image,
 }));
 
-export function ExhibitionCategoriesSection() {
-  const [activeId, setActiveId] = useState<(typeof exhibitionCategories)[number]["id"]>(
-    exhibitionCategories[0].id,
+export function ExhibitionCategoriesSection({
+  content,
+}: {
+  content?: ExhibitionCategoriesSectionContent;
+}) {
+  const resolvedContent = resolveExhibitionCategories(content);
+  const [activeId, setActiveId] = useState<string>(
+    resolvedContent.categories[0]?.id ?? "",
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [isMarqueeHovered, setIsMarqueeHovered] = useState(false);
@@ -224,18 +263,17 @@ export function ExhibitionCategoriesSection() {
           <div className="flex flex-col gap-4">
             <div className="max-w-3xl space-y-4">
               <div className="inline-flex items-center rounded-full border border-[rgba(159,123,40,0.18)] bg-white/80 px-3 py-1 text-[0.66rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] backdrop-blur-sm [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[#071018]/70 [html[data-theme='dark']_&]:text-[#d8b766]">
-                Our Exhibitions
+                {resolvedContent.eyebrow}
               </div>
               <div className="space-y-3">
                 <h2
                   id="exhibition-categories-heading"
                   className="welcome-display-font max-w-[12ch] text-[2rem] font-black leading-[0.94] tracking-[-0.035em] text-slate-950 md:text-[2.6rem] lg:text-[3.3rem] [html[data-theme='dark']_&]:text-slate-50"
                 >
-                  Categories We Bring To Life
+                  {resolvedContent.title}
                 </h2>
                 <p className="max-w-[58ch] text-sm leading-relaxed text-slate-600 md:text-[0.98rem] [html[data-theme='dark']_&]:text-slate-400">
-                  We design and deliver sector-focused exhibition platforms that connect brands, buyers,
-                  partners, and industry decision-makers through purposeful trade environments.
+                  {resolvedContent.description}
                 </p>
               </div>
             </div>
@@ -245,7 +283,7 @@ export function ExhibitionCategoriesSection() {
             className="hidden gap-3 lg:flex"
             onMouseLeave={canHover ? () => setHoveredId(null) : undefined}
           >
-            {exhibitionCategories.map((category, index) => {
+            {resolvedContent.categories.map((category, index) => {
               const expanded = previewId === category.id;
 
               return (
@@ -346,12 +384,11 @@ export function ExhibitionCategoriesSection() {
 
           <div className="space-y-3 lg:hidden">
             <p className="text-[0.9rem] leading-relaxed text-slate-600 [html[data-theme='dark']_&]:text-slate-400">
-              Our exhibition portfolio spans specialized sectors built to connect focused buyers, brands,
-              suppliers, and decision-makers.
+              {resolvedContent.mobileDescription}
             </p>
 
             <div className="space-y-3">
-              {exhibitionCategories.map((category) => (
+              {resolvedContent.categories.map((category) => (
                 <div key={category.id} className="flex items-start gap-3">
                   <div
                     className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${category.mobileDotClass}`}

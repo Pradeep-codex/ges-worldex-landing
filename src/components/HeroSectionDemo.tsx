@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, CalendarDays, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
+import type { HomeHeroSection } from "@/sanity/lib/home";
 
 type DemoSlide = {
   id: string;
@@ -92,6 +93,7 @@ const demoSocialLinks = [
 ];
 
 type HeroSectionDemoProps = {
+  content?: HomeHeroSection;
   shellMode?: "demo" | "home";
   tightPortraitTabletTop?: boolean;
 };
@@ -99,27 +101,53 @@ type HeroSectionDemoProps = {
 type ThemeMode = "light" | "dark";
 
 export function HeroSectionDemo({
+  content,
   shellMode = "demo",
   tightPortraitTabletTop = false,
 }: HeroSectionDemoProps) {
+  const slides = useMemo(
+    () =>
+      content?.slides?.length
+        ? content.slides
+            .filter((slide) => slide.title)
+            .map((slide, index) => {
+              const fallback = demoSlides[index % demoSlides.length];
+
+              return {
+                id: (slide.title || fallback.title).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+                eyebrow: fallback.eyebrow,
+                headline: fallback.headline,
+                highlight: fallback.highlight,
+                description: slide.description || fallback.description,
+                title: slide.title || fallback.title,
+                subtitle: slide.subtitle || fallback.subtitle,
+                edition: slide.edition || fallback.edition,
+                date: slide.date || fallback.date,
+                venue: slide.venue || fallback.venue,
+                image: slide.image || fallback.image,
+              };
+            })
+        : demoSlides,
+    [content],
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const isHomeHero = shellMode === "home";
   const showHeroNav = shellMode === "demo";
   const isLightHome = shellMode === "home" && themeMode !== "dark";
-  const activeSlide = demoSlides[activeIndex];
+  const activeSlide = slides[activeIndex] ?? slides[0] ?? demoSlides[0];
 
   const orderedSlides = useMemo(
-    () => demoSlides.map((_, index) => demoSlides[(activeIndex + index) % demoSlides.length]),
-    [activeIndex],
+    () => slides.map((_, index) => slides[(activeIndex + index) % slides.length]),
+    [activeIndex, slides],
   );
 
   const goToNext = () => {
-    setActiveIndex((current) => (current + 1) % demoSlides.length);
+    setActiveIndex((current) => (current + 1) % slides.length);
   };
 
   const goToPrevious = () => {
-    setActiveIndex((current) => (current - 1 + demoSlides.length) % demoSlides.length);
+    setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
   };
 
   useEffect(() => {
@@ -143,11 +171,11 @@ export function HeroSectionDemo({
 
   useEffect(() => {
     const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % demoSlides.length);
+      setActiveIndex((current) => (current + 1) % slides.length);
     }, 5200);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [slides.length]);
 
   return (
     <section
@@ -250,7 +278,7 @@ export function HeroSectionDemo({
                 animate={{ x: `-${activeIndex * 100}%` }}
                 transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
               >
-                {demoSlides.map((slide) => (
+                {slides.map((slide) => (
                   <div key={`${slide.id}-compact`} className="relative h-full min-w-full">
                     <Image
                       src={slide.image}
@@ -268,7 +296,7 @@ export function HeroSectionDemo({
 
             <div className="mt-4 flex justify-center">
               <div className="flex items-center gap-2.5">
-                {demoSlides.map((slide, index) => (
+                {slides.map((slide, index) => (
                   <button
                     key={`${slide.id}-compact-dot`}
                     type="button"
@@ -636,7 +664,7 @@ export function HeroSectionDemo({
           </button>
 
           <div className="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3">
-            {demoSlides.map((slide, index) => (
+            {slides.map((slide, index) => (
               <button
                 key={slide.id}
                 type="button"

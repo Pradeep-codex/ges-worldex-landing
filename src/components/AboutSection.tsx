@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import RotatingText from "./ui/RotatingText";
+import type { HomeAboutSection } from "@/sanity/lib/home";
 
 const visionCardClass =
   "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[30px] will-change-transform sm:rounded-[38px]";
@@ -50,9 +52,26 @@ const visionPhrases = [
   "Opportunity-Driven",
 ];
 
-export function AboutSection() {
+export function AboutSection({
+  content,
+}: {
+  content?: HomeAboutSection;
+}) {
   const [activeVisionGroup, setActiveVisionGroup] = useState<"primary" | "secondary">("primary");
   const revealViewport = { once: true, amount: 0.2 } as const;
+  const resolvedImages = visionCards.map((card, index) => ({
+    ...card,
+    src: content?.images?.[index]?.src || card.src,
+    alt: content?.images?.[index]?.alt || card.alt,
+  }));
+  const phrases = content?.rotatingPhrases?.length ? content.rotatingPhrases : visionPhrases;
+  const bullets = content?.bullets?.length
+    ? content.bullets
+    : [
+        "15+ Years of Industry Excellence",
+        "Presence in 20+ Global Strategic Markets",
+        "Connecting 50,000+ Business Leaders Annually",
+      ];
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -78,7 +97,7 @@ export function AboutSection() {
         {/* Left Side: Shuffled Focus Cards */}
         <div className="relative order-2 flex items-center justify-center py-3 sm:py-6 lg:order-1 lg:py-2">
           <div className="relative w-[340px] h-[330px] sm:w-[560px] sm:h-[430px] lg:w-[700px] lg:h-[500px]">
-            {visionCards.map((card, index) => {
+            {resolvedImages.map((card, index) => {
               const isFocused = card.group === activeVisionGroup;
 
               return (
@@ -102,12 +121,13 @@ export function AboutSection() {
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true, amount: 0.2 }}
                 >
-                  <img
+                  <Image
                     src={card.src}
                     alt={card.alt}
-                    className="h-full w-full rounded-[30px] object-cover sm:rounded-[38px]"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
+                    fill
+                    sizes="(min-width: 1024px) 20vw, (min-width: 640px) 28vw, 42vw"
+                    priority={index === 0}
+                    className="rounded-[30px] object-cover sm:rounded-[38px]"
                   />
                   <motion.div
                     className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,253,243,0.04),rgba(37,31,34,0.18))] dark:bg-[linear-gradient(145deg,rgba(30,25,20,0.3),rgba(100,80,60,0.15))]"
@@ -134,16 +154,16 @@ export function AboutSection() {
               className="text-sm font-bold uppercase tracking-[0.2em]"
               style={{ color: "var(--about-section-accent)" }}
             >
-              Our Vision
+              {content?.eyebrow || "Our Vision"}
             </h3>
             <h2
               className="flex flex-col gap-4 text-4xl font-black leading-[1.1] tracking-tight md:text-5xl lg:text-6xl"
               style={{ color: "var(--about-text-primary)" }}
             >
-              <span>We Build Powerful</span>
+              <span>{content?.titlePrefix || "We Build Powerful"}</span>
               <div className="flex">
                 <RotatingText
-                  texts={visionPhrases}
+                  texts={phrases}
                   mainClassName="inline-flex max-w-full rounded-xl px-3 py-1 sm:px-4 sm:py-2"
                   style={{
                     background: "linear-gradient(135deg, #2f2318 0%, #8d6a1e 48%, #d8b766 100%)",
@@ -165,7 +185,7 @@ export function AboutSection() {
               </div>
               <div>
                 <span className="uppercase tracking-tighter" style={{ color: "var(--about-text-primary)" }}>
-                  Experiences
+                  {content?.titleSuffix || "Experiences"}
                 </span>
               </div>
             </h2>
@@ -179,7 +199,8 @@ export function AboutSection() {
             className="max-w-xl text-lg leading-relaxed md:text-xl"
             style={{ color: "var(--about-text-secondary)" }}
           >
-            GES Worldex is a leading force in international exhibitions, dedicated to creating platforms where innovation meets opportunity. We bridge the gap between global service providers and emerging markets.
+            {content?.description ||
+              "GES Worldex is a leading force in international exhibitions, dedicated to creating platforms where innovation meets opportunity. We bridge the gap between global service providers and emerging markets."}
           </motion.p>
 
           <motion.ul
@@ -189,11 +210,7 @@ export function AboutSection() {
             viewport={revealViewport}
             className="space-y-4"
           >
-            {[
-              "15+ Years of Industry Excellence",
-              "Presence in 20+ Global Strategic Markets",
-              "Connecting 50,000+ Business Leaders Annually"
-            ].map((item: string, idx: number) => (
+            {bullets.map((item: string, idx: number) => (
               <li
                 key={idx}
                 className="group flex items-center gap-3 font-semibold"
@@ -218,11 +235,11 @@ export function AboutSection() {
             className="pt-4"
           >
             <Link
-              href="/about"
+              href={content?.cta?.href || "/about"}
               className="group relative z-10 inline-flex pointer-events-auto items-center gap-3 overflow-hidden rounded-full bg-[#2f2318] px-8 py-4 text-sm font-black uppercase tracking-widest text-white shadow-[0_18px_42px_rgba(47,35,24,0.16)] transition-transform active:scale-95 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018]"
             >
               <span className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-[#9f7b28] transition-transform duration-300 group-hover:scale-x-100 [html[data-theme='dark']_&]:bg-[#f0d188]" />
-              <span className="relative z-10">Discover Our Story</span>
+              <span className="relative z-10">{content?.cta?.label || "Discover Our Story"}</span>
               <ArrowRight className="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </motion.div>

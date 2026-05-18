@@ -2,12 +2,20 @@
 
 import { ArrowUpRight, PlayCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import type { FeaturedVideoSectionContent } from "@/sanity/lib/home";
 
 const videoUrl = "https://www.youtube.com/watch?v=LI9m-6uwETY";
 const embedUrl =
   "https://www.youtube-nocookie.com/embed/LI9m-6uwETY?rel=0&modestbranding=1&playsinline=1";
 
-export function FeaturedVideoSection() {
+export function FeaturedVideoSection({
+  content,
+}: {
+  content?: FeaturedVideoSectionContent;
+}) {
+  const resolvedVideoUrl = content?.youtubeUrl || videoUrl;
+  const resolvedEmbedUrl = content?.embedUrl || embedUrl;
+
   return (
     <section className="relative mx-auto w-full max-w-[1700px] px-0 pb-24 pt-6 md:px-8 md:pb-28 md:pt-8 lg:px-12 lg:pb-32 lg:pt-10">
       <div className="relative isolate overflow-hidden px-0 py-0 md:rounded-[42px] md:bg-[linear-gradient(135deg,#fffdf8_0%,#f6edd9_44%,#ead9b7_100%)] md:px-7 md:py-8 md:shadow-[0_40px_90px_rgba(47,35,24,0.14)] lg:px-10 lg:py-10 [html[data-theme='dark']_&]:md:bg-[linear-gradient(135deg,#071018_0%,#0d181f_44%,#162126_100%)] [html[data-theme='dark']_&]:md:shadow-[0_40px_90px_rgba(0,0,0,0.4)]">
@@ -25,17 +33,17 @@ export function FeaturedVideoSection() {
           >
             <div className="space-y-4">
               <h2 className="welcome-display-font max-w-[12ch] text-[1.9rem] font-black leading-[0.94] tracking-[-0.04em] text-[#2f2318] md:max-w-none md:text-[2.9rem] lg:text-[3.4rem] [html[data-theme='dark']_&]:text-[#f3e7d4]">
-                Watch The Exhibition Energy Come Alive
+                {content?.title || "Watch The Exhibition Energy Come Alive"}
               </h2>
               <p className="max-w-[58ch] text-[0.92rem] leading-relaxed text-[#6b5743] md:text-[1.04rem] [html[data-theme='dark']_&]:text-[#d8c2a8]">
-                A more cinematic look into the scale, atmosphere, and movement behind the GES
-                Worldex experience, presented in a sharper, more modern showcase frame.
+                {content?.description ||
+                  "A more cinematic look into the scale, atmosphere, and movement behind the GES Worldex experience, presented in a sharper, more modern showcase frame."}
               </p>
             </div>
 
             <div>
               <a
-                href={videoUrl}
+                href={resolvedVideoUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-[rgba(159,123,40,0.24)] bg-[linear-gradient(180deg,rgba(255,253,248,0.72)_0%,rgba(255,250,240,0.34)_100%)] px-3.5 py-2 text-[0.72rem] font-black uppercase tracking-[0.16em] text-[#2f2318] shadow-[8px_8px_20px_rgba(47,35,24,0.12),-4px_-4px_10px_rgba(255,255,255,0.42),inset_1px_1px_0_rgba(255,255,255,0.5)] transition-transform duration-300 hover:-translate-y-0.5 md:px-4 md:py-2.5 md:text-[0.8rem] md:tracking-[0.18em] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.02)_100%)] [html[data-theme='dark']_&]:text-[#f3e7d4] [html[data-theme='dark']_&]:shadow-[10px_10px_24px_rgba(0,0,0,0.34),inset_1px_1px_0_rgba(255,255,255,0.08)]"
@@ -61,7 +69,7 @@ export function FeaturedVideoSection() {
               <div className="relative overflow-hidden rounded-none border-0 shadow-none md:rounded-[30px] md:border md:border-white/24 md:shadow-[inset_2px_2px_4px_rgba(255,255,255,0.42),inset_-4px_-4px_8px_rgba(47,35,24,0.1),0_16px_32px_rgba(47,35,24,0.14)] [html[data-theme='dark']_&]:md:border-white/8 [html[data-theme='dark']_&]:md:shadow-[inset_2px_2px_4px_rgba(216,183,102,0.06),inset_-6px_-6px_10px_rgba(0,0,0,0.22),0_16px_32px_rgba(0,0,0,0.24)]">
                 <div className="aspect-video bg-[linear-gradient(135deg,#fffdf8_0%,#f6edd9_44%,#ead9b7_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,#071018_0%,#0d181f_44%,#162126_100%)]">
                   <iframe
-                    src={embedUrl}
+                    src={resolvedEmbedUrl}
                     title="GES Worldex featured video"
                     className="h-full w-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
