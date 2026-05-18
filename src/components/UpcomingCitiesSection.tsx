@@ -1,183 +1,151 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight, Building2, CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 const cityCards = [
   {
-    id: "mumbai",
-    city: "Mumbai",
-    date: "14-16 Aug 2026",
-    venue: "Jio World Convention Centre",
+    id: "ssi-delhi-2026",
+    city: "Silver Show of India",
+    date: "25th - 28th September, 2026",
     copy:
-      "A high-energy trade showcase built for jewellery, lifestyle, and design-led brand conversations.",
+      "Delhi's 3rd Edition - 2026",
+    imageSrc: "/demo-banner.png",
+    mapHref:
+      "https://www.google.com/maps/search/?api=1&query=Sector%2025%20Dwarka%2C%20Dwarka%2C%20New%20Delhi%2C%20Delhi%2C%20110077",
+    venue: "Sector 25 Dwarka, Dwarka, New Delhi, Delhi, 110077",
   },
   {
-    id: "dubai",
-    city: "Dubai",
-    date: "08-10 Oct 2026",
-    venue: "Dubai Exhibition Centre",
+    id: "sjs-bengaluru-2026",
+    city: "South Jewellery Show",
+    date: "10th - 12th July, 2026",
     copy:
-      "A premium Gulf market edition focused on cross-border buyers, hospitality networks, and regional expansion.",
+      "Bengaluru's 6th Edition - 2026",
+    imageSrc: "/demo-banner2.png",
+    mapHref:
+      "https://www.google.com/maps/search/?api=1&query=3F4F%2BVF4%2C%20Madanayakanahalli%2C%20Karnataka%20562162",
+    venue: "3F4F+VF4, Madanayakanahalli, Karnataka 562162",
   },
   {
-    id: "singapore",
-    city: "Singapore",
-    date: "19-21 Jan 2027",
-    venue: "Marina Bay Sands Expo",
+    id: "ssi-bengaluru-2026",
+    city: "Silver Show of India",
+    date: "18th - 21st December, 2026",
     copy:
-      "A polished Asia-facing platform for future retail, mobility, interiors, and innovation-forward exhibitors.",
+      "Bengaluru's 6th Edition - 2026",
+    imageSrc: "/demo-banner3.png",
+    mapHref:
+      "https://www.google.com/maps/search/?api=1&query=3F4F%2BVF4%2C%20Madanayakanahalli%2C%20Karnataka%20562162",
+    venue: "3F4F+VF4, Madanayakanahalli, Karnataka 562162",
   },
 ] as const;
 
-function CompactDestinationCard({
-  city,
-  date,
-}: Pick<(typeof cityCards)[number], "city" | "date">) {
-  return (
-    <div className="rounded-[16px] border border-[rgba(159,123,40,0.14)] bg-[linear-gradient(145deg,rgba(255,253,248,0.96)_0%,rgba(245,235,215,0.94)_100%)] px-3.5 py-3 shadow-[0_12px_28px_rgba(47,35,24,0.08)] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(7,16,24,0.92)_0%,rgba(18,28,34,0.9)_100%)]">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[rgba(159,123,40,0.2)] bg-[radial-gradient(circle_at_30%_30%,rgba(255,253,248,0.92),rgba(232,214,174,0.72)_100%)] text-[#9f7b28] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_30%_30%,rgba(216,183,102,0.24),rgba(7,16,24,0.92)_100%)] [html[data-theme='dark']_&]:text-[#d8b766]">
-            <Building2 className="h-4.5 w-4.5" />
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-[1rem] font-black leading-none text-[#2f2318] [html[data-theme='dark']_&]:text-[#f3e7d4]">
-              {city}
-            </div>
-            <div className="mt-1 inline-flex items-center gap-1.5 text-[0.68rem] font-semibold text-[#6b5743] [html[data-theme='dark']_&]:text-[#d8c2a8]">
-              <CalendarDays className="h-3 w-3" />
-              {date}
-            </div>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[rgba(159,123,40,0.2)] bg-white/70 px-2.5 py-1 text-[0.58rem] font-black uppercase tracking-[0.14em] text-[#9f7b28] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[#071018]/44 [html[data-theme='dark']_&]:text-[#d8b766]"
-        >
-          Explore
-          <ArrowUpRight className="h-3 w-3" />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function DestinationFlipCard({
+function UpcomingEditionCard({
   city,
   copy,
   date,
+  imageSrc,
+  mapHref,
   venue,
 }: (typeof cityCards)[number]) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
-  const isFlipped = isHovered || isPinned;
-
   return (
-    <motion.button
-      type="button"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsHovered(true)}
-      onBlur={() => setIsHovered(false)}
-      onClick={() => setIsPinned((current) => !current)}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-      className="group relative h-[250px] w-full rounded-[20px] text-left outline-none [perspective:1600px] focus-visible:ring-2 focus-visible:ring-[#9f7b28] focus-visible:ring-offset-2 focus-visible:ring-offset-white md:h-[340px] md:rounded-[24px] [html[data-theme='dark']_&]:focus-visible:ring-offset-[#071018]"
-      aria-label={`${city} event card`}
-      aria-pressed={isPinned}
+    <motion.article
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.42, ease: "easeOut" }}
+      className="group relative"
     >
-      <div
-        className="relative h-full w-full rounded-[20px] transition-transform duration-700 [transform-style:preserve-3d] md:rounded-[24px]"
-        style={{
-          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        }}
-      >
-        <div className="absolute inset-0 rounded-[20px] border border-[rgba(159,123,40,0.18)] bg-[linear-gradient(145deg,rgba(255,253,248,0.9)_0%,rgba(242,230,205,0.86)_100%)] p-4 shadow-[14px_14px_28px_rgba(47,35,24,0.12),-6px_-6px_14px_rgba(255,255,255,0.32),inset_1px_1px_0_rgba(255,255,255,0.5)] [backface-visibility:hidden] md:rounded-[24px] md:p-6 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(7,16,24,0.92)_0%,rgba(18,28,34,0.9)_100%)] [html[data-theme='dark']_&]:shadow-[16px_16px_32px_rgba(0,0,0,0.34),inset_1px_1px_0_rgba(255,255,255,0.06)]">
-          <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(216,183,102,0.8),rgba(159,123,40,0.65),transparent)] shadow-[0_0_16px_rgba(216,183,102,0.24)] md:inset-x-6" />
-          <div className="flex h-full flex-col items-center text-center">
-            <div className="mt-1.5 flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(159,123,40,0.22)] bg-[radial-gradient(circle_at_30%_30%,rgba(255,253,248,0.9),rgba(232,214,174,0.74)_60%,rgba(216,183,102,0.36)_100%)] text-[#9f7b28] shadow-[inset_4px_4px_8px_rgba(255,255,255,0.5),inset_-6px_-6px_12px_rgba(47,35,24,0.1),0_12px_24px_rgba(47,35,24,0.1)] md:mt-3 md:h-24 md:w-24 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_30%_30%,rgba(216,183,102,0.24),rgba(22,31,37,0.88)_55%,rgba(7,16,24,0.92)_100%)] [html[data-theme='dark']_&]:text-[#d8b766]">
-              <Building2 className="h-6 w-6 md:h-10 md:w-10" />
-            </div>
-
-            <div className="mt-4 space-y-2 md:mt-8 md:space-y-3">
-              <div className="text-[0.58rem] font-black uppercase tracking-[0.18em] text-[#9f7b28] md:text-[0.68rem] md:tracking-[0.24em] [html[data-theme='dark']_&]:text-[#d8b766]">
-                Upcoming Location
-              </div>
-              <h3 className="welcome-display-font text-[1.4rem] font-black leading-[0.92] tracking-[-0.04em] text-[#2f2318] md:text-[2rem] [html[data-theme='dark']_&]:text-[#f3e7d4]">
-                {city}
-              </h3>
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(159,123,40,0.18)] bg-white/28 px-3 py-1.5 text-[0.68rem] font-semibold text-[#6b5743] shadow-[inset_1px_1px_0_rgba(255,255,255,0.28)] md:gap-2 md:px-4 md:py-2 md:text-[0.8rem] [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[#071018]/42 [html[data-theme='dark']_&]:text-[#d8c2a8]">
-                <CalendarDays className="h-3 w-3 md:h-3.5 md:w-3.5" />
-                {date}
-              </div>
-            </div>
-
-            <div className="mt-auto w-full pt-5 md:pt-8">
-              <div className="mx-auto h-px w-16 bg-[linear-gradient(90deg,transparent,rgba(216,183,102,0.85),rgba(159,123,40,0.8),transparent)] shadow-[0_0_18px_rgba(216,183,102,0.28)] md:w-24" />
-            </div>
-          </div>
+      <div className="group/card relative mx-auto max-w-[21.5rem] overflow-hidden rounded-[24px] border border-[rgba(215,178,95,0.2)] bg-[linear-gradient(180deg,rgba(255,252,247,0.98)_0%,rgba(249,242,229,0.98)_100%)] shadow-[0_18px_42px_rgba(180,147,86,0.16)] transition-transform duration-300 group-hover:-translate-y-1 md:max-w-[22.5rem] [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.14)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(12,22,30,0.98)_0%,rgba(16,28,36,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[0_20px_48px_rgba(0,0,0,0.28)]">
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-[22%] top-[8%] z-10 h-[112%] w-[18%] rotate-[18deg] bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,244,214,0.14)_42%,rgba(245,200,93,0.28)_50%,rgba(255,244,214,0.14)_58%,rgba(255,255,255,0)_100%)] opacity-60 blur-lg [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,228,156,0.06)_42%,rgba(241,199,92,0.18)_50%,rgba(255,228,156,0.06)_58%,rgba(255,255,255,0)_100%)] [html[data-theme='dark']_&]:opacity-70"
+          animate={{ x: ["0%", "360%"] }}
+          transition={{ duration: 4.6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut", repeatDelay: 2.2 }}
+        />
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[18%] top-[14%] z-10 h-1.5 w-1.5 rounded-full bg-[#f1c75c] shadow-[0_0_8px_rgba(241,199,92,0.7),0_0_14px_rgba(241,199,92,0.32)] [html[data-theme='dark']_&]:bg-[#efbf56]"
+          animate={{ opacity: [0.12, 0.72, 0.18], scale: [0.92, 1.08, 0.96] }}
+          transition={{ duration: 3.1, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+        />
+        <div className="relative aspect-[16/10] overflow-hidden rounded-b-[24px]">
+          <Image
+            src={imageSrc}
+            alt={`${city} upcoming exhibition`}
+            fill
+            sizes="(min-width: 1280px) 28vw, (min-width: 768px) 42vw, 100vw"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(19,24,32,0.1)_38%,rgba(19,24,32,0.38)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(4,10,14,0.08)_0%,rgba(4,10,14,0.22)_38%,rgba(4,10,14,0.5)_100%)]" />
         </div>
 
-        <div className="absolute inset-0 rounded-[20px] border border-[rgba(159,123,40,0.18)] bg-[linear-gradient(145deg,rgba(255,253,248,0.9)_0%,rgba(242,230,205,0.86)_100%)] p-4 shadow-[14px_14px_28px_rgba(47,35,24,0.12),-6px_-6px_14px_rgba(255,255,255,0.32),inset_1px_1px_0_rgba(255,255,255,0.5)] [backface-visibility:hidden] [transform:rotateY(180deg)] md:rounded-[24px] md:p-6 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(7,16,24,0.92)_0%,rgba(18,28,34,0.9)_100%)] [html[data-theme='dark']_&]:shadow-[16px_16px_32px_rgba(0,0,0,0.34),inset_1px_1px_0_rgba(255,255,255,0.06)]">
-          <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(216,183,102,0.8),rgba(159,123,40,0.65),transparent)] shadow-[0_0_16px_rgba(216,183,102,0.24)] md:inset-x-6" />
-          <div className="flex h-full flex-col">
-            <div className="flex items-center gap-1.5 text-[0.58rem] font-black uppercase tracking-[0.18em] text-[#9f7b28] md:gap-2 md:text-[0.68rem] md:tracking-[0.24em] [html[data-theme='dark']_&]:text-[#d8b766]">
-              <MapPin className="h-3 w-3 md:h-3.5 md:w-3.5" />
+        <div className="px-4 pb-4 pt-4">
+          <div className="relative overflow-hidden rounded-[18px] border border-[rgba(220,176,83,0.42)] bg-[linear-gradient(135deg,rgba(255,249,239,1)_0%,rgba(247,232,196,0.98)_55%,rgba(255,244,222,1)_100%)] px-4 py-3 text-center shadow-[0_14px_32px_rgba(201,157,73,0.18)] [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.24)] [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,rgba(39,55,64,0.98)_0%,rgba(57,43,24,0.9)_52%,rgba(24,37,45,0.98)_100%)] [html[data-theme='dark']_&]:shadow-[0_14px_30px_rgba(0,0,0,0.24)]">
+            <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.95),rgba(241,199,92,0.55),transparent)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,transparent,rgba(255,241,196,0.28),rgba(241,199,92,0.4),transparent)]" />
+            <div className="pointer-events-none absolute right-3 top-2 h-10 w-10 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.55),rgba(255,255,255,0)_72%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle,rgba(241,199,92,0.14),rgba(255,255,255,0)_72%)]" />
+            <div className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-[#a97410] [html[data-theme='dark']_&]:text-[#efbf56]">
+              Event Dates
+            </div>
+            <div className="mt-1.5 inline-flex items-center gap-2 text-[1rem] font-black leading-tight text-[#7f5710] [html[data-theme='dark']_&]:text-[#ffd77a]">
+              <CalendarDays className="h-4.5 w-4.5 shrink-0" />
+              <span>{date}</span>
+            </div>
+          </div>
+
+          <div className="mt-4 text-left">
+            <h3 className="welcome-display-font text-[1.58rem] font-black leading-[1.04] tracking-[-0.04em] text-[#15233a] md:text-[1.78rem] [html[data-theme='dark']_&]:text-[#f6ead4]">
               {city}
+            </h3>
+            <div className="mt-1.5 text-[0.88rem] font-semibold leading-6 text-[#6d5b43] [html[data-theme='dark']_&]:text-[#cfbea5]">
+              {copy}
             </div>
+          </div>
 
-            <div className="mt-3 rounded-[16px] border border-[rgba(159,123,40,0.16)] bg-white/28 p-3 shadow-[inset_1px_1px_0_rgba(255,255,255,0.28)] md:mt-5 md:rounded-[20px] md:p-4 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[#071018]/34">
-              <div className="text-[0.62rem] font-black uppercase tracking-[0.16em] text-[#7b6650] md:text-[0.72rem] md:tracking-[0.2em] [html[data-theme='dark']_&]:text-[#cdb79d]">
-                Venue
-              </div>
-              <div className="mt-1.5 text-[0.88rem] font-black leading-snug text-[#2f2318] md:mt-2 md:text-[1.05rem] [html[data-theme='dark']_&]:text-[#f3e7d4]">
-                {venue}
-              </div>
-              <div className="mt-3 h-px bg-[linear-gradient(90deg,rgba(216,183,102,0.25),rgba(159,123,40,0.5),transparent)] md:mt-4" />
-              <p className="mt-3 text-[0.76rem] leading-relaxed text-[#6b5743] md:mt-4 md:text-[0.92rem] [html[data-theme='dark']_&]:text-[#d8c2a8]">
-                {copy}
-              </p>
-            </div>
+          <div className="mt-3 flex items-center justify-center gap-2">
+            <div className="h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,165,69,0.36))]" />
+            <div className="h-2 w-2 rotate-45 rounded-[2px] bg-[#d7aa47]" />
+            <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(212,165,69,0.36),transparent)]" />
+          </div>
 
-            <div className="mt-auto pt-3 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-[#7b6650] md:pt-5 md:text-[0.74rem] md:tracking-[0.18em] [html[data-theme='dark']_&]:text-[#cdb79d]">
-              {date}
+          <a
+            href={mapHref}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-5 flex items-start gap-3 text-[#8f6411] transition-colors hover:text-[#b07d19] [html[data-theme='dark']_&]:text-[#efbf56] [html[data-theme='dark']_&]:hover:text-[#f6d37b]"
+            aria-label={`Open ${venue} in Google Maps`}
+          >
+            <MapPin className="mt-1 h-4.5 w-4.5 shrink-0" />
+            <div className="text-[0.86rem] leading-6 text-[#3c3328] [html[data-theme='dark']_&]:text-[#efe2cf]">
+              {venue}
             </div>
+          </a>
+
+          <div className="mt-5">
+            <a
+              href={mapHref}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-w-0 flex-1 items-center justify-center rounded-full border border-[rgba(215,178,95,0.4)] bg-[linear-gradient(180deg,rgba(255,250,240,0.96)_0%,rgba(248,238,221,0.96)_100%)] px-4 py-2.5 text-[0.84rem] font-black text-[#b07d19] transition-colors hover:border-[#d7aa47] hover:text-[#8d6210] [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.3)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(22,38,48,0.96)_0%,rgba(15,27,35,0.98)_100%)] [html[data-theme='dark']_&]:text-[#f4c95b] [html[data-theme='dark']_&]:hover:border-[#efbf56] [html[data-theme='dark']_&]:hover:bg-[linear-gradient(180deg,rgba(31,50,61,0.98)_0%,rgba(18,33,41,0.98)_100%)] [html[data-theme='dark']_&]:hover:text-[#ffe29a]"
+            >
+              View Venue Details
+            </a>
           </div>
         </div>
       </div>
-    </motion.button>
+    </motion.article>
   );
 }
 
 export function UpcomingCitiesSection() {
   return (
-    <section className="relative mx-auto w-full max-w-[1700px] px-4 pb-20 pt-4 md:px-8 md:pb-24 md:pt-8 lg:px-12 lg:pb-28 lg:pt-10">
-      <div className="relative overflow-visible px-0 py-0 md:overflow-hidden md:rounded-[34px] md:bg-[linear-gradient(180deg,rgba(255,253,248,0.58)_0%,rgba(250,244,231,0.42)_48%,rgba(232,214,174,0.38)_100%)] md:px-7 md:py-8 md:shadow-[0_28px_70px_rgba(47,35,24,0.08)] lg:px-10 lg:py-10 [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(7,16,24,0.82)_0%,rgba(13,24,31,0.72)_48%,rgba(22,31,37,0.78)_100%)] [html[data-theme='dark']_&]:md:shadow-[0_28px_70px_rgba(0,0,0,0.24)]">
-        <div className="pointer-events-none absolute inset-0 hidden md:block">
-          <Image
-            src="/upcoming-light.png"
-            alt=""
-            fill
-            aria-hidden="true"
-            sizes="100vw"
-            className="block scale-[1.04] object-cover object-center opacity-[0.78] [html[data-theme='dark']_&]:hidden"
-          />
-          <Image
-            src="/upcoming-dark.png"
-            alt=""
-            fill
-            aria-hidden="true"
-            sizes="100vw"
-            className="hidden scale-[1.04] object-cover object-center opacity-[0.64] [html[data-theme='dark']_&]:block"
-          />
-        </div>
-        <div className="pointer-events-none absolute inset-0 hidden md:block md:bg-[linear-gradient(180deg,rgba(255,250,240,0.14)_0%,rgba(255,255,255,0.03)_22%,rgba(232,214,174,0.18)_100%),radial-gradient(circle_at_82%_18%,rgba(216,183,102,0.1),transparent_28%)] [html[data-theme='dark']_&]:md:bg-[linear-gradient(180deg,rgba(7,16,24,0.2)_0%,rgba(13,24,31,0.05)_22%,rgba(22,31,37,0.3)_100%),radial-gradient(circle_at_82%_18%,rgba(216,183,102,0.08),transparent_28%)]" />
-        <div className="pointer-events-none absolute inset-x-[8%] top-[-12%] hidden h-36 rounded-full bg-[radial-gradient(circle,rgba(216,183,102,0.18)_0%,rgba(216,183,102,0.06)_42%,transparent_76%)] blur-3xl md:block" />
-        <div className="pointer-events-none absolute inset-x-[12%] bottom-[-16%] hidden h-40 rounded-full bg-[radial-gradient(circle,rgba(159,123,40,0.12)_0%,rgba(159,123,40,0.04)_42%,transparent_76%)] blur-3xl md:block" />
+    <section className="relative mx-auto w-full max-w-[1700px] px-4 pb-20 pt-6 md:px-8 md:pb-24 md:pt-10 lg:px-12 lg:pb-28 lg:pt-12">
+      <div className="relative px-0 py-0 md:px-2 md:py-2">
+        <div className="pointer-events-none absolute inset-x-[-12%] top-[-32%] hidden h-[34rem] rounded-full border border-[rgba(215,178,95,0.32)] md:block [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.18)]" />
+        <div className="pointer-events-none absolute inset-x-[8%] top-[-22%] hidden h-[28rem] rounded-full border border-[rgba(215,178,95,0.18)] md:block [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.1)]" />
+        <div className="pointer-events-none absolute left-[10%] top-[8rem] hidden h-5 w-5 rounded-full bg-[linear-gradient(180deg,#f1c75c_0%,#d59c22_100%)] shadow-[0_0_0_8px_rgba(241,199,92,0.14)] md:block" />
+        <div className="pointer-events-none absolute right-[12%] top-[6rem] hidden h-6 w-6 rounded-full border border-[rgba(241,199,92,0.7)] bg-[rgba(255,255,255,0.6)] md:block [html[data-theme='dark']_&]:bg-[rgba(255,255,255,0.06)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(241,199,92,0.14),transparent_34%),radial-gradient(circle_at_bottom,rgba(241,199,92,0.08),transparent_28%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_top,rgba(216,183,102,0.12),transparent_34%),radial-gradient(circle_at_bottom,rgba(216,183,102,0.07),transparent_28%)]" />
 
         <div className="relative z-10">
           <motion.div
@@ -185,34 +153,48 @@ export function UpcomingCitiesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.2 }}
-            className="mx-auto max-w-[1100px] px-0 py-2 text-center md:px-6 md:py-3"
+            className="mx-auto max-w-[58rem] text-center"
           >
-            <h2 className="welcome-display-font mx-auto text-[1.7rem] font-black leading-[0.98] tracking-[-0.04em] text-[#2f2318] md:text-[2.55rem] md:whitespace-nowrap lg:text-[3rem] [html[data-theme='dark']_&]:text-[#f3e7d4]">
-              City Editions Crafted To Feel Premium
+            <div className="flex items-center justify-center gap-3 text-[#c48a17] [html[data-theme='dark']_&]:text-[#efbf56]">
+              <div className="hidden h-px w-20 bg-[linear-gradient(90deg,transparent,#d7aa47)] md:block" />
+              <div className="h-2 w-2 rotate-45 rounded-[2px] bg-[#d7aa47]" />
+              <div className="text-[0.78rem] font-black uppercase tracking-[0.2em]">
+                Our Journey Continues
+              </div>
+              <div className="h-2 w-2 rotate-45 rounded-[2px] bg-[#d7aa47]" />
+              <div className="hidden h-px w-20 bg-[linear-gradient(90deg,#d7aa47,transparent)] md:block" />
+            </div>
+
+            <h2 className="mt-5 text-[2.15rem] font-black leading-[0.94] tracking-[-0.05em] text-[#13233b] sm:text-[2.6rem] md:text-[3.45rem] [html[data-theme='dark']_&]:text-[#f6ead4]">
+              Upcoming Exhibitions
             </h2>
-            <p className="mx-auto mt-3 max-w-[58ch] text-[0.88rem] leading-relaxed text-[#6b5743] md:mt-4 md:text-[1rem] [html[data-theme='dark']_&]:text-[#d8c2a8]">
-              Explore a refined preview of upcoming event destinations with tactile flip cards designed to feel calm, premium, and intentional.
+            <p className="mx-auto mt-4 max-w-[44rem] text-[0.98rem] leading-8 text-[#665949] md:text-[1.12rem] [html[data-theme='dark']_&]:text-[#d5c3ab]">
+              Discover our global showcase of innovation, craftsmanship, and industry leadership.
             </p>
           </motion.div>
 
-          <div className="mt-5 grid gap-2.5 md:hidden">
-            {cityCards.map((card) => (
-              <CompactDestinationCard key={card.id} city={card.city} date={card.date} />
-            ))}
-          </div>
-
-          <div className="mt-6 hidden gap-3 md:mt-10 md:grid md:grid-cols-2 md:gap-5 xl:grid-cols-3">
+          <div className="mx-auto mt-10 grid max-w-[78rem] gap-7 md:mt-12 md:grid-cols-2 md:gap-8 xl:grid-cols-3 xl:gap-10">
             {cityCards.map((card, index) => (
               <motion.div
                 key={card.id}
-                initial={{ opacity: 0, y: 22 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.42, delay: index * 0.08, ease: "easeOut" }}
                 viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
               >
-                <DestinationFlipCard {...card} />
+                <UpcomingEditionCard {...card} />
               </motion.div>
             ))}
+          </div>
+
+          <div className="mt-10 hidden items-center justify-center gap-3 md:flex">
+            <div className="h-px w-20 bg-[linear-gradient(90deg,transparent,#d7aa47)]" />
+            <div className="flex items-center gap-3">
+              <div className="h-3.5 w-3.5 rounded-full border border-[rgba(215,178,95,0.42)] bg-white shadow-[0_0_0_5px_rgba(241,199,92,0.12)] [html[data-theme='dark']_&]:bg-[#0f1d25]" />
+              <div className="h-6 w-6 rounded-full border border-[rgba(215,178,95,0.62)] bg-[linear-gradient(180deg,#f1c75c_0%,#d59c22_100%)] shadow-[0_0_0_7px_rgba(241,199,92,0.12)]" />
+              <div className="h-3.5 w-3.5 rounded-full border border-[rgba(215,178,95,0.42)] bg-white shadow-[0_0_0_5px_rgba(241,199,92,0.12)] [html[data-theme='dark']_&]:bg-[#0f1d25]" />
+            </div>
+            <div className="h-px w-20 bg-[linear-gradient(90deg,#d7aa47,transparent)]" />
           </div>
         </div>
       </div>

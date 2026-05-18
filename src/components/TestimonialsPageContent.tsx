@@ -5,9 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Transition, Variants } from "framer-motion";
-import { ArrowRight, Quote } from "lucide-react";
+import { ArrowRight, Quote, UserRound } from "lucide-react";
 
 type Testimonial = {
+  avatarSrc?: string;
   company: string;
   logo: string;
   person: string;
@@ -24,19 +25,6 @@ type TestimonialSection = {
   tone: "white" | "ivory";
   testimonials: Testimonial[];
 };
-
-const testimonialImagePool = [
-  "/exhibition/expo1.jpg",
-  "/exhibition/expo2.jpg",
-  "/exhibition/expo3.jpg",
-  "/exhibition/expo4.jpg",
-  "/exhibition/expo5.jpg",
-  "/exhibition/expo6.jpg",
-  "/about-images/abt1.JPG",
-  "/about-images/abt2.JPG",
-  "/about-images/abt3.JPG",
-  "/about-images/abt4.JPG",
-];
 
 const testimonialSections: TestimonialSection[] = [
   {
@@ -91,6 +79,7 @@ const testimonialSections: TestimonialSection[] = [
         text: `Gold prices have moderated, jobs are slowly coming back and consumer demand is on the upswing. So everyone in the industry is looking forward to the South Jewellery Show to provide a further boost to the business. It is well timed to enable us to be prepared for the all important marriage season that is coming soon.`,
       },
       {
+        avatarSrc: "/Suresh%20Kumar%20Ganna%20.jpg",
         company: "SK Jewels",
         logo: "SK",
         person: "Mr. Suresh Kumar Ganna",
@@ -247,11 +236,6 @@ const sectionVariants: Variants = {
 const revealTransition: Transition = { duration: 0.55, ease: "easeOut" };
 const MARQUEE_SPEED = 42;
 const MARQUEE_SMOOTHING = 0.1;
-
-function getTestimonialImage(sectionId: string, index: number) {
-  const seed = Array.from(sectionId).reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return testimonialImagePool[(seed + index * 3) % testimonialImagePool.length];
-}
 
 function getCompactTestimonialText(text: string) {
   if (text.length <= 118) {
@@ -515,14 +499,18 @@ function TestimonialBand({
                       <div className="absolute left-1/2 top-0 h-28 w-28 -translate-x-1/2 -translate-y-[42%] rounded-full bg-[#fffdfa] sm:h-36 sm:w-36 sm:-translate-y-[50%] [html[data-theme='dark']_&]:bg-[#101922]" />
 
                       <div className="absolute left-1/2 top-0 flex h-24 w-24 -translate-x-1/2 -translate-y-[46%] items-center justify-center rounded-full bg-[#fffdfa] sm:h-32 sm:w-32 sm:-translate-y-[54%] [html[data-theme='dark']_&]:bg-[#101922]">
-                        <div className="relative h-[5.4rem] w-[5.4rem] overflow-hidden rounded-full border-[5px] border-[#fffdfa] sm:h-[7.2rem] sm:w-[7.2rem] sm:border-[6px] [html[data-theme='dark']_&]:border-[#101922]">
-                          <Image
-                            src={getTestimonialImage(section.id, index)}
-                            alt={`${testimonial.company} exhibition showcase`}
-                            fill
-                            sizes="(max-width: 640px) 86px, 116px"
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
+                        <div className="relative flex h-[5.4rem] w-[5.4rem] items-center justify-center overflow-hidden rounded-full border-[5px] border-[#fffdfa] bg-[linear-gradient(180deg,#f8f0df_0%,#edd49d_100%)] text-[#9f7b28] shadow-[0_10px_24px_rgba(159,123,40,0.18)] sm:h-[7.2rem] sm:w-[7.2rem] sm:border-[6px] [html[data-theme='dark']_&]:border-[#101922] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,#2d3944_0%,#1a242d_100%)] [html[data-theme='dark']_&]:text-[#f1c45a]">
+                          {testimonial.avatarSrc ? (
+                            <Image
+                              src={testimonial.avatarSrc}
+                              alt={testimonial.person}
+                              fill
+                              sizes="(max-width: 640px) 86px, 116px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <UserRound className="h-10 w-10 sm:h-14 sm:w-14" />
+                          )}
                         </div>
                       </div>
 

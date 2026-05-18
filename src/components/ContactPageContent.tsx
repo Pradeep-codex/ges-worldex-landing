@@ -80,9 +80,9 @@ export function ContactPageContent() {
           </p>
 
           <div className="grid gap-3 pt-2">
-            <InlineContactRow icon={Mail} label="Email" value="info@gesindiaexh.com" href="mailto:info@gesindiaexh.com" />
+            <InlineContactRow icon={Mail} label="Email" value="support@gesworldex.com" href="mailto:support@gesworldex.com" />
             <InlineContactRow icon={Phone} label="Phone" value="+91 99450 12123" href="tel:+919945012123" />
-            <InlineContactRow icon={MapPin} label="Office" value={officeAddress} href={officeMapsUrl} />
+            <InlineContactRow icon={MapPin} label="HEAD OFFICE" value={officeAddress} href={officeMapsUrl} />
           </div>
         </div>
 
@@ -191,7 +191,7 @@ export function ContactPageContent() {
               </button>
 
               <Link
-                href="mailto:info@gesindiaexh.com"
+                href="mailto:support@gesworldex.com"
                 className="inline-flex w-full items-center justify-center rounded-full border px-7 py-4 text-sm font-black uppercase tracking-widest transition-all hover:border-[#9f7b28] active:scale-95 sm:w-fit"
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
               >

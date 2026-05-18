@@ -19,7 +19,7 @@ export function OurStorySection() {
             Our Story
           </p>
           <h2 className="max-w-none text-2xl font-black leading-[0.98] tracking-[-0.05em] sm:max-w-[13ch] sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px]" style={{ color: 'var(--about-text-primary)' }}>
-            Built on vision, shaped by experience.
+            BUILT ON VISION, SHAPED BY EXPERIENCE.
           </h2>
         </div>
 

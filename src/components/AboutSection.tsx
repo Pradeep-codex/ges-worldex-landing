@@ -179,7 +179,7 @@ export function AboutSection() {
             className="max-w-xl text-lg leading-relaxed md:text-xl"
             style={{ color: "var(--about-text-secondary)" }}
           >
-            GES Worldex is a leading force in international exhibitions, dedicated to creating platforms where innovation meets opportunity. We bridge the gap between global service providers and emerging markets.
+            GES Worldex India Pvt. Ltd. is a B2B Trade Exhibiton organizer, committed to creating world-class business platforms that connect industries, foster innovation, and drive global opportunities. With a strong international presence, we bridge businesses, buyers, and emerging markets through impactful exhibitions and strategic networking experiences.
           </motion.p>
 
           <motion.ul
@@ -190,9 +190,10 @@ export function AboutSection() {
             className="space-y-4"
           >
             {[
-              "15+ Years of Industry Excellence",
-              "Presence in 20+ Global Strategic Markets",
-              "Connecting 50,000+ Business Leaders Annually"
+              "27+ Years of Industry Leadership & Excellence",
+              "Connecting 50,000+ Business Professionals Annually",
+              "Delivering High-Impact B2B Exhibitions & Trade Platforms",
+              "Trusted Partner for International Business Growth",
             ].map((item: string, idx: number) => (
               <li
                 key={idx}

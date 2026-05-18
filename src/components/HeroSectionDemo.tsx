@@ -88,7 +88,7 @@ const demoNavItems = [
 const demoSocialLinks = [
   { name: "Instagram", href: "https://www.instagram.com/ges.india.inc/", icon: Instagram },
   { name: "Facebook", href: "https://www.facebook.com/ges.india.exh", icon: Facebook },
-  { name: "Email", href: "mailto:info@gesindiaexh.com", icon: Mail },
+  { name: "Email", href: "mailto:support@gesworldex.com", icon: Mail },
 ];
 
 type HeroSectionDemoProps = {

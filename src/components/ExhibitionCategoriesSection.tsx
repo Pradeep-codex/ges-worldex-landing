@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { portfolioExhibitions } from "@/lib/portfolio";
 
 const exhibitionCategories = [
   {
@@ -95,11 +94,55 @@ const exhibitionCategories = [
   },
 ] as const;
 
-const exhibitionHighlights = portfolioExhibitions.map((exhibition) => ({
-  id: exhibition.id,
-  title: exhibition.title,
-  imageSrc: exhibition.image,
-}));
+const exhibitionHighlights = [
+  {
+    id: "south-jewellery-show",
+    title: "South Jewellery Show",
+    imageSrc: "/logo/SJS%20Black%20Logo.png",
+    darkImageSrc: "/logo/SJS%20White%20Logo.png",
+  },
+  {
+    id: "silver-show-of-india",
+    title: "Silver Show of India",
+    imageSrc: "/logo/SSI%20Black%20Logo.png",
+    darkImageSrc: "/logo/%20SSI%20White%20Logo.png",
+  },
+  {
+    id: "buildcon",
+    title: "Build Con",
+    imageSrc: "/logo/Build%20COn.png",
+    darkModeClassName: "[html[data-theme='dark']_&]:invert [html[data-theme='dark']_&]:brightness-[1.18] [html[data-theme='dark']_&]:contrast-[1.08]",
+  },
+  {
+    id: "glamour",
+    title: "Glamour",
+    imageSrc: "/logo/Glamour.png",
+  },
+  {
+    id: "auto-expo",
+    title: "Auto Expo",
+    imageSrc: "/logo/Auto%20Expo%20lightmode.png",
+    darkImageSrc: "/logo/%20Auto%20Expo%20darkmode.png",
+  },
+  {
+    id: "ghar",
+    title: "GHAR",
+    imageSrc: "/logo/GHAR.png",
+    darkModeClassName: "[html[data-theme='dark']_&]:invert [html[data-theme='dark']_&]:brightness-[1.18] [html[data-theme='dark']_&]:contrast-[1.08]",
+  },
+  {
+    id: "esel",
+    title: "Esel",
+    imageSrc: "/logo/Esel.png",
+    darkModeClassName: "[html[data-theme='dark']_&]:invert [html[data-theme='dark']_&]:brightness-[1.16] [html[data-theme='dark']_&]:contrast-[1.06]",
+  },
+  {
+    id: "interior-furniture",
+    title: "Interior & Furniture",
+    imageSrc: "/logo/INTERIOR%20%26%20Furniture%20.png",
+    darkModeClassName: "[html[data-theme='dark']_&]:invert [html[data-theme='dark']_&]:brightness-[1.18] [html[data-theme='dark']_&]:contrast-[1.08]",
+  },
+] as const;
 
 export function ExhibitionCategoriesSection() {
   const [activeId, setActiveId] = useState<(typeof exhibitionCategories)[number]["id"]>(
@@ -376,7 +419,7 @@ export function ExhibitionCategoriesSection() {
       </div>
 
       <div className="mt-8 md:mt-10 lg:mt-12">
-        <div className="rounded-[30px] border border-[rgba(159,123,40,0.14)] bg-[linear-gradient(180deg,rgba(255,253,248,0.94)_0%,rgba(245,235,215,0.96)_100%)] px-4 py-5 shadow-[0_28px_70px_rgba(47,35,24,0.07)] md:px-6 md:py-6 lg:px-8 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.92)_0%,rgba(13,24,31,0.96)_100%)]">
+        <div className="rounded-[30px] border border-[rgba(159,123,40,0.14)] bg-[linear-gradient(180deg,rgba(255,253,248,0.94)_0%,rgba(245,235,215,0.96)_100%)] px-4 py-5 md:px-6 md:py-6 lg:px-8 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(7,16,24,0.92)_0%,rgba(13,24,31,0.96)_100%)]">
           <div className="mb-5 flex flex-col gap-2 md:mb-6">
             <div className="text-[0.68rem] font-black uppercase tracking-[0.24em] text-[#9f7b28] [html[data-theme='dark']_&]:text-[#d8b766]">
               Exhibition Highlights
@@ -391,27 +434,38 @@ export function ExhibitionCategoriesSection() {
             onMouseEnter={() => setIsMarqueeHovered(true)}
             onMouseLeave={() => setIsMarqueeHovered(false)}
           >
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(90deg,rgba(255,253,248,1)_0%,rgba(255,253,248,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-10 bg-[linear-gradient(270deg,rgba(255,253,248,1)_0%,rgba(255,253,248,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(270deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(90deg,#F6EBD8_0%,rgba(246,235,216,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-10 bg-[linear-gradient(270deg,#F6EBD8_0%,rgba(246,235,216,0)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(270deg,rgba(7,16,24,1)_0%,rgba(7,16,24,0)_100%)]" />
             {reduceMotion ? (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-                {exhibitionHighlights.map((item, index) => (
+                {exhibitionHighlights.map((item) => (
                   <Link
                     key={item.id}
                     href={`/portfolio#${item.id}`}
-                    className="group relative aspect-[4/3] overflow-hidden rounded-[22px] border border-white/50 text-left lg:cursor-pointer [html[data-theme='dark']_&]:border-white/8"
+                    className="group relative aspect-[4/3] overflow-hidden rounded-[22px] border border-[rgba(215,178,95,0.18)] bg-[linear-gradient(180deg,rgba(255,252,247,0.98)_0%,rgba(246,235,216,0.98)_100%)] text-left lg:cursor-pointer [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.12)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(19,31,39,0.98)_0%,rgba(12,22,30,0.98)_100%)]"
                   >
                     <Image
                       src={item.imageSrc}
-                      alt={`Exhibition showcase ${index + 1}`}
+                      alt={`${item.title} logo`}
                       fill
                       sizes="(min-width: 1280px) 14vw, (min-width: 768px) 28vw, 44vw"
-                      className="object-contain transition-transform duration-500 ease-out lg:group-hover:scale-[1]"
+                      className={`object-contain p-4 transition-transform duration-500 ease-out lg:group-hover:scale-[1.02] ${
+                        item.darkImageSrc ? "[html[data-theme='dark']_&]:hidden" : item.darkModeClassName ?? ""
+                      }`}
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.05)_0%,rgba(2,6,23,0.28)_100%)]" />
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.1)_0%,rgba(2,6,23,0.36)_42%,rgba(2,6,23,0.74)_100%)] opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100" />
-                    <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(2,6,23,0)_0%,rgba(2,6,23,0.9)_100%)] px-4 pb-4 pt-10 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100">
-                      <div className="inline-flex rounded-full bg-white/14 px-3 py-1.5 text-[0.72rem] font-black uppercase tracking-[0.18em] text-white backdrop-blur-sm">
+                    {item.darkImageSrc ? (
+                      <Image
+                        src={item.darkImageSrc}
+                        alt={`${item.title} logo`}
+                        fill
+                        sizes="(min-width: 1280px) 14vw, (min-width: 768px) 28vw, 44vw"
+                        className="hidden object-contain p-4 transition-transform duration-500 ease-out lg:group-hover:scale-[1.02] [html[data-theme='dark']_&]:block"
+                      />
+                    ) : null}
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.28)_0%,rgba(216,183,102,0.08)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(216,183,102,0.06)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,248,232,0.12)_0%,rgba(216,183,102,0.22)_52%,rgba(159,123,40,0.18)_100%)] opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100 [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(8,20,30,0.18)_0%,rgba(20,39,50,0.42)_46%,rgba(216,183,102,0.18)_100%)]" />
+                    <div className="absolute inset-0 flex items-end justify-center p-4 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100">
+                      <div className="inline-flex items-center justify-center rounded-full border border-[rgba(159,123,40,0.28)] bg-[linear-gradient(180deg,rgba(255,251,241,0.98)_0%,rgba(240,214,155,0.96)_100%)] px-3.5 py-1.5 text-center text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#4e391d] shadow-[0_12px_24px_rgba(159,123,40,0.22)] backdrop-blur-sm [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.28)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(15,29,39,0.96)_0%,rgba(29,50,61,0.94)_58%,rgba(216,183,102,0.26)_100%)] [html[data-theme='dark']_&]:text-[#fff1c8] [html[data-theme='dark']_&]:shadow-[0_12px_24px_rgba(0,0,0,0.34)]">
                         View In Portfolio
                       </div>
                     </div>
@@ -425,19 +479,30 @@ export function ExhibitionCategoriesSection() {
                     <Link
                       key={`${item.id}-${index}`}
                       href={`/portfolio#${item.id}`}
-                      className="group relative aspect-[4/3] w-[96px] shrink-0 overflow-hidden rounded-[22px] border border-white/50 text-left lg:cursor-pointer md:w-[180px] xl:w-[210px] [html[data-theme='dark']_&]:border-white/8"
+                      className="group relative aspect-[4/3] w-[96px] shrink-0 overflow-hidden rounded-[22px] border border-[rgba(215,178,95,0.18)] bg-[linear-gradient(180deg,rgba(255,252,247,0.98)_0%,rgba(246,235,216,0.98)_100%)] text-left lg:cursor-pointer md:w-[180px] xl:w-[210px] [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.12)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(19,31,39,0.98)_0%,rgba(12,22,30,0.98)_100%)]"
                     >
                       <Image
                         src={item.imageSrc}
-                        alt={`Exhibition showcase ${index + 1}`}
+                        alt={`${item.title} logo`}
                         fill
                         sizes="(min-width: 1280px) 19vw, (min-width: 768px) 28vw, 62vw"
-                        className="object-contain transition-transform duration-500 ease-out lg:group-hover:scale-[1.02]"
+                        className={`object-contain p-4 transition-transform duration-500 ease-out lg:group-hover:scale-[1.02] ${
+                          item.darkImageSrc ? "[html[data-theme='dark']_&]:hidden" : item.darkModeClassName ?? ""
+                        }`}
                       />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.05)_0%,rgba(2,6,23,0.28)_100%)]" />
-                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.1)_0%,rgba(2,6,23,0.38)_42%,rgba(2,6,23,0.76)_100%)] opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100" />
-                      <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(2,6,23,0)_0%,rgba(2,6,23,0.9)_100%)] px-4 pb-4 pt-10 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100">
-                        <div className="inline-flex rounded-full bg-white/14 px-3 py-1.5 text-[0.72rem] font-black uppercase tracking-[0.18em] text-white backdrop-blur-sm">
+                      {item.darkImageSrc ? (
+                        <Image
+                          src={item.darkImageSrc}
+                          alt={`${item.title} logo`}
+                          fill
+                          sizes="(min-width: 1280px) 19vw, (min-width: 768px) 28vw, 62vw"
+                          className="hidden object-contain p-4 transition-transform duration-500 ease-out lg:group-hover:scale-[1.02] [html[data-theme='dark']_&]:block"
+                        />
+                      ) : null}
+                      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.28)_0%,rgba(216,183,102,0.08)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(216,183,102,0.06)_100%)]" />
+                      <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,248,232,0.12)_0%,rgba(216,183,102,0.22)_52%,rgba(159,123,40,0.18)_100%)] opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100 [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(8,20,30,0.18)_0%,rgba(20,39,50,0.42)_46%,rgba(216,183,102,0.18)_100%)]" />
+                      <div className="absolute inset-0 flex items-end justify-center p-4 opacity-0 transition-opacity duration-300 lg:group-hover:opacity-100">
+                        <div className="inline-flex items-center justify-center rounded-full border border-[rgba(159,123,40,0.28)] bg-[linear-gradient(180deg,rgba(255,251,241,0.98)_0%,rgba(240,214,155,0.96)_100%)] px-3.5 py-1.5 text-center text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#4e391d] shadow-[0_12px_24px_rgba(159,123,40,0.22)] backdrop-blur-sm [html[data-theme='dark']_&]:border-[rgba(216,183,102,0.28)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(15,29,39,0.96)_0%,rgba(29,50,61,0.94)_58%,rgba(216,183,102,0.26)_100%)] [html[data-theme='dark']_&]:text-[#fff1c8] [html[data-theme='dark']_&]:shadow-[0_12px_24px_rgba(0,0,0,0.34)]">
                           View In Portfolio
                         </div>
                       </div>

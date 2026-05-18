@@ -53,7 +53,7 @@ export async function POST(req: Request) {
   const SMTP_SECURE = (getEnv("SMTP_SECURE") ?? "false").toLowerCase() === "true";
   const SMTP_USER = getEnv("SMTP_USER");
   const SMTP_PASS = getEnv("SMTP_PASS");
-  const CONTACT_TO = getEnv("CONTACT_TO") ?? "info@gesindiaexh.com";
+  const CONTACT_TO = getEnv("CONTACT_TO") ?? "support@gesworldex.com";
   const CONTACT_FROM = getEnv("CONTACT_FROM") ?? SMTP_USER ?? CONTACT_TO;
 
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
@@ -99,4 +99,3 @@ export async function POST(req: Request) {
 
   return NextResponse.json({ ok: true });
 }
-

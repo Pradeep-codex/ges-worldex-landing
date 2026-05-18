@@ -90,7 +90,7 @@ const socialIcons = [
         <path d="M3 3h18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2zm0 2v.011l9 5.25 9-5.25V5H3zm18 14V8.388l-9 5.25-9-5.25V19h18z" />
       </svg>
     ),
-    href: "mailto:info@gesindiaexh.com",
+    href: "mailto:support@gesworldex.com",
   },
 ];
 
@@ -175,12 +175,12 @@ export function Header() {
   };
 
   const dropAnimation = {
-    initial: { opacity: 0, y: -25 },
+    initial: { opacity: 0, y: -12 },
     animate: { opacity: 1, y: 0 },
-    transition: (delayMs: number) => ({
-      duration: 0.7,
+    transition: (order = 0) => ({
+      duration: 0.24,
       ease: "easeOut" as const,
-      delay: delayMs,
+      delay: Math.min(order * 0.015, 0.09),
     }),
   };
 
@@ -202,10 +202,10 @@ export function Header() {
               }`}
           >
             <div className="flex flex-1 items-center justify-start">
-              <motion.div
+                <motion.div
                 initial={dropAnimation.initial}
                 animate={dropAnimation.animate}
-                transition={dropAnimation.transition(1.3)}
+                transition={dropAnimation.transition()}
               >
                 <Link
                   href="/"
@@ -240,7 +240,7 @@ export function Header() {
                       className="flex items-center relative"
                       initial={dropAnimation.initial}
                       animate={dropAnimation.animate}
-                      transition={dropAnimation.transition(1.4 + idx * 0.1)}
+                      transition={dropAnimation.transition(idx + 1)}
                     >
                       <Link
                         href={item.href}
@@ -351,7 +351,7 @@ export function Header() {
                       key={social.name}
                       initial={dropAnimation.initial}
                       animate={dropAnimation.animate}
-                      transition={dropAnimation.transition(1.9 + idx * 0.1)}
+                      transition={dropAnimation.transition(idx + 1)}
                       className="relative group flex items-center justify-center p-[7px] rounded-full cursor-pointer text-foreground/70 bg-background/40 border border-[color:var(--border)] transition-transform duration-300 transform hover:scale-110 z-30"
                       onMouseEnter={(e) => {
                         e.currentTarget.style.color = "#ffffff";
@@ -395,13 +395,13 @@ export function Header() {
                 className="h-5 w-[1px] bg-foreground/15 hidden xl:block rounded-full mx-1"
                 initial={dropAnimation.initial}
                 animate={dropAnimation.animate}
-                transition={dropAnimation.transition(2.2)}
+                transition={dropAnimation.transition(1)}
               />
 
               <motion.div
                 initial={dropAnimation.initial}
                 animate={dropAnimation.animate}
-                transition={dropAnimation.transition(2.3)}
+                transition={dropAnimation.transition(2)}
                 className="hidden xl:block"
               >
                 <ThemeToggle className="shadow-none border-none xl:border-[color:var(--border)]" />
@@ -411,7 +411,7 @@ export function Header() {
                 href="tel:+919945012123"
                 initial={dropAnimation.initial}
                 animate={dropAnimation.animate}
-                transition={dropAnimation.transition(2.3)}
+                transition={dropAnimation.transition(3)}
                 className="hidden xl:flex items-center gap-2 text-foreground/75 bg-background/55 px-4 xl:px-6 py-2 xl:py-2.5 rounded-full shadow-[0_14px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_18px_55px_rgba(0,0,0,0.16)] transition-all duration-300 group border border-[color:var(--border)] backdrop-blur-xl"
               >
                 <Phone className="w-[16px] xl:w-[17px] h-[16px] xl:h-[17px] stroke-[2.5]" />
@@ -424,7 +424,7 @@ export function Header() {
                 className="xl:hidden flex items-center gap-2"
                 initial={dropAnimation.initial}
                 animate={dropAnimation.animate}
-                transition={dropAnimation.transition(1.5)}
+                transition={dropAnimation.transition(1)}
               >
                 <ThemeToggle className="shadow-none" />
                 <button
@@ -587,4 +587,3 @@ export function Header() {
     </>
   );
 }
-

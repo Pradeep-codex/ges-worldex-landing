@@ -15,7 +15,7 @@ const quickLinks = [
 const socialLinks = [
   { label: "Instagram", href: "https://www.instagram.com/ges.india.inc/", icon: Instagram },
   { label: "X", href: "https://x.com/IndiaGes", icon: Twitter },
-  { label: "Email", href: "mailto:info@gesindiaexh.com", icon: Mail },
+  { label: "Email", href: "mailto:support@gesworldex.com", icon: Mail },
 ];
 
 const serviceLinks = [
@@ -58,11 +58,11 @@ export function Footer() {
             </p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <a
-                href="mailto:info@gesindiaexh.com"
+                href="mailto:support@gesworldex.com"
                 className="inline-flex items-center gap-2 rounded-2xl border border-[#8fd6e7]/40 bg-white/68 px-4 py-3 text-sm font-semibold text-[#0c3e55] transition-colors hover:bg-white/88 [html[data-theme='dark']_&]:border-white/10 [html[data-theme='dark']_&]:bg-white/6 [html[data-theme='dark']_&]:text-[#e7f6ff]"
               >
                 <Mail className="h-4 w-4" />
-                info@gesindiaexh.com
+                support@gesworldex.com
               </a>
               <a
                 href="tel:+9199450 12123"
