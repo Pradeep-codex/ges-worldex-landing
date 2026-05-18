@@ -93,11 +93,15 @@ const demoSocialLinks = [
 
 type HeroSectionDemoProps = {
   shellMode?: "demo" | "home";
+  tightPortraitTabletTop?: boolean;
 };
 
 type ThemeMode = "light" | "dark";
 
-export function HeroSectionDemo({ shellMode = "demo" }: HeroSectionDemoProps) {
+export function HeroSectionDemo({
+  shellMode = "demo",
+  tightPortraitTabletTop = false,
+}: HeroSectionDemoProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const isHomeHero = shellMode === "home";
@@ -151,6 +155,7 @@ export function HeroSectionDemo({ shellMode = "demo" }: HeroSectionDemoProps) {
       className={`relative min-h-screen overflow-hidden ${
         isHomeHero ? (isLightHome ? "bg-transparent text-[#241b14]" : "bg-transparent text-white") : "bg-[#070707] text-white"
       }`}
+      style={tightPortraitTabletTop ? { marginTop: "-6rem" } : undefined}
     >
       {isHomeHero ? null : (
         <>
@@ -224,9 +229,12 @@ export function HeroSectionDemo({ shellMode = "demo" }: HeroSectionDemoProps) {
       ) : null}
 
       <div
-        className={`relative mx-auto grid min-h-[calc(100vh-7.5rem)] w-full max-w-[1700px] gap-14 px-4 pb-10 md:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-12 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:pt-4 ${
-          showHeroNav ? "pt-6 lg:pt-10" : "pt-24 lg:pt-28"
+        className={`relative mx-auto grid min-h-[calc(100vh-7.5rem)] w-full max-w-[1700px] gap-14 px-4 pb-10 md:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-12 ${
+          showHeroNav
+            ? "pt-6 lg:pt-10"
+            : "pt-24 lg:pt-28 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:pt-2"
         }`}
+        style={tightPortraitTabletTop ? { paddingTop: "0", alignContent: "start" } : undefined}
       >
         <div className="relative z-10 max-w-[35rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:-mt-8">
           <div className="relative h-[21rem] sm:h-[22rem] lg:h-[23rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:h-[18rem]">

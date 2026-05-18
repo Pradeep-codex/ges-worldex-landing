@@ -407,10 +407,12 @@ export function PortfolioShowcase() {
   const exhibition = portfolioExhibitions[activeExhibitionIndex];
   const editionCount = exhibition.editions.length;
   const maxSummaryCards = 5;
-  const sidebarLineStyle =
-    hoveredExhibitionIndex != null && hoveredExhibitionIndex !== activeExhibitionIndex
-      ? { ...sidebarHoverStyle, opacity: 1 }
-      : sidebarActiveStyle;
+  const isHoverHighlightVisible =
+    hoveredExhibitionIndex != null && hoveredExhibitionIndex !== activeExhibitionIndex;
+  const sidebarLineStyle = isHoverHighlightVisible
+    ? { ...sidebarHoverStyle, opacity: 1 }
+    : sidebarActiveStyle;
+  const sidebarLineTransitionDuration = isHoverHighlightVisible ? "200ms" : "500ms";
 
   const summaryCards = useMemo(() => {
     const totals = exhibition.editions.reduce<Record<string, number>>((acc, edition) => {
@@ -706,7 +708,10 @@ export function PortfolioShowcase() {
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute left-0 z-10 w-[2px] bg-[linear-gradient(180deg,#f0c680_0%,#d0923e_100%)] transition-[top,height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                  style={sidebarLineStyle}
+                  style={{
+                    ...sidebarLineStyle,
+                    transitionDuration: sidebarLineTransitionDuration,
+                  }}
                 />
                 <span
                   aria-hidden="true"
