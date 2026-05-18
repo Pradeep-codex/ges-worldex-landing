@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { AboutPageCmsContent } from "@/sanity/lib/pages";
 
 const defaultParagraphs = [
-  "More than two decades ago, a group of passionate professionals came together with one vision: to rethink how exhibitions are created across India.",
+  "Close to 3 Decades With 450+ Exhibitions, a group of passionate professionals came together with one vision: to rethink how exhibitions are created across India.",
   "That vision became GES Worldex, a company built to turn trade events into sharper, more immersive, and more commercially meaningful experiences.",
   "With 400+ exhibitions delivered across Pan India, our journey has always been about creating spaces where brands, buyers, and industries connect with purpose.",
   "Every event we design carries that same belief forward: exhibitions should not just be seen, they should move people and markets.",

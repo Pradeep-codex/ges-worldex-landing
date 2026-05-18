@@ -50,6 +50,34 @@ function getPrimaryLocation(cities: string[]) {
   return Object.entries(counts).sort((left, right) => right[1] - left[1])[0]?.[0] ?? cities[0];
 }
 
+function getShowcaseLocation(exhibition: PortfolioExhibition, fallbackLocation: string) {
+  if (exhibition.id === "silver-show-of-india") {
+    return "Bengaluru, Delhi & Mumbai";
+  }
+
+  if (exhibition.id === "south-jewellery-show") {
+    return "Bengaluru, South India";
+  }
+
+  if (exhibition.id === "jewellery-show-of-india") {
+    return "Retail Exhibition, Bengaluru";
+  }
+
+  if (fallbackLocation === "Bengaluru") {
+    return "Bengaluru, Karnataka";
+  }
+
+  if (fallbackLocation === "Mumbai") {
+    return "Mumbai, Maharashtra";
+  }
+
+  if (fallbackLocation === "Delhi") {
+    return "New Delhi, India";
+  }
+
+  return fallbackLocation;
+}
+
 function formatCount(value: number) {
   if (value >= 1000) {
     return compactFormatter.format(value).toUpperCase();
@@ -482,12 +510,13 @@ export function PortfolioShowcase({
   const showcaseMeta = useMemo(() => {
     const cities = exhibition.editions.map((edition) => edition.city);
     const firstYear = exhibition.editions[0]?.date ? extractYear(exhibition.editions[0].date) : "Ongoing";
+    const primaryLocation = getPrimaryLocation(cities);
 
     return {
       firstYear,
-      location: getPrimaryLocation(cities),
+      location: getShowcaseLocation(exhibition, primaryLocation),
     };
-  }, [exhibition.editions]);
+  }, [exhibition]);
 
   const themeStyle: PortfolioThemeStyle = {
     "--portfolio-accent": exhibition.theme.accent,
@@ -835,9 +864,9 @@ export function PortfolioShowcase({
 
             <div className="border-t border-[color:var(--about-card-border)] bg-white/94 [html[data-theme='dark']_&]:bg-slate-950">
               <div className="grid gap-px bg-[color:var(--about-card-border)] sm:grid-cols-2 md:max-lg:grid-cols-3 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:grid-cols-5 [@media(min-width:1181px)_and_(max-width:1279px)]:grid-cols-5 xl:grid-cols-5">
-                {summaryCards.map((card) => (
+                {summaryCards.map((card, index) => (
                   <div
-                    key={card.label}
+                    key={`${exhibition.id}-${card.label}-${card.note}-${card.value}-${index}`}
                     className="flex min-h-[132px] flex-col justify-center bg-white/94 px-5 py-5 text-left [html[data-theme='dark']_&]:bg-slate-950 md:px-6 md:max-lg:min-h-[92px] md:max-lg:px-3.5 md:max-lg:py-3.5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:min-h-[108px] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:px-4.5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:py-4 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:min-h-[92px] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:px-3 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:py-3 [@media(min-width:1181px)_and_(max-width:1279px)]:min-h-[96px] [@media(min-width:1181px)_and_(max-width:1279px)]:px-3.5 [@media(min-width:1181px)_and_(max-width:1279px)]:py-3.5"
                   >
                     <div className="text-[2.4rem] font-black leading-none tracking-tight text-slate-950 [html[data-theme='dark']_&]:text-slate-50 md:text-[2.8rem] md:max-lg:text-[1.7rem] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[2.2rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:text-[1.65rem] [@media(min-width:1181px)_and_(max-width:1279px)]:text-[1.8rem]">

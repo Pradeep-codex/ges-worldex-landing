@@ -295,8 +295,8 @@ export function TestimonialsPageContent() {
                 Visitor & exhibitor reflections
               </p>
 
-              <h1 className="welcome-display-font max-w-[12ch] text-[clamp(2.8rem,10vw,6.15rem)] font-black leading-[0.9] tracking-[-0.04em] text-[#2F2417] [html[data-theme='dark']_&]:text-white">
-                Trusted voices from our exhibition floors.
+              <h1 className="welcome-display-font max-w-[12ch] text-[clamp(2.3rem,8.2vw,5.15rem)] font-black leading-[0.9] tracking-[-0.04em] text-[#2F2417] [html[data-theme='dark']_&]:text-white">
+                TRUSTED VOICES FROM OUR EXHIBITION FLOORS.
               </h1>
 
               <p className="max-w-2xl text-[0.98rem] leading-relaxed text-[#2F2417] sm:text-base md:text-lg md:leading-8 [html[data-theme='dark']_&]:text-white/78">

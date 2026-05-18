@@ -49,6 +49,9 @@ export function PortfolioIntro() {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.08)_0%,rgba(2,6,23,0.28)_42%,rgba(2,6,23,0.9)_100%)]" />
+          <div className="absolute left-6 top-6 rounded-full border border-white/20 bg-black/35 px-4 py-2 text-[0.72rem] font-black uppercase tracking-[0.18em] text-white shadow-[0_12px_30px_rgba(15,23,42,0.22)] backdrop-blur-md md:left-8 md:top-8 md:text-[0.78rem]">
+            Bengaluru, Delhi &amp; Mumbai Silver Show of India
+          </div>
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
             <div className="grid grid-cols-3 gap-3">
               {[
