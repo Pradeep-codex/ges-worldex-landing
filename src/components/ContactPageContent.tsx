@@ -81,9 +81,24 @@ export function ContactPageContent({ content }: { content?: ContactPageCmsConten
           </p>
 
           <div className="grid gap-3 pt-2">
-            <InlineContactRow icon={Mail} label="Email" value={content?.email || "info@gesindiaexh.com"} href={`mailto:${content?.email || "info@gesindiaexh.com"}`} />
-            <InlineContactRow icon={Phone} label="Phone" value={content?.phone || "+91 99450 12123"} href={`tel:${(content?.phone || "+91 99450 12123").replace(/[^\d+]/g, "")}`} />
-            <InlineContactRow icon={MapPin} label="Office" value={content?.officeAddress || officeAddress} href={content?.officeMapsUrl || officeMapsUrl} />
+            <InlineContactRow
+              icon={Mail}
+              label="Email"
+              value={content?.email || "support@gesworldex.com"}
+              href={`mailto:${content?.email || "support@gesworldex.com"}`}
+            />
+            <InlineContactRow
+              icon={Phone}
+              label="Phone"
+              value={content?.phone || "+91 99450 12123"}
+              href={`tel:${(content?.phone || "+91 99450 12123").replace(/[^\d+]/g, "")}`}
+            />
+            <InlineContactRow
+              icon={MapPin}
+              label="Head Office"
+              value={content?.officeAddress || officeAddress}
+              href={content?.officeMapsUrl || officeMapsUrl}
+            />
           </div>
         </div>
 
@@ -192,7 +207,7 @@ export function ContactPageContent({ content }: { content?: ContactPageCmsConten
               </button>
 
               <Link
-                href={`mailto:${content?.email || "info@gesindiaexh.com"}`}
+                href={`mailto:${content?.email || "support@gesworldex.com"}`}
                 className="inline-flex w-full items-center justify-center rounded-full border px-7 py-4 text-sm font-black uppercase tracking-widest transition-all hover:border-[#9f7b28] active:scale-95 sm:w-fit"
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
               >

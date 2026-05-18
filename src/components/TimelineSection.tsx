@@ -76,7 +76,7 @@ function StoryPanel({ align, body, index, label, title }: StoryPanelProps) {
           {title}
         </h3>
         <p
-          className="text-left text-[15px] leading-7 tracking-[0.02em] xl:text-base xl:leading-8 [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:text-[0.82rem] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:leading-5"
+          className="text-justify text-[15px] leading-7 tracking-[0.02em] xl:text-base xl:leading-8 [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:text-[0.82rem] [@media(min-width:768px)_and_(max-width:1279px)_and_(orientation:landscape)]:leading-5"
           style={{ color: "var(--about-text-secondary)" }}
         >
           {body}
@@ -156,7 +156,7 @@ export function TimelineSection() {
             The GES Worldex Growth Story
           </h2>
           <p
-            className="max-w-3xl text-sm leading-relaxed sm:text-[0.98rem] md:text-[1.08rem] lg:text-[1.16rem]"
+            className="max-w-3xl text-justify text-sm leading-relaxed sm:text-[0.98rem] md:text-[1.08rem] lg:text-[1.16rem]"
             style={{ color: "var(--about-text-secondary)" }}
           >
             A timeline of milestones that shaped GES Worldex into a trusted exhibition company, built through consistent execution, industry insight, and long-term business relationships.

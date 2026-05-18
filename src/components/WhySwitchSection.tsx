@@ -65,7 +65,7 @@ const switchContent = {
     body:
       "Partner with GES Worldex India Pvt. Ltd. to showcase your brand on platforms designed to drive visibility, connections, and measurable business growth.",
     highlights: [
-      { value: "20+", label: "years of expertise" },
+      { value: "27+", label: "years of expertise" },
       { value: "High", label: "value opportunities" },
       { value: "Strong", label: "growth focus" },
     ],
@@ -74,7 +74,7 @@ const switchContent = {
         icon: "expertise",
         title: "Proven Industry Expertise",
         description:
-          "With over two decades of experience, we bring deep industry knowledge and strategic insight to help exhibitors achieve maximum impact.",
+          "With more than 27 years of experience, we bring deep industry knowledge and strategic insight to help exhibitors achieve maximum impact.",
       },
       {
         icon: "opportunities",
