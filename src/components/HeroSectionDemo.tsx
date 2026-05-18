@@ -144,7 +144,7 @@ export function HeroSectionDemo({
   useEffect(() => {
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % demoSlides.length);
-    }, 4200);
+    }, 5200);
 
     return () => window.clearInterval(interval);
   }, []);
@@ -152,8 +152,10 @@ export function HeroSectionDemo({
   return (
     <section
       data-hero-shell={shellMode}
-      className={`relative min-h-screen overflow-hidden ${
-        isHomeHero ? (isLightHome ? "bg-transparent text-[#241b14]" : "bg-transparent text-white") : "bg-[#070707] text-white"
+      className={`relative overflow-hidden ${
+        isHomeHero
+          ? `min-h-0 ${isLightHome ? "bg-transparent text-[#241b14]" : "bg-transparent text-white"}`
+          : "min-h-screen bg-[#070707] text-white"
       }`}
       style={tightPortraitTabletTop ? { marginTop: "-6rem" } : undefined}
     >
@@ -229,7 +231,163 @@ export function HeroSectionDemo({
       ) : null}
 
       <div
-        className={`relative mx-auto grid min-h-[calc(100vh-7.5rem)] w-full max-w-[1700px] gap-14 px-4 pb-10 md:px-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-12 ${
+        className={`relative mx-auto w-full max-w-[1700px] px-4 pb-8 md:px-8 md:pb-10 lg:hidden [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:hidden ${
+          showHeroNav ? "pt-6" : "pt-24"
+        }`}
+        style={tightPortraitTabletTop ? { paddingTop: "0.75rem" } : undefined}
+      >
+        <div className="mx-auto max-w-[46rem]">
+          <div className="relative mt-2">
+            <div
+              className={`relative h-[15rem] overflow-hidden rounded-[28px] sm:h-[18rem] md:h-[21rem] ${
+                isLightHome
+                  ? "border border-[rgba(206,166,94,0.42)] shadow-[0_22px_64px_rgba(96,62,22,0.14)]"
+                  : "border border-[rgba(233,203,129,0.34)] shadow-[0_28px_80px_rgba(0,0,0,0.34)]"
+              }`}
+            >
+              <motion.div
+                className="flex h-full"
+                animate={{ x: `-${activeIndex * 100}%` }}
+                transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {demoSlides.map((slide) => (
+                  <div key={`${slide.id}-compact`} className="relative h-full min-w-full">
+                    <Image
+                      src={slide.image}
+                      alt={`${slide.title} showcase`}
+                      fill
+                      sizes="(min-width: 768px) 86vw, 94vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,8,0.08)_0%,rgba(8,8,8,0.16)_42%,rgba(8,8,8,0.58)_100%)]" />
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-[radial-gradient(circle_at_bottom,rgba(216,183,102,0.18),transparent_70%)]" />
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            <div className="mt-4 flex justify-center">
+              <div className="flex items-center gap-2.5">
+                {demoSlides.map((slide, index) => (
+                  <button
+                    key={`${slide.id}-compact-dot`}
+                    type="button"
+                    onClick={() => {
+                      setActiveIndex(index);
+                    }}
+                    aria-label={`Show ${slide.title}`}
+                    className="h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: activeIndex === index ? "2.4rem" : "0.6rem",
+                      background:
+                        activeIndex === index
+                          ? "#d6ad5e"
+                          : isLightHome
+                            ? "rgba(124,92,52,0.24)"
+                            : "rgba(255,255,255,0.24)",
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`${activeSlide.id}-compact-details`}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              className={`mt-4 rounded-[24px] border p-4 shadow-[0_16px_44px_rgba(34,24,14,0.08)] backdrop-blur-xl sm:p-5 ${
+                isLightHome
+                  ? "border-[rgba(177,132,63,0.14)] bg-white/86"
+                  : "border-[rgba(216,183,102,0.12)] bg-slate-950/72"
+              }`}
+            >
+              <div
+                className={`text-[0.64rem] font-black uppercase tracking-[0.16em] ${
+                  isLightHome ? "text-[#b1843f]" : "text-[#d8b766]"
+                }`}
+              >
+                {activeSlide.eyebrow}
+              </div>
+              <h1
+                className={`welcome-display-font mt-2.5 text-[1.55rem] font-black leading-[0.98] tracking-[-0.03em] sm:text-[2rem] ${
+                  isLightHome ? "text-[#221a12]" : "text-white"
+                }`}
+              >
+                {activeSlide.title}
+              </h1>
+              <p className={`mt-2.5 text-[0.9rem] leading-6 sm:text-[0.98rem] ${isLightHome ? "text-[#5f5446]" : "text-white/74"}`}>
+                {activeSlide.subtitle}
+              </p>
+              <p className={`mt-2 text-[0.82rem] leading-5 sm:text-sm sm:leading-6 ${isLightHome ? "text-[#736553]" : "text-white/56"}`}>
+                {activeSlide.description}
+              </p>
+
+              <div className={`mt-4 grid gap-2 text-[0.82rem] sm:grid-cols-2 sm:text-sm ${isLightHome ? "text-[#5f5446]" : "text-white/76"}`}>
+                <div
+                  className={`flex items-start gap-2.5 rounded-[16px] border px-3 py-2.5 ${
+                    isLightHome
+                      ? "border-[rgba(177,132,63,0.12)] bg-[#fffaf1]"
+                      : "border-[rgba(216,183,102,0.12)] bg-white/[0.03]"
+                  }`}
+                >
+                  <CalendarDays className={`mt-0.5 h-4 w-4 shrink-0 ${isLightHome ? "text-[#b1843f]" : "text-[#d8b766]"}`} />
+                  <span>{activeSlide.date}</span>
+                </div>
+                <div
+                  className={`flex items-start gap-2.5 rounded-[16px] border px-3 py-2.5 ${
+                    isLightHome
+                      ? "border-[rgba(177,132,63,0.12)] bg-[#fffaf1]"
+                      : "border-[rgba(216,183,102,0.12)] bg-white/[0.03]"
+                  }`}
+                >
+                  <MapPin className={`mt-0.5 h-4 w-4 shrink-0 ${isLightHome ? "text-[#b1843f]" : "text-[#d8b766]"}`} />
+                  <span>{activeSlide.venue}</span>
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <div
+                  className={`rounded-full border px-2.5 py-1.5 text-[0.68rem] font-semibold ${
+                    isLightHome
+                      ? "border-[rgba(177,132,63,0.14)] bg-white/72 text-[#6a5b49]"
+                      : "border-[rgba(216,183,102,0.14)] bg-white/[0.03] text-white/62"
+                  }`}
+                >
+                  Buyer-focused audience
+                </div>
+                <div
+                  className={`rounded-full border px-3 py-2 text-[0.76rem] font-semibold ${
+                    isLightHome
+                      ? "border-[rgba(177,132,63,0.14)] bg-white/72 text-[#6a5b49]"
+                      : "border-[rgba(216,183,102,0.14)] bg-white/[0.03] text-white/62"
+                  }`}
+                >
+                  Premium venue experience
+                </div>
+              </div>
+
+              <Link
+                href="/visitors/registration"
+                className={`mt-5 inline-flex items-center gap-2.5 rounded-[16px] px-5 py-2.5 text-[0.82rem] font-black transition-transform duration-300 hover:-translate-y-0.5 ${
+                  isLightHome
+                    ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
+                    : "bg-[linear-gradient(180deg,#f2d38c_0%,#d8b766_100%)] text-[#17120b] shadow-[0_18px_32px_rgba(216,183,102,0.22)]"
+                }`}
+              >
+                Register Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <div
+        className={`relative mx-auto hidden min-h-[calc(100vh-7.5rem)] w-full max-w-[1700px] gap-14 px-4 pb-10 md:px-8 lg:grid lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-12 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:grid [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:grid-cols-[0.78fr_1.22fr] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:gap-8 ${
           showHeroNav
             ? "pt-6 lg:pt-10"
             : "pt-24 lg:pt-28 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:pt-2"
