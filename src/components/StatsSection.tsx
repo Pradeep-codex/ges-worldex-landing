@@ -29,7 +29,7 @@ const defaultStatsContent: StatsContent = {
     { end: 400, suffix: "+", label: "Exhibitions" },
     { end: 4, suffix: "K+", label: "Brands" },
     { end: 10, suffix: "M+", label: "Products" },
-    { end: 100, suffix: "K+", label: "Visitors" },
+    { end: 50, suffix: " Lakhs", label: "Visitors" },
   ],
 };
 

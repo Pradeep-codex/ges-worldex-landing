@@ -41,22 +41,34 @@ export function ManagingDirectorSection() {
               Under the leadership of our Managing Director, the company continues to expand its reach, strengthen execution quality, and deliver experiences that are both visually compelling and commercially effective.
             </p>
             <p>
-              This section can be updated with the final MD note, biography, or message when you share the exact content and portrait image.
+              Sreekanth Urs leads GES Worldex India Pvt. Ltd. with a focus on purposeful growth, stronger industry connections, and exhibitions that create measurable business impact.
             </p>
           </div>
 
-          <div className="flex flex-col gap-3 rounded-[24px] border px-5 py-4 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: 'var(--about-card-border)', backgroundColor: 'var(--about-card-bg)' }}>
-            <div>
+          <div
+            className="grid gap-4 rounded-[24px] border px-5 py-4 sm:grid-cols-[1fr_auto] sm:items-end"
+            style={{ borderColor: 'var(--about-card-border)', backgroundColor: 'var(--about-card-bg)' }}
+          >
+            <div className="space-y-1">
               <div className="text-xs font-black uppercase tracking-[0.24em]" style={{ color: 'var(--about-text-secondary)' }}>
                 Managing Director
               </div>
-              <div className="mt-1 text-lg font-black" style={{ color: 'var(--about-text-primary)' }}>
-                GES Worldex
+              <div className="text-lg font-black leading-tight" style={{ color: 'var(--about-text-primary)' }}>
+                Sreekanth Urs
+              </div>
+              <div className="text-sm font-bold uppercase tracking-[0.18em] leading-tight" style={{ color: 'var(--about-text-secondary)' }}>
+                MD
+              </div>
+              <div className="text-sm font-bold uppercase tracking-[0.18em] leading-tight" style={{ color: 'var(--about-text-secondary)' }}>
+                GES Worldex India Pvt Ltd
               </div>
             </div>
 
-            <div className="text-sm font-medium leading-6 sm:text-right" style={{ color: 'var(--about-text-secondary)' }}>
-              A space reserved for signature, designation, or a short closing line.
+            <div
+              className="max-w-[320px] text-sm font-medium leading-6 sm:justify-self-end sm:self-end sm:text-right"
+              style={{ color: 'var(--about-text-secondary)' }}
+            >
+              Building trusted exhibition platforms with a clear vision for growth.
             </div>
           </div>
         </div>

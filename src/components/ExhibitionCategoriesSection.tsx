@@ -10,8 +10,8 @@ import type { ExhibitionCategoriesSectionContent } from "@/sanity/lib/home";
 const exhibitionCategories = [
   {
     id: "jewellery",
-    title: "Gold Exhibitions",
-    titleLines: ["Gold", "Exhibitions"],
+    title: "B2B Exhibition in Gold",
+    titleLines: ["B2B Exhibition in", "Gold"],
     eyebrow: "Luxury trade experiences",
     description:
       "High-value showcase environments for fine jewellery brands, gemstone houses, designers, and premium buyers.",
@@ -25,8 +25,8 @@ const exhibitionCategories = [
   },
   {
     id: "silver",
-    title: "Silver Exhibitions",
-    titleLines: ["Silver", "Exhibitions"],
+    title: "B2B Exhibition in Silver",
+    titleLines: ["B2B Exhibition in", "Silver"],
     eyebrow: "Refined precious-metal showcases",
     description:
       "Purpose-built environments for sterling silver collections, artisanal craftsmanship, gifting brands, and high-intent trade buyers.",
@@ -96,6 +96,18 @@ const exhibitionCategories = [
   },
 ] as const;
 
+function buildCategoryTitleLines(title: string) {
+  if (title.startsWith("B2B Exhibition in ")) {
+    return ["B2B Exhibition in", title.replace("B2B Exhibition in ", "")];
+  }
+
+  if (title.includes(" & ")) {
+    return title.split(" & ").map((line, lineIndex) => (lineIndex === 0 ? `${line} &` : line));
+  }
+
+  return [title];
+}
+
 function resolveExhibitionCategories(content?: ExhibitionCategoriesSectionContent) {
   const categories = content?.categories?.length
     ? content.categories
@@ -108,7 +120,7 @@ function resolveExhibitionCategories(content?: ExhibitionCategoriesSectionConten
             ...fallback,
             id: title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
             title,
-            titleLines: title.includes(" & ") ? title.split(" & ").map((line, lineIndex) => (lineIndex === 0 ? `${line} &` : line)) : [title],
+            titleLines: buildCategoryTitleLines(title),
             eyebrow: category.eyebrow || fallback.eyebrow,
             description: category.description || fallback.description,
             image: category.image || fallback.image,

@@ -68,7 +68,7 @@ export function AboutSection({
   const bullets = content?.bullets?.length
     ? content.bullets
     : [
-        "27+ Years of Industry Leadership & Excellence",
+        "29+ Years of Industry Leadership & Excellence",
         "Connecting 50,000+ Business Professionals Annually",
         "Delivering High-Impact B2B Exhibitions & Trade Platforms",
         "Trusted Partner for International Business Growth",

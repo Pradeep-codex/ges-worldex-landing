@@ -17,7 +17,7 @@ const metrics = [
   { value: "400+", label: "Exhibitions" },
   { value: "4K+", label: "Brands" },
   { value: "10M+", label: "Products" },
-  { value: "100K+", label: "Visitors" },
+  { value: "50 Lakhs", label: "Visitors" },
 ];
 
 export default async function AboutPage() {

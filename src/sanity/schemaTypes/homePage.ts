@@ -84,7 +84,7 @@ export const homePage = defineType({
             { value: 400, suffix: "+", label: "Exhibitions" },
             { value: 4, suffix: "K+", label: "Brands" },
             { value: 10, suffix: "M+", label: "Products" },
-            { value: 100, suffix: "K+", label: "Visitors" },
+            { value: 50, suffix: " Lakhs", label: "Visitors" },
           ],
           validation: (rule) => rule.required().min(1).max(4),
         }),
