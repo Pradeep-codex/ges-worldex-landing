@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { CalendarDays, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import type { UpcomingCitiesSectionContent } from "@/sanity/lib/home";
 
 const cityCards = [
   {
@@ -51,11 +50,18 @@ type CityCard = {
   venue: string;
 };
 
-function resolveUpcomingCities(content?: UpcomingCitiesSectionContent) {
+type IncomingCityItem = {
+  city?: string;
+  date?: string;
+  venue?: string;
+  copy?: string;
+};
+
+function resolveUpcomingCities(content?: any) {
   const cities: CityCard[] = content?.cities?.length
     ? content.cities
-        .filter((city) => city.city || city.date || city.venue || city.copy)
-        .map((city, index) => {
+        .filter((city: IncomingCityItem) => city.city || city.date || city.venue || city.copy)
+        .map((city: IncomingCityItem, index: number) => {
           const fallback = cityCards[index % cityCards.length];
           const base = (city.city || fallback.city)
             .toLowerCase()
@@ -182,7 +188,7 @@ function UpcomingEditionCard({
 export function UpcomingCitiesSection({
   content,
 }: {
-  content?: UpcomingCitiesSectionContent;
+  content?: any;
 }) {
   const resolvedContent = resolveUpcomingCities(content);
 

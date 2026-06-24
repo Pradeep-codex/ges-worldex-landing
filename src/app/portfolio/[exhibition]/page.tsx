@@ -80,12 +80,12 @@ export default async function PortfolioDetailPage({
           Portfolio
         </Link>
 
-        <div className="overflow-hidden rounded-[34px] bg-[color:var(--ink)] shadow-[0_32px_110px_rgba(15,23,42,0.2)]">
+        <div className="overflow-hidden rounded-[34px] border border-black/6 bg-[#f8f1e3] shadow-[0_32px_110px_rgba(15,23,42,0.12)] [html[data-theme='dark']_&]:border-white/8 [html[data-theme='dark']_&]:bg-[#121820]">
           <div className="grid min-h-[680px] lg:grid-cols-[0.9fr_1.1fr]">
-            <div className="relative flex flex-col justify-between p-6 text-white md:p-10 lg:p-12">
-              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.08),transparent_42%),radial-gradient(circle_at_18%_12%,var(--accent)_0%,transparent_34%)] opacity-80" />
+            <div className="relative flex flex-col justify-between p-6 text-slate-950 md:p-10 lg:p-12 [html[data-theme='dark']_&]:text-white">
+              <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(255,255,255,0.65),transparent_42%),radial-gradient(circle_at_18%_12%,color-mix(in_srgb,var(--accent)_18%,transparent)_0%,transparent_34%)] [html[data-theme='dark']_&]:bg-[linear-gradient(145deg,rgba(255,255,255,0.04),transparent_42%),radial-gradient(circle_at_18%_12%,color-mix(in_srgb,var(--accent)_24%,transparent)_0%,transparent_34%)]" />
               <div className="relative z-10 space-y-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.22em] text-white/82 backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent)]/18 bg-white/70 px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.22em] text-slate-800 backdrop-blur-md [html[data-theme='dark']_&]:bg-white/8 [html[data-theme='dark']_&]:text-white/82">
                   <Sparkles className="h-3.5 w-3.5 text-[color:var(--accent)]" />
                   {exhibition.label}
                 </div>
@@ -93,7 +93,7 @@ export default async function PortfolioDetailPage({
                   <h1 className="welcome-display-font max-w-[10ch] text-[3.4rem] font-black leading-[0.88] tracking-tight md:text-[5.4rem]">
                     {exhibition.title}
                   </h1>
-                  <p className="max-w-xl text-base leading-relaxed text-white/72 md:text-lg">
+                  <p className="max-w-xl text-base leading-relaxed text-slate-600 md:text-lg [html[data-theme='dark']_&]:text-white/72">
                     {exhibition.overview}
                   </p>
                 </div>
@@ -103,7 +103,7 @@ export default async function PortfolioDetailPage({
                 {exhibition.focus.map((item) => (
                   <div
                     key={item}
-                    className="rounded-full border border-white/14 bg-white/10 px-4 py-2 text-sm font-bold text-white/76 backdrop-blur-md"
+                    className="rounded-full border border-[color:var(--accent)]/16 bg-white/72 px-4 py-2 text-sm font-bold text-slate-700 backdrop-blur-md [html[data-theme='dark']_&]:bg-white/8 [html[data-theme='dark']_&]:text-white/76"
                   >
                     {item}
                   </div>
@@ -225,7 +225,7 @@ export default async function PortfolioDetailPage({
             {exhibition.editions.length > 0 ? (
               exhibition.editions.map((edition, index) => {
                 const metrics = getEditionMetrics(edition);
-                const visual = exhibition.galleryImages[index % exhibition.galleryImages.length];
+                const visual = edition.image ?? exhibition.galleryImages[index % exhibition.galleryImages.length] ?? exhibition.image;
 
                 return (
                   <article

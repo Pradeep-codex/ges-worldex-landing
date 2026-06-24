@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
-import type { ContactPageCmsContent } from "@/sanity/lib/pages";
 
 const officeAddress =
   "225 14th Cross, Sampige Rd, opposite Saibaba Temple, Malleshwaram, Bengaluru, Karnataka 560003";
@@ -14,7 +13,7 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-export function ContactPageContent({ content }: { content?: ContactPageCmsContent | null }) {
+export function ContactPageContent({ content }: { content?: any }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");

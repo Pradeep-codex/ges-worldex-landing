@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import RotatingText from "./ui/RotatingText";
-import type { HomeAboutSection } from "@/sanity/lib/home";
 
 const visionCardClass =
   "absolute w-[42%] aspect-[3/4] overflow-hidden rounded-[30px] will-change-transform sm:rounded-[38px]";
@@ -55,7 +54,7 @@ const visionPhrases = [
 export function AboutSection({
   content,
 }: {
-  content?: HomeAboutSection;
+  content?: any;
 }) {
   const [activeVisionGroup, setActiveVisionGroup] = useState<"primary" | "secondary">("primary");
   const revealViewport = { once: true, amount: 0.2 } as const;

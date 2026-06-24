@@ -1,5 +1,3 @@
-import type { GenericPageContent } from "@/sanity/lib/pages";
-
 export const navPageFallbacks = {
   "exhibitors/booth-application": {
     eyebrow: "Exhibitors",
@@ -87,14 +85,16 @@ export const navPageFallbacks = {
 
 export function mergeNavPageContent(
   fallback: (typeof navPageFallbacks)[keyof typeof navPageFallbacks],
-  cms?: GenericPageContent | null,
+  cms?: any,
 ) {
   return {
     eyebrow: cms?.eyebrow || fallback.eyebrow,
     title: cms?.title || fallback.title,
     description: cms?.description || fallback.description,
     points: cms?.cards?.length
-      ? cms.cards.map((card) => card.title).filter((point): point is string => Boolean(point))
+      ? cms.cards
+          .map((card: { title?: string }) => card.title)
+          .filter((point: string | undefined): point is string => Boolean(point))
       : fallback.points,
   };
 }

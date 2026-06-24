@@ -13,7 +13,6 @@ import {
   UsersRound,
   Wrench,
 } from "lucide-react";
-import type { GenericPageContent } from "@/sanity/lib/pages";
 
 const hubContent = {
   exhibitors: {
@@ -130,7 +129,7 @@ const hubContent = {
 
 type AudienceHubPageProps = {
   type: keyof typeof hubContent;
-  content?: GenericPageContent | null;
+  content?: any;
 };
 
 export function AudienceHubPage({ type, content: cmsContent }: AudienceHubPageProps) {
@@ -143,13 +142,13 @@ export function AudienceHubPage({ type, content: cmsContent }: AudienceHubPagePr
     heroPoints: cmsContent?.cards?.length
       ? cmsContent.cards
           .slice(0, 3)
-          .map((card) => card.eyebrow || card.title)
-          .filter((point): point is string => Boolean(point))
+          .map((card: any) => card.eyebrow || card.title)
+          .filter((point: any): point is string => Boolean(point))
       : fallbackContent.heroPoints,
     options: cmsContent?.cards?.length
       ? cmsContent.cards
-          .filter((card) => card.title)
-          .map((card, index) => {
+          .filter((card: any) => card.title)
+          .map((card: any, index: number) => {
             const fallbackOption = fallbackContent.options[index % fallbackContent.options.length];
 
             return {
@@ -213,7 +212,7 @@ export function AudienceHubPage({ type, content: cmsContent }: AudienceHubPagePr
         </div>
 
         <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-1">
-          {content.heroPoints.map((point, index) => (
+          {content.heroPoints.map((point: any, index: number) => (
             <div
               key={point}
               className="flex min-h-[140px] flex-col justify-between rounded-[24px] border p-5 shadow-[0_18px_60px_rgba(47,35,24,0.06)]"
@@ -235,7 +234,7 @@ export function AudienceHubPage({ type, content: cmsContent }: AudienceHubPagePr
 
       <section className="mt-10 md:mt-14 lg:mt-16">
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {content.options.map((option) => {
+          {content.options.map((option: any) => {
             const Icon = option.icon;
 
             return (
@@ -265,7 +264,7 @@ export function AudienceHubPage({ type, content: cmsContent }: AudienceHubPagePr
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-2">
-                  {option.details.map((detail) => (
+                  {option.details.map((detail: any) => (
                     <span
                       key={detail}
                       className="rounded-full px-3 py-1.5 text-[0.66rem] font-black uppercase tracking-[0.12em]"

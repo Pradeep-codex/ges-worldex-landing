@@ -5,9 +5,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion, useMotionTemplate, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import type { AboutPageCmsContent } from "@/sanity/lib/pages";
 
-export function AboutHero({ content }: { content?: AboutPageCmsContent["hero"] }) {
+export function AboutHero({ content }: { content?: any }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const { scrollYProgress } = useScroll({

@@ -25,15 +25,10 @@ type DomeGalleryProps = {
 };
 
 const DEFAULT_IMAGES: GalleryImage[] = [
-  { src: "/exhibition/expo1.jpg", alt: "GES Worldex exhibition scene one" },
-  { src: "/exhibition/expo2.jpg", alt: "GES Worldex exhibition scene two" },
-  { src: "/exhibition/expo3.jpg", alt: "GES Worldex exhibition scene three" },
-  { src: "/exhibition/expo4.jpg", alt: "GES Worldex exhibition scene four" },
-  { src: "/exhibition/expo5.jpg", alt: "GES Worldex exhibition scene five" },
-  { src: "/exhibition/expo6.jpg", alt: "GES Worldex exhibition scene six" },
-  { src: "/about-images/abt1.JPG", alt: "GES Worldex gallery image one" },
-  { src: "/about-images/abt2.JPG", alt: "GES Worldex gallery image two" },
-  { src: "/about-images/abt3.JPG", alt: "GES Worldex gallery image three" },
+  ...Array.from({ length: 91 }, (_, index) => ({
+    src: `/globe-gallery/${index + 1}.jpg`,
+    alt: `GES Worldex globe gallery image ${index + 1}`,
+  })),
 ] as const;
 
 type DomeItem = {

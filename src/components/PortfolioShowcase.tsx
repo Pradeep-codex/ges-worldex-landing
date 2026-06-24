@@ -91,6 +91,22 @@ function buildEditionPreviewImages(images: string[], fallback: string) {
   return source.length > 0 ? source : [fallback];
 }
 
+function getEditionGalleryImages(exhibition: PortfolioExhibition, edition?: PortfolioExhibition["editions"][number] | null) {
+  if (!edition) {
+    return [exhibition.detailImage, ...exhibition.galleryImages];
+  }
+
+  return buildEditionPreviewImages(
+    [
+      edition.image ?? "",
+      ...(edition.galleryImages ?? []),
+      exhibition.detailImage,
+      ...exhibition.galleryImages,
+    ],
+    exhibition.image,
+  );
+}
+
 function EditionGallery({
   accent,
   images,
@@ -278,17 +294,9 @@ function MobilePortfolioSection({
     ? exhibition.editions.indexOf(activeEdition)
     : 0;
   const metrics = activeEdition ? getEditionMetrics(activeEdition) : [];
-  const previewImages = buildEditionPreviewImages(
-    activeEdition
-      ? [
-          exhibition.galleryImages[activeEditionSourceIndex % exhibition.galleryImages.length] ??
-            exhibition.image,
-          exhibition.detailImage,
-          ...exhibition.galleryImages,
-        ]
-      : [exhibition.detailImage, ...exhibition.galleryImages],
-    exhibition.image,
-  );
+  const previewImages = activeEdition
+    ? getEditionGalleryImages(exhibition, activeEdition)
+    : getEditionGalleryImages(exhibition, null);
 
   return (
     <article id={`show-${exhibition.id}`} className="overflow-hidden scroll-mt-[110px]" style={sectionStyle}>
@@ -785,15 +793,17 @@ export function PortfolioShowcase({
                           >
                             {item.title}
                           </div>
-                          <div
-                            className={`mt-1 text-[0.72rem] font-black uppercase tracking-[0.16em] transition-colors duration-300 ${
-                              isActive
-                                ? "text-slate-800 [html[data-theme='dark']_&]:text-slate-50"
-                                : "text-slate-500 [html[data-theme='dark']_&]:text-slate-400"
-                            }`}
-                          >
-                            {item.editions.length > 0 ? `${item.editions.length} Editions` : "Coming soon"}
-                          </div>
+                          {item.editions.length > 0 ? (
+                            <div
+                              className={`mt-1 text-[0.72rem] font-black uppercase tracking-[0.16em] transition-colors duration-300 ${
+                                isActive
+                                  ? "text-slate-800 [html[data-theme='dark']_&]:text-slate-50"
+                                  : "text-slate-500 [html[data-theme='dark']_&]:text-slate-400"
+                              }`}
+                            >
+                              {`${item.editions.length} Editions`}
+                            </div>
+                          ) : null}
                         </div>
 
                         <div
@@ -827,29 +837,24 @@ export function PortfolioShowcase({
 
         <div ref={contentTopRef} className="min-w-0 space-y-6">
           <article className="overflow-hidden rounded-[32px] border border-[color:var(--about-card-border)] bg-white/84 shadow-[0_26px_90px_rgba(22,16,10,0.08)] backdrop-blur-xl [html[data-theme='dark']_&]:bg-slate-950/82">
-            <div className="relative min-h-[360px] overflow-hidden rounded-[32px] bg-[color:var(--portfolio-ink)] md:min-h-[420px]">
-              <Image
-                src={exhibition.detailImage}
-                alt={exhibition.title}
-                fill
-                priority
-                sizes="(min-width: 1280px) 68vw, 96vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,7,6,0.9)_0%,rgba(7,7,6,0.76)_32%,rgba(7,7,6,0.22)_68%,rgba(7,7,6,0.12)_100%)]" />
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--portfolio-accent)_28%,transparent),transparent_36%)]" />
+            <div className="relative min-h-[280px] overflow-hidden rounded-[32px] bg-[#fbf6ec] md:min-h-[320px] [html[data-theme='dark']_&]:bg-[#121820]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--portfolio-accent)_16%,transparent),transparent_34%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--portfolio-accent)_22%,transparent),transparent_36%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.72),rgba(255,255,255,0.12))] [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))]" />
 
-              <div className="relative z-10 flex min-h-[360px] flex-col justify-between p-6 text-white md:min-h-[420px] md:p-8 lg:p-10">
-                <div className="max-w-[44rem] space-y-4">
-                  <h2 className="welcome-display-font max-w-[12ch] text-[2.7rem] font-black leading-[0.92] tracking-tight sm:text-[3.3rem] lg:text-[4.1rem]">
+              <div className="relative z-10 flex min-h-[280px] flex-col justify-between p-6 text-slate-950 md:min-h-[320px] md:p-8 lg:p-10 [html[data-theme='dark']_&]:text-white">
+                <div className="max-w-[56rem] space-y-4">
+                  <div className="inline-flex w-fit rounded-full border border-[color:var(--portfolio-accent)]/20 bg-white/70 px-4 py-2 text-[0.72rem] font-black uppercase tracking-[0.18em] text-[color:var(--portfolio-accent)] [html[data-theme='dark']_&]:bg-white/6">
+                    {exhibition.label}
+                  </div>
+                  <h2 className="welcome-display-font max-w-[16ch] text-[2.7rem] font-black leading-[0.92] tracking-tight sm:text-[3.3rem] lg:text-[4.1rem]">
                     {exhibition.title}
                   </h2>
-                  <p className="max-w-[36rem] text-base leading-relaxed text-white/80 md:text-lg">
+                  <p className="max-w-[48rem] text-base leading-relaxed text-slate-600 md:text-lg [html[data-theme='dark']_&]:text-white/76">
                     {exhibition.overview}
                   </p>
                 </div>
 
-                <div className="mt-8 flex flex-wrap gap-5 text-sm font-semibold text-white/84">
+                <div className="mt-8 flex flex-wrap gap-5 text-sm font-semibold text-slate-700 [html[data-theme='dark']_&]:text-white/84">
                   <div className="inline-flex items-center gap-2">
                     <CalendarDays className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
                     Since {showcaseMeta.firstYear}
@@ -888,11 +893,8 @@ export function PortfolioShowcase({
             {editionCount > 0 ? (
               exhibition.editions.map((edition, index) => {
                 const metrics = getEditionMetrics(edition);
-                const visual = exhibition.galleryImages[index % exhibition.galleryImages.length] ?? exhibition.image;
-                const previewImages = buildEditionPreviewImages(
-                  [visual, exhibition.detailImage, ...exhibition.galleryImages],
-                  exhibition.image,
-                );
+                const visual = edition.image ?? exhibition.galleryImages[index % exhibition.galleryImages.length] ?? exhibition.image;
+                const previewImages = getEditionGalleryImages(exhibition, edition);
                 const year = extractYear(edition.date);
 
                 return (

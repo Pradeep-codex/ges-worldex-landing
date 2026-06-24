@@ -5,7 +5,6 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { portfolioExhibitions } from "@/lib/portfolio";
-import type { ExhibitionCategoriesSectionContent } from "@/sanity/lib/home";
 
 const exhibitionCategories = [
   {
@@ -108,11 +107,11 @@ function buildCategoryTitleLines(title: string) {
   return [title];
 }
 
-function resolveExhibitionCategories(content?: ExhibitionCategoriesSectionContent) {
+function resolveExhibitionCategories(content?: any) {
   const categories = content?.categories?.length
     ? content.categories
-        .filter((category) => category.title)
-        .map((category, index) => {
+        .filter((category: any) => category.title)
+        .map((category: any, index: number) => {
           const fallback = exhibitionCategories[index % exhibitionCategories.length];
           const title = category.title || fallback.title;
 
@@ -153,12 +152,13 @@ const exhibitionHighlights: ExhibitionHighlight[] = portfolioExhibitions.map((ex
   id: exhibition.id,
   title: exhibition.title,
   imageSrc: exhibition.image,
+  darkImageSrc: (exhibition as any).darkImageSrc,
 }));
 
 export function ExhibitionCategoriesSection({
   content,
 }: {
-  content?: ExhibitionCategoriesSectionContent;
+  content?: any;
 }) {
   const resolvedContent = resolveExhibitionCategories(content);
   const [activeId, setActiveId] = useState<string>(
@@ -303,7 +303,7 @@ export function ExhibitionCategoriesSection({
             className="hidden gap-3 lg:flex"
             onMouseLeave={canHover ? () => setHoveredId(null) : undefined}
           >
-            {resolvedContent.categories.map((category, index) => {
+            {resolvedContent.categories.map((category: any, index: number) => {
               const expanded = previewId === category.id;
 
               return (
@@ -353,7 +353,7 @@ export function ExhibitionCategoriesSection({
                       transition={{ duration: reduceMotion ? 0 : 0.22 }}
                     >
                       <div className="[writing-mode:vertical-rl] rotate-180 whitespace-nowrap text-[2rem] font-black uppercase leading-[0.82] tracking-[0.015em] text-white [text-shadow:0_10px_28px_rgba(0,0,0,0.6)]">
-                        {category.titleLines.map((line) => (
+                        {category.titleLines.map((line: string) => (
                           <span key={line} className="block">
                             {line}
                           </span>
@@ -373,7 +373,7 @@ export function ExhibitionCategoriesSection({
                         >
                           <div className="space-y-3 bg-[linear-gradient(180deg,rgba(2,6,23,0)_0%,rgba(2,6,23,0.74)_14%,rgba(2,6,23,0.96)_100%)] px-6 pb-6 pt-12">
                             <h3 className="welcome-display-font w-full text-[2.35rem] font-black leading-[0.95] tracking-[-0.04em] text-white">
-                              {category.titleLines.map((line) => (
+                              {category.titleLines.map((line: string) => (
                                 <span key={line} className="block">
                                   {line}
                                 </span>
@@ -408,14 +408,14 @@ export function ExhibitionCategoriesSection({
             </p>
 
             <div className="space-y-3">
-              {resolvedContent.categories.map((category) => (
+              {resolvedContent.categories.map((category: any) => (
                 <div key={category.id} className="flex items-start gap-3">
                   <div
                     className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${category.mobileDotClass}`}
                   />
                   <div className="min-w-0 space-y-1">
                     <div className="text-[1rem] font-black leading-snug text-slate-900 [html[data-theme='dark']_&]:text-slate-100">
-                      {category.titleLines.map((line) => (
+                      {category.titleLines.map((line: string) => (
                         <span key={line} className="block">
                           {line}
                         </span>

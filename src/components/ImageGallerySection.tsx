@@ -2,12 +2,11 @@
 
 import { motion } from "framer-motion";
 import DomeGallery from "@/components/DomeGallery";
-import type { GallerySectionContent } from "@/sanity/lib/home";
 
 export function ImageGallerySection({
   content,
 }: {
-  content?: GallerySectionContent;
+  content?: any;
 }) {
   return (
     <section className="relative mx-auto w-full max-w-[1700px] px-4 pb-24 pt-6 md:px-8 md:pb-28 md:pt-8 lg:px-12 lg:pb-32 lg:pt-10">

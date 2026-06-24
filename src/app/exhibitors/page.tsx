@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { AudienceHubPage } from "@/components/AudienceHubPage";
-import { getGenericPageContent } from "@/sanity/lib/pages";
 
 export const metadata: Metadata = {
   title: "Exhibitors",
@@ -8,6 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ExhibitorsPage() {
-  const content = await getGenericPageContent("exhibitors");
-  return <AudienceHubPage type="exhibitors" content={content} />;
+  return <AudienceHubPage type="exhibitors" />;
 }

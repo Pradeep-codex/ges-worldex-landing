@@ -10,10 +10,9 @@ import { UpcomingCitiesSection } from "@/components/UpcomingCitiesSection";
 import { FeaturedVideoSection } from "@/components/FeaturedVideoSection";
 import { ImageGallerySection } from "@/components/ImageGallerySection";
 import { defaultSeo, siteUrl } from "@/lib/seo";
-import type { HomePageContent as SanityHomePageContent } from "@/sanity/lib/home";
 
 type HomePageContentProps = {
-  content?: SanityHomePageContent | null;
+  content?: any;
 };
 
 export function HomePageContent({ content }: HomePageContentProps) {

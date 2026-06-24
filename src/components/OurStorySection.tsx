@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { AboutPageCmsContent } from "@/sanity/lib/pages";
 
 const defaultParagraphs = [
   "Close to 3 Decades With 450+ Exhibitions, a group of passionate professionals came together with one vision: to rethink how exhibitions are created across India.",
@@ -10,7 +9,7 @@ const defaultParagraphs = [
   "Every event we design carries that same belief forward: exhibitions should not just be seen, they should move people and markets.",
 ];
 
-export function OurStorySection({ content }: { content?: AboutPageCmsContent["story"] }) {
+export function OurStorySection({ content }: { content?: any }) {
   const paragraphs = content?.paragraphs?.length ? content.paragraphs : defaultParagraphs;
 
   return (
@@ -34,7 +33,7 @@ export function OurStorySection({ content }: { content?: AboutPageCmsContent["st
         </div>
 
         <div className="space-y-6 text-[16px] leading-[1.9] tracking-[0.02em] md:text-[17px]" style={{ color: 'var(--about-text-secondary)' }}>
-          {paragraphs.map((paragraph, index) => (
+          {paragraphs.map((paragraph: string, index: number) => (
             <p
               key={`${paragraph}-${index}`}
               className={index === 0 ? "font-semibold" : index === paragraphs.length - 1 ? "font-medium" : undefined}

@@ -2,7 +2,6 @@
 
 import { ArrowUpRight, PlayCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import type { FeaturedVideoSectionContent } from "@/sanity/lib/home";
 
 const videoUrl = "https://www.youtube.com/watch?v=LI9m-6uwETY";
 const embedUrl =
@@ -11,7 +10,7 @@ const embedUrl =
 export function FeaturedVideoSection({
   content,
 }: {
-  content?: FeaturedVideoSectionContent;
+  content?: any;
 }) {
   const resolvedVideoUrl = content?.youtubeUrl || videoUrl;
   const resolvedEmbedUrl = content?.embedUrl || embedUrl;

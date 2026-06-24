@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import type { HomeStatsSection } from "@/sanity/lib/home";
 
 type StatItem = {
   end: number;
@@ -15,6 +14,12 @@ type StatsContent = {
   headline: string[];
   description: string;
   stats: StatItem[];
+};
+
+type IncomingStatItem = {
+  value?: number;
+  suffix?: string;
+  label?: string;
 };
 
 const defaultStatsContent: StatsContent = {
@@ -33,12 +38,12 @@ const defaultStatsContent: StatsContent = {
   ],
 };
 
-function resolveStatsContent(content?: HomeStatsSection): StatsContent {
+function resolveStatsContent(content?: any): StatsContent {
   const stats =
     content?.stats
-      ?.filter((stat) => typeof stat.value === "number" && stat.label)
+      ?.filter((stat: IncomingStatItem) => typeof stat.value === "number" && stat.label)
       .slice(0, 4)
-      .map((stat) => ({
+      .map((stat: IncomingStatItem) => ({
         end: stat.value as number,
         suffix: stat.suffix,
         label: stat.label as string,
@@ -324,7 +329,7 @@ function StatsBand({
   );
 }
 
-export function StatsSection({ content }: { content?: HomeStatsSection }) {
+export function StatsSection({ content }: { content?: any }) {
   const sectionRef = useRef<HTMLElement>(null);
   const [hasEntered, setHasEntered] = useState(false);
   const resolvedContent = resolveStatsContent(content);

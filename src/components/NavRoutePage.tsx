@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import type { ReactNode } from "react";
 
 type NavRoutePageProps = {
   eyebrow: string;
@@ -8,6 +9,7 @@ type NavRoutePageProps = {
   points?: string[];
   ctaLabel?: string;
   ctaHref?: string;
+  children?: ReactNode;
 };
 
 export function NavRoutePage({
@@ -17,6 +19,7 @@ export function NavRoutePage({
   points = [],
   ctaLabel = "Start a conversation",
   ctaHref = "/contact",
+  children,
 }: NavRoutePageProps) {
   return (
     <main className="mx-auto w-full max-w-[1700px] px-4 py-12 md:px-8 md:py-16 lg:px-12 lg:py-24">
@@ -57,6 +60,8 @@ export function NavRoutePage({
           ))}
         </section>
       )}
+
+      {children}
     </main>
   );
 }

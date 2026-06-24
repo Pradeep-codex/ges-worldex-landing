@@ -16,7 +16,6 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
-import type { WhySectionContent } from "@/sanity/lib/home";
 
 const pointIcons = {
   expertise: BadgeCheck,
@@ -57,6 +56,22 @@ type SwitchContentItem = {
 type SwitchMode = "exhibit" | "visit";
 
 type SwitchContentMap = Record<SwitchMode, SwitchContentItem>;
+
+type IncomingSwitchTab = {
+  key?: SwitchMode;
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  highlights?: Array<{
+    value?: string | number;
+    suffix?: string;
+    label?: string;
+  }>;
+  points?: Array<{
+    title?: string;
+    description?: string;
+  }>;
+};
 
 const switchContent = {
   exhibit: {
@@ -159,7 +174,7 @@ const switchContent = {
   },
 } satisfies SwitchContentMap;
 
-function resolveWhySection(content?: WhySectionContent): SwitchContentMap {
+function resolveWhySection(content?: any): SwitchContentMap {
   if (!content?.tabs?.length) {
     return switchContent;
   }
@@ -169,7 +184,7 @@ function resolveWhySection(content?: WhySectionContent): SwitchContentMap {
     visit: { ...switchContent.visit },
   };
 
-  content.tabs.forEach((tab) => {
+  content.tabs.forEach((tab: IncomingSwitchTab) => {
     if (tab.key !== "exhibit" && tab.key !== "visit") {
       return;
     }
@@ -181,16 +196,16 @@ function resolveWhySection(content?: WhySectionContent): SwitchContentMap {
       body: tab.body || fallback.body,
       highlights: tab.highlights?.length
         ? tab.highlights
-            .filter((highlight) => highlight.label)
-            .map((highlight) => ({
+            .filter((highlight: NonNullable<IncomingSwitchTab["highlights"]>[number]) => highlight.label)
+            .map((highlight: NonNullable<IncomingSwitchTab["highlights"]>[number]) => ({
               value: `${highlight.value ?? ""}${highlight.suffix ?? ""}`,
               label: highlight.label as string,
             }))
         : fallback.highlights,
       points: tab.points?.length
         ? tab.points
-            .filter((point) => point.title)
-            .map((point, index) => ({
+            .filter((point: NonNullable<IncomingSwitchTab["points"]>[number]) => point.title)
+            .map((point: NonNullable<IncomingSwitchTab["points"]>[number], index: number) => ({
               icon: pointIconKeys[index % pointIconKeys.length],
               title: point.title as string,
               description: point.description || fallback.points[index % fallback.points.length].description,
@@ -202,7 +217,7 @@ function resolveWhySection(content?: WhySectionContent): SwitchContentMap {
   return nextContent;
 }
 
-export function WhySwitchSection({ content }: { content?: WhySectionContent }) {
+export function WhySwitchSection({ content }: { content?: any }) {
   const resolvedSwitchContent = resolveWhySection(content);
   const [mode, setMode] = useState<SwitchMode>("exhibit");
   const activeContent = resolvedSwitchContent[mode];
