@@ -2,38 +2,41 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Clock, MapPin, ChevronRight } from "lucide-react";
+import { Calendar, MapPin, ChevronRight } from "lucide-react";
 
 const bannerImages = [
-  { desktop: "/banners/b1.jpeg", mobile: "/banners/mtb1.jpeg" },
-  { desktop: "/banners/b2.jpeg", mobile: "/banners/mtb2.jpeg" },
-  { desktop: "/banners/b3.jpeg", mobile: "/banners/mtb3.jpeg" },
+  { desktop: "/banners/1.jpg", mobile: "/banners/1.jpg" },
+  { desktop: "/banners/2.jpg", mobile: "/banners/2.jpg" },
+  { desktop: "/banners/3.jpg", mobile: "/banners/3.jpg" },
 ];
 
 const bannerData = [
   {
-    title: "Global Exhibition on Services 2024",
-    subtitle: "Connecting the world through premium trade partnerships and global services.",
-    date: "24th - 26th Oct, 2024",
-    time: "10:00 AM - 06:30 PM",
-    location: "BIEC, Bangalore, India",
-    tag: "Flagship Event"
+    title: "Mumbai's 5 Edition on 2027",
+    subtitle:
+      "India's Biggest Silver Specific Trade Show - An Exclusive B2B Exhibition showcasing Silver Jewellery, Articles, Innovations, Trends, and Business Opportunities for manufacturers, wholesalers, retailers, exporters, and industry professionals.",
+    date: "4 - 7 June 2027",
+    location: "Mumbai, Maharashtra",
+    venue: "Jio World Convention Centre, Bandra Kurla Complex (BKC), Mumbai",
+    tag: "Silver Trade Show"
   },
   {
-    title: "World Expo India Summit",
-    subtitle: "The definitive destination for international business and innovative collaborations.",
-    date: "12th - 14th Nov, 2024",
-    time: "09:30 AM - 07:00 PM",
-    location: "Pragati Maidan, New Delhi",
-    tag: "International"
+    title: "Mumbai's 5 Edition on 2027",
+    subtitle:
+      "India's Biggest Silver Specific Trade Show - An Exclusive B2B Exhibition showcasing Silver Jewellery, Articles, Innovations, Trends, and Business Opportunities for manufacturers, wholesalers, retailers, exporters, and industry professionals.",
+    date: "4 - 7 June 2027",
+    location: "Mumbai, Maharashtra",
+    venue: "Jio World Convention Centre, Bandra Kurla Complex (BKC), Mumbai",
+    tag: "Silver Trade Show"
   },
   {
-    title: "Eco-Tech Innovation Forum",
-    subtitle: "Defining the future of sustainable technology and green industrial solutions.",
-    date: "05th - 07th Dec, 2024",
-    time: "10:00 AM - 06:00 PM",
-    location: "HITEX, Hyderabad, India",
-    tag: "Tech Summit"
+    title: "Delhi's 3rd Edition - 2026",
+    subtitle:
+      "India's premier B2B silver trade exhibition, bringing together manufacturers, wholesalers, retailers, exporters, and buyers to explore the latest silver jewellery collections, innovative designs, market trends, and business opportunities.",
+    date: "25 - 28 September 2026",
+    location: "New Delhi",
+    venue: "Yashobhoomi - India International Convention & Expo Centre (IICC), Hall No. 1, Sector 25, Dwarka, New Delhi",
+    tag: "Silver Trade Show"
   }
 ];
 
@@ -184,11 +187,11 @@ export function BannerSlider() {
 
                         <div className="flex items-center gap-3 group">
                           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/10 group-hover:bg-white group-hover:text-black transition-all">
-                            <Clock className="w-4 h-4" />
+                            <MapPin className="w-4 h-4" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Timing</span>
-                            <span className="text-[15px] font-bold">{bannerData[current].time}</span>
+                            <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Location</span>
+                            <span className="text-[15px] font-bold">{bannerData[current].location}</span>
                           </div>
                         </div>
 
@@ -198,7 +201,7 @@ export function BannerSlider() {
                           </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Venue</span>
-                            <span className="text-[15px] font-bold">{bannerData[current].location}</span>
+                            <span className="text-[15px] font-bold">{bannerData[current].venue}</span>
                           </div>
                         </div>
                       </motion.div>
