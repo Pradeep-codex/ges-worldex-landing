@@ -141,7 +141,15 @@ function resolveExhibitionCategories(content?: ExhibitionCategoriesSectionConten
   };
 }
 
-const exhibitionHighlights = portfolioExhibitions.map((exhibition) => ({
+type ExhibitionHighlight = {
+  id: string;
+  title: string;
+  imageSrc: string;
+  darkImageSrc?: string;
+  darkModeClassName?: string;
+};
+
+const exhibitionHighlights: ExhibitionHighlight[] = portfolioExhibitions.map((exhibition) => ({
   id: exhibition.id,
   title: exhibition.title,
   imageSrc: exhibition.image,

@@ -39,8 +39,17 @@ const cityCards = [
       "https://www.google.com/maps/search/?api=1&query=3F4F%2BVF4%2C%20Madanayakanahalli%2C%20Karnataka%20562162",
     venue: "3F4F+VF4, Madanayakanahalli, Karnataka 562162",
   },
-] as const;
-type CityCard = (typeof cityCards)[number];
+];
+
+type CityCard = {
+  id: string;
+  city: string;
+  date: string;
+  copy: string;
+  imageSrc: string;
+  mapHref: string;
+  venue: string;
+};
 
 function resolveUpcomingCities(content?: UpcomingCitiesSectionContent) {
   const cities: CityCard[] = content?.cities?.length
