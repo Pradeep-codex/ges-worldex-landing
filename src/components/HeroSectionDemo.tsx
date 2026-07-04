@@ -427,7 +427,7 @@ export function HeroSectionDemo({
               </div>
 
               <Link
-                href="/visitors/registration"
+                href="https://portal.gesworldex.com/ssidelhi"
                 className={`mt-5 inline-flex items-center gap-2.5 rounded-[16px] px-5 py-2.5 text-[0.82rem] font-black transition-transform duration-300 hover:-translate-y-0.5 ${
                   isLightHome
                     ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
@@ -529,7 +529,7 @@ export function HeroSectionDemo({
                 </div>
 
                 <Link
-                  href="/visitors/registration"
+                  href="https://portal.gesworldex.com/ssidelhi"
                   className={`mt-6 inline-flex items-center gap-3 rounded-[18px] px-6 py-3 text-sm font-black transition-transform duration-300 hover:-translate-y-0.5 ${
                     isLightHome
                       ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"

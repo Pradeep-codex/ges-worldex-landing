@@ -27,9 +27,9 @@ const navItems = [
     name: "Exhibitors", 
     href: "/exhibitors",
     subMenu: [
-      { name: "Booth Application", href: "/exhibitors/booth-application", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Booth Application", href: "https://portal.gesworldex.com/ep/ssiexb.php", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Floor Plan", href: "/exhibitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
-      { name: "Exhibitor Portal", href: "/exhibitors/portal", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Exhibitor Portal", href: "https://portal.gesworldex.com/ep/index.php", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Hotel Info", href: "/exhibitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Vendor Info", href: "/exhibitors/vendor-info", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Sponsorship Info", href: "/exhibitors/sponsorship", icon: <ArrowRight className="w-4 h-4" /> },
@@ -39,7 +39,7 @@ const navItems = [
     name: "Visitors", 
     href: "/visitors",
     subMenu: [
-      { name: "Visitor Registration", href: "/visitors/registration", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Visitor Registration", href: "https://portal.gesworldex.com/ssidelhi", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Floor Plan", href: "/visitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Exhibitor List", href: "/visitors/exhibitor-list", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Hotel Info", href: "/visitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },

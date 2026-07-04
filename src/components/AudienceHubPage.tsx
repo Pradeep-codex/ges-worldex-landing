@@ -20,13 +20,13 @@ const hubContent = {
     title: "Build a stronger exhibition presence.",
     description:
       "Access the planning essentials, support pathways, and visibility opportunities needed to prepare your brand for a focused, high-value exhibition experience.",
-    primaryCta: { label: "Apply For Booth", href: "/exhibitors/booth-application" },
+    primaryCta: { label: "Apply For Booth", href: "https://portal.gesworldex.com/ep/ssiexb.php" },
     secondaryCta: { label: "Explore Sponsorship", href: "/exhibitors/sponsorship" },
     heroPoints: ["Booth planning", "Venue readiness", "Brand visibility"],
     options: [
       {
         title: "Booth Application",
-        href: "/exhibitors/booth-application",
+        href: "https://portal.gesworldex.com/ep/ssiexb.php",
         icon: ClipboardList,
         description:
           "Submit participation interest, share booth requirements, and begin coordination for the right exhibition presence.",
@@ -42,7 +42,7 @@ const hubContent = {
       },
       {
         title: "Exhibitor Portal",
-        href: "/exhibitors/portal",
+        href: "https://portal.gesworldex.com/ep/index.php",
         icon: BadgeCheck,
         description:
           "A central access point for exhibitor coordination, documentation, reminders, and event-readiness updates.",
@@ -79,13 +79,13 @@ const hubContent = {
     title: "Plan a productive exhibition visit.",
     description:
       "Find the registration, navigation, exhibitor, stay, and travel information you need to discover products and connect with the right businesses.",
-    primaryCta: { label: "Register Interest", href: "/visitors/registration" },
+    primaryCta: { label: "Register Interest", href: "https://portal.gesworldex.com/ssidelhi" },
     secondaryCta: { label: "View Exhibitors", href: "/visitors/exhibitor-list" },
     heroPoints: ["Easy entry", "Clear navigation", "Better discovery"],
     options: [
       {
         title: "Visitor Registration",
-        href: "/visitors/registration",
+        href: "https://portal.gesworldex.com/ssidelhi",
         icon: TicketCheck,
         description:
           "Register your interest, prepare visitor access details, and make your event-day entry smoother.",
