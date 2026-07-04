@@ -4,8 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { portfolioExhibitions } from "@/lib/portfolio";
-
 const exhibitionCategories = [
   {
     id: "jewellery",
@@ -148,12 +146,51 @@ type ExhibitionHighlight = {
   darkModeClassName?: string;
 };
 
-const exhibitionHighlights: ExhibitionHighlight[] = portfolioExhibitions.map((exhibition) => ({
-  id: exhibition.id,
-  title: exhibition.title,
-  imageSrc: exhibition.image,
-  darkImageSrc: (exhibition as any).darkImageSrc,
-}));
+const exhibitionHighlights: ExhibitionHighlight[] = [
+  {
+    id: "auto-expo",
+    title: "Auto Expo",
+    imageSrc: "/logo/Auto Expo lightmode.png",
+    darkImageSrc: "/logo/ Auto Expo darkmode.png",
+  },
+  {
+    id: "interior-furniture",
+    title: "Interior & Furniture",
+    imageSrc: "/logo/INTERIOR & Furniture .png",
+  },
+  {
+    id: "esel",
+    title: "Esel",
+    imageSrc: "/logo/Esel.png",
+  },
+  {
+    id: "ghar",
+    title: "GHAR",
+    imageSrc: "/logo/GHAR.png",
+  },
+  {
+    id: "glamour",
+    title: "Glamour",
+    imageSrc: "/logo/Glamour.png",
+  },
+  {
+    id: "build-con",
+    title: "Build Con",
+    imageSrc: "/logo/Build COn.png",
+  },
+  {
+    id: "sjs",
+    title: "SJS",
+    imageSrc: "/logo/SJS Black Logo.png",
+    darkImageSrc: "/logo/SJS White Logo.png",
+  },
+  {
+    id: "ssi",
+    title: "SSI",
+    imageSrc: "/logo/SSI Black Logo.png",
+    darkImageSrc: "/logo/ SSI White Logo.png",
+  },
+];
 
 export function ExhibitionCategoriesSection({
   content,

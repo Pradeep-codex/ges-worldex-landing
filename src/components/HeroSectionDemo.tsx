@@ -278,7 +278,7 @@ export function HeroSectionDemo({
 
       <div
         className={`relative mx-auto w-full max-w-[1700px] px-4 pb-8 md:px-8 md:pb-10 lg:hidden [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:hidden ${
-          showHeroNav ? "pt-6" : "pt-24"
+          showHeroNav ? "pt-6" : "pt-8"
         }`}
         style={tightPortraitTabletTop ? { paddingTop: "0.75rem" } : undefined}
       >
@@ -446,7 +446,7 @@ export function HeroSectionDemo({
         className={`relative mx-auto hidden min-h-[calc(100vh-7.5rem)] w-full max-w-[1700px] gap-14 px-4 pb-10 md:px-8 lg:grid lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-12 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:grid [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:grid-cols-[0.78fr_1.22fr] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:gap-8 ${
           showHeroNav
             ? "pt-6 lg:pt-10"
-            : "pt-24 lg:pt-28 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:pt-2"
+            : "pt-8 lg:pt-10 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:pt-2"
         }`}
         style={tightPortraitTabletTop ? { paddingTop: "0", alignContent: "start" } : undefined}
       >
@@ -545,10 +545,10 @@ export function HeroSectionDemo({
         </div>
 
         <div className="relative overflow-visible min-h-[620px] lg:min-h-[840px]">
-          <div className="relative mx-auto min-h-[620px] w-full max-w-[1120px] overflow-hidden lg:min-h-[840px]">
+          <div className="relative min-h-[620px] w-full overflow-visible lg:min-h-[840px]">
             {orderedSlides.slice(0, 4).map((slide: DemoSlide, stackIndex: number) => {
-              const widths = ["80%", "43%", "31%", "23%"];
-              const lefts = ["0%", "45%", "61.5%", "73.5%"];
+              const widths = ["72%", "39%", "28%", "20%"];
+              const lefts = ["0%", "41%", "55.5%", "66.5%"];
               const bottoms = ["2.8rem", "4.4rem", "5.8rem", "7rem"];
               const transforms = [
                 "perspective(2400px) translate3d(0, 0, 5rem) rotateY(-7deg) rotateX(1.2deg) rotateZ(0.35deg) scale(1)",
@@ -558,10 +558,10 @@ export function HeroSectionDemo({
               ];
               const origins = ["center center", "right center", "right center", "right center"];
               const heightClasses = [
-                "h-[29rem] lg:h-[43rem]",
-                "h-[26rem] lg:h-[39rem]",
-                "h-[23.5rem] lg:h-[35rem]",
-                "h-[21rem] lg:h-[31rem]",
+                "h-[24rem] lg:h-[36rem]",
+                "h-[21.5rem] lg:h-[32rem]",
+                "h-[19rem] lg:h-[28rem]",
+                "h-[17rem] lg:h-[25rem]",
               ];
               const opacity = 1;
               const zIndex = 30 - stackIndex;
@@ -585,11 +585,7 @@ export function HeroSectionDemo({
                   layout
                   initial={false}
                   transition={{ layout: { duration: 0.72, ease: [0.22, 1, 0.36, 1] } }}
-                  className={`absolute overflow-hidden rounded-[28px] backdrop-blur-[12px] will-change-transform ${heightClasses[stackIndex]} ${
-                    isLightHome
-                      ? "border border-[rgba(206,166,94,0.48)] bg-[linear-gradient(180deg,rgba(255,251,243,0.68)_0%,rgba(247,238,220,0.42)_100%)] shadow-[0_0_0_1px_rgba(236,212,162,0.34),0_24px_70px_rgba(96,62,22,0.14)]"
-                      : "border border-[rgba(233,203,129,0.56)] bg-[linear-gradient(180deg,rgba(12,18,28,0.82)_0%,rgba(12,18,28,0.5)_100%)] shadow-[0_0_0_1px_rgba(244,217,150,0.14),0_30px_90px_rgba(0,0,0,0.46)]"
-                  }`}
+                  className={`absolute overflow-hidden will-change-transform ${heightClasses[stackIndex]}`}
                   style={{
                     left: lefts[stackIndex],
                     bottom: bottoms[stackIndex],
@@ -599,79 +595,16 @@ export function HeroSectionDemo({
                     transform: transforms[stackIndex],
                     transformOrigin: origins[stackIndex],
                     filter: filters[stackIndex],
-                    boxShadow:
-                      isLightHome
-                        ? stackIndex === 0
-                          ? "0 0 0 1px rgba(240,219,176,0.62), 0 0 0 2px rgba(216,183,102,0.18), 0 0 20px rgba(223,186,118,0.16)"
-                          : stackIndex === 1
-                            ? "0 0 0 1px rgba(236,208,152,0.44), 0 0 16px rgba(223,186,118,0.14), 0 24px 52px rgba(89,62,29,0.14)"
-                            : stackIndex === 2
-                              ? "0 0 0 1px rgba(231,199,138,0.36), 0 0 13px rgba(223,186,118,0.12), 0 18px 38px rgba(89,62,29,0.12)"
-                              : "0 0 0 1px rgba(226,191,127,0.32), 0 0 10px rgba(223,186,118,0.1), 0 14px 28px rgba(89,62,29,0.1)"
-                        : stackIndex === 0
-                          ? "0 0 0 1px rgba(252,229,176,0.6), 0 0 0 2px rgba(216,183,102,0.18), 0 0 24px rgba(240,210,138,0.24)"
-                          : stackIndex === 1
-                            ? "0 0 0 1px rgba(248,220,156,0.44), 0 0 18px rgba(232,199,122,0.18), 0 26px 68px rgba(0,0,0,0.42)"
-                            : stackIndex === 2
-                              ? "0 0 0 1px rgba(244,214,150,0.34), 0 0 14px rgba(228,193,114,0.14), 0 18px 46px rgba(0,0,0,0.34)"
-                              : "0 0 0 1px rgba(239,207,141,0.3), 0 0 12px rgba(222,188,110,0.1), 0 14px 34px rgba(0,0,0,0.28)",
+                    boxShadow: "none",
                   }}
                 >
-                  <div
-                    className={`pointer-events-none absolute inset-0 rounded-[28px] ${
-                      isLightHome ? "border border-[rgba(255,248,233,0.86)]" : "border border-[rgba(255,239,208,0.62)]"
-                    }`}
-                  />
-                  <div
-                    className={`pointer-events-none absolute inset-[1px] rounded-[27px] ${
-                      isLightHome
-                        ? "bg-[linear-gradient(135deg,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_24%,rgba(255,246,223,0)_76%,rgba(232,196,117,0.16)_100%)]"
-                        : "bg-[linear-gradient(135deg,rgba(255,241,196,0.24)_0%,rgba(255,241,196,0)_24%,rgba(255,241,196,0)_76%,rgba(255,222,154,0.2)_100%)]"
-                    }`}
-                  />
-                  <div
-                    className={`pointer-events-none absolute inset-0 rounded-[28px] ${
-                      isLightHome
-                        ? "bg-[radial-gradient(circle_at_9%_10%,rgba(255,255,255,0.74),transparent_14%),radial-gradient(circle_at_91%_9%,rgba(240,211,153,0.64),transparent_14%),radial-gradient(circle_at_9%_92%,rgba(232,196,117,0.28),transparent_16%),radial-gradient(circle_at_92%_90%,rgba(255,255,255,0.34),transparent_14%)]"
-                        : "bg-[radial-gradient(circle_at_9%_10%,rgba(255,243,214,0.36),transparent_14%),radial-gradient(circle_at_91%_9%,rgba(245,209,136,0.52),transparent_14%),radial-gradient(circle_at_9%_92%,rgba(232,196,117,0.22),transparent_16%),radial-gradient(circle_at_92%_90%,rgba(255,233,186,0.18),transparent_14%)]"
-                    }`}
-                  />
-                  <div
-                    className={`pointer-events-none absolute inset-0 rounded-[28px] ${
-                      isLightHome
-                        ? "shadow-[inset_0_1px_0_rgba(255,255,255,0.78),inset_1px_0_0_rgba(240,214,156,0.24),inset_-1px_0_0_rgba(240,214,156,0.18)]"
-                        : "shadow-[inset_0_1px_0_rgba(255,246,223,0.52),inset_1px_0_0_rgba(246,216,145,0.28),inset_-1px_0_0_rgba(246,216,145,0.22)]"
-                    }`}
-                  />
-                  <div
-                    className={`pointer-events-none absolute left-[10%] right-[10%] top-0 h-px ${
-                      isLightHome
-                        ? "bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.96),rgba(240,211,153,0.42),transparent)]"
-                        : "bg-[linear-gradient(90deg,transparent,rgba(255,241,196,0.82),rgba(240,210,138,0.32),transparent)]"
-                    }`}
-                  />
-                  <div
-                    className={`pointer-events-none absolute inset-x-[14%] top-[6%] h-[22%] -rotate-[8deg] blur-2xl ${
-                      isLightHome
-                        ? "bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.22),rgba(255,245,217,0.32),transparent)]"
-                        : "bg-[linear-gradient(90deg,transparent,rgba(255,242,214,0.08),rgba(245,209,136,0.18),transparent)]"
-                    }`}
-                  />
-                  <div
-                    className={`absolute inset-[1px] rounded-[27px] ${
-                      isLightHome ? "bg-[#f6efe2]" : "bg-[#0d1218]"
-                    }`}
-                  />
                   <Image
                     src={slide.image}
                     alt={`${slide.title} showcase`}
                     fill
                     sizes="(min-width: 1024px) 58vw, 90vw"
-                    className={stackIndex === 1 || stackIndex === 2 ? "object-cover" : "object-contain p-1"}
+                    className="object-contain"
                   />
-                  {!isLightHome ? (
-                    <div className="pointer-events-none absolute inset-[1px] rounded-[27px] bg-black/28" />
-                  ) : null}
                 </motion.article>
               );
             })}
