@@ -9,8 +9,8 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/favicon.jpeg",
+    shortcut: "/favicon.jpeg",
   },
   title: {
     default: defaultSeo.defaultTitle ?? "GES Worldex",
