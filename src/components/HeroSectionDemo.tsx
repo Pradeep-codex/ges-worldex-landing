@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, CalendarDays, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Facebook, Instagram, Mail, MapPin, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { exhibitionSlides, getSlideOrder, type ExhibitionSlide } from "@/lib/exhibitionSlides";
 
@@ -78,10 +78,17 @@ export function HeroSectionDemo({
   }, [content]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
+  const [activeFormId, setActiveFormId] = useState<string | null>(null);
+  const [companyName, setCompanyName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [submitState, setSubmitState] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const isHomeHero = shellMode === "home";
   const showHeroNav = shellMode === "demo";
   const isLightHome = shellMode === "home" && themeMode !== "dark";
   const activeSlide = slides[activeIndex] ?? slides[0] ?? exhibitionSlides[0];
+  const activeFormSlide = slides.find((slide) => slide.id === activeFormId) ?? null;
+  const isRegistrationActive = activeSlide.title === "Delhi's 3rd Edition - 2026";
 
   const orderedSlides = useMemo(
     () => slides.map((_: ExhibitionSlide, index: number) => slides[(activeIndex + index) % slides.length]),
@@ -126,6 +133,53 @@ export function HeroSectionDemo({
 
     return () => window.clearInterval(interval);
   }, [slides.length]);
+
+  const openInterestModal = (slide: ExhibitionSlide) => {
+    setActiveFormId(slide.id);
+    setSubmitState("idle");
+    setSubmitMessage(null);
+  };
+
+  const closeInterestModal = () => {
+    setActiveFormId(null);
+    setCompanyName("");
+    setMobileNumber("");
+    setSubmitState("idle");
+    setSubmitMessage(null);
+  };
+
+  async function handleInterestSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!activeFormSlide) return;
+
+    setSubmitState("submitting");
+    setSubmitMessage(null);
+
+    try {
+      const response = await fetch("/api/visitor-interest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName,
+          mobileNumber,
+          showTitle: activeFormSlide.title,
+        }),
+      });
+
+      const data = (await response.json().catch(() => null)) as null | { ok?: boolean; error?: string };
+      if (!response.ok || !data?.ok) {
+        throw new Error(data?.error || "Unable to submit your interest.");
+      }
+
+      setSubmitState("success");
+      setSubmitMessage("Interest submitted successfully.");
+      setCompanyName("");
+      setMobileNumber("");
+    } catch (error) {
+      setSubmitState("error");
+      setSubmitMessage(error instanceof Error ? error.message : "Unable to submit your interest.");
+    }
+  }
 
   return (
     <section
@@ -208,6 +262,9 @@ export function HeroSectionDemo({
         </div>
       ) : null}
 
+      <div
+        className={`${activeFormSlide ? "pointer-events-none select-none blur-[10px]" : ""} transition-[filter] duration-300`}
+      >
       <div
         className={`relative mx-auto w-full max-w-[1700px] px-4 pb-8 md:px-8 md:pb-10 lg:hidden [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:hidden ${
           showHeroNav ? "pt-6" : "pt-8"
@@ -358,17 +415,32 @@ export function HeroSectionDemo({
                 </div>
               </div>
 
-              <Link
-                href="https://gesworldex.com/ssidelhi"
-                className={`mt-5 inline-flex items-center gap-2.5 rounded-[16px] px-5 py-2.5 text-[0.82rem] font-black transition-transform duration-300 hover:-translate-y-0.5 ${
-                  isLightHome
-                    ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
-                    : "bg-[linear-gradient(180deg,#f2d38c_0%,#d8b766_100%)] text-[#17120b] shadow-[0_18px_32px_rgba(216,183,102,0.22)]"
-                }`}
-              >
-                Register Now
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              {isRegistrationActive ? (
+                <Link
+                  href="https://gesworldex.com/ssidelhi"
+                  className={`mt-5 inline-flex items-center gap-2.5 rounded-[16px] px-5 py-2.5 text-[0.82rem] font-black transition-transform duration-300 hover:-translate-y-0.5 ${
+                    isLightHome
+                      ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
+                      : "bg-[linear-gradient(180deg,#f2d38c_0%,#d8b766_100%)] text-[#17120b] shadow-[0_18px_32px_rgba(216,183,102,0.22)]"
+                  }`}
+                >
+                  Register
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => openInterestModal(activeSlide)}
+                  className={`group mt-5 inline-flex cursor-pointer items-center gap-3 rounded-[18px] px-6 py-3.5 text-[0.88rem] font-black uppercase tracking-[0.12em] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] ${
+                    isLightHome
+                      ? "border border-[rgba(177,132,63,0.3)] bg-[linear-gradient(180deg,#fff7e8_0%,#f4ddab_100%)] text-[#20170f] shadow-[0_22px_38px_rgba(177,132,63,0.2)] hover:border-[rgba(177,132,63,0.44)]"
+                      : "border border-[rgba(216,183,102,0.34)] bg-[linear-gradient(180deg,rgba(242,211,140,0.22)_0%,rgba(216,183,102,0.14)_100%)] text-[#fff7e1] shadow-[0_22px_38px_rgba(0,0,0,0.24)] hover:border-[rgba(240,209,136,0.54)]"
+                  }`}
+                >
+                  Interested
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -460,17 +532,32 @@ export function HeroSectionDemo({
                   </div>
                 </div>
 
-                <Link
-                  href="https://gesworldex.com/ssidelhi"
-                  className={`mt-6 inline-flex items-center gap-3 rounded-[18px] px-6 py-3 text-sm font-black transition-transform duration-300 hover:-translate-y-0.5 ${
-                    isLightHome
-                      ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
-                      : "bg-[linear-gradient(180deg,#f2d38c_0%,#d8b766_100%)] text-[#17120b] shadow-[0_18px_32px_rgba(216,183,102,0.22)]"
-                  }`}
-                >
-                  Register Now
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                {isRegistrationActive ? (
+                  <Link
+                    href="https://gesworldex.com/ssidelhi"
+                    className={`mt-6 inline-flex items-center gap-3 rounded-[18px] px-6 py-3 text-sm font-black transition-transform duration-300 hover:-translate-y-0.5 ${
+                      isLightHome
+                        ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
+                        : "bg-[linear-gradient(180deg,#f2d38c_0%,#d8b766_100%)] text-[#17120b] shadow-[0_18px_32px_rgba(216,183,102,0.22)]"
+                    }`}
+                  >
+                    Register
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => openInterestModal(activeSlide)}
+                    className={`group mt-6 inline-flex cursor-pointer items-center gap-3 rounded-[18px] px-6 py-3.5 text-sm font-black uppercase tracking-[0.12em] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] ${
+                      isLightHome
+                        ? "border border-[rgba(177,132,63,0.3)] bg-[linear-gradient(180deg,#fff7e8_0%,#f4ddab_100%)] text-[#20170f] shadow-[0_22px_38px_rgba(177,132,63,0.2)] hover:border-[rgba(177,132,63,0.44)]"
+                        : "border border-[rgba(216,183,102,0.34)] bg-[linear-gradient(180deg,rgba(242,211,140,0.22)_0%,rgba(216,183,102,0.14)_100%)] text-[#fff7e1] shadow-[0_22px_38px_rgba(0,0,0,0.24)] hover:border-[rgba(240,209,136,0.54)]"
+                    }`}
+                  >
+                    Interested
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -545,7 +632,7 @@ export function HeroSectionDemo({
           <button
             type="button"
             onClick={goToPrevious}
-            className={`absolute -left-4 top-[44%] z-[200] inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-md transition-colors duration-300 lg:-left-8 ${
+            className={`absolute -left-4 top-[52%] z-10 inline-flex h-14 w-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border backdrop-blur-md transition-all duration-300 hover:scale-105 lg:-left-8 ${
               isLightHome
                 ? "border-[rgba(177,132,63,0.16)] bg-white/86 text-[#3b2c1d] shadow-[0_16px_30px_rgba(177,132,63,0.12)] hover:border-[rgba(177,132,63,0.3)] hover:text-[#b1843f]"
                 : "border-[rgba(216,183,102,0.22)] bg-black/26 text-white/88 hover:border-[rgba(216,183,102,0.4)] hover:text-[#f0d188]"
@@ -558,7 +645,7 @@ export function HeroSectionDemo({
           <button
             type="button"
             onClick={goToNext}
-            className={`absolute right-0 top-[44%] z-40 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border text-[#17120b] transition-transform duration-300 hover:scale-[1.03] lg:right-2 ${
+            className={`absolute right-0 top-[52%] z-10 inline-flex h-14 w-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border text-[#17120b] transition-all duration-300 hover:scale-105 lg:right-2 ${
               isLightHome
                 ? "border-[rgba(177,132,63,0.34)] bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] shadow-[0_16px_34px_rgba(177,132,63,0.2)]"
                 : "border-[rgba(216,183,102,0.45)] bg-[linear-gradient(180deg,#f2d38c_0%,#d8b766_100%)] shadow-[0_16px_34px_rgba(216,183,102,0.26)]"
@@ -587,6 +674,106 @@ export function HeroSectionDemo({
           </div>
         </div>
       </div>
+      </div>
+
+      {activeFormSlide ? (
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-[rgba(10,12,16,0.34)] px-4 py-8 backdrop-blur-md">
+          <div
+            className="w-full max-w-[28rem] rounded-[28px] border p-5 shadow-[0_30px_90px_rgba(20,14,10,0.18)] md:p-6"
+            style={{
+              backgroundColor: "var(--about-card-bg)",
+              borderColor: "var(--about-card-border)",
+            }}
+          >
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div className="space-y-1.5">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#9f7b28]">
+                  Show Interest
+                </p>
+                <h2 className="text-2xl font-black leading-tight" style={{ color: "var(--about-text-primary)" }}>
+                  {activeFormSlide.title}
+                </h2>
+                <p className="text-sm leading-6" style={{ color: "var(--about-text-secondary)" }}>
+                  Share your company details and we will capture your interest against this show.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeInterestModal}
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border"
+                style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-secondary)" }}
+                aria-label="Close interest form"
+              >
+                <X className="h-4.5 w-4.5" />
+              </button>
+            </div>
+
+            <form className="grid gap-4" onSubmit={handleInterestSubmit}>
+              <input type="hidden" value={activeFormSlide.title} name="showTitle" />
+              <label className="grid gap-1.5">
+                <span className="text-[0.68rem] font-black uppercase tracking-[0.16em]" style={{ color: "var(--about-text-secondary)" }}>
+                  Show
+                </span>
+                <div
+                  className="rounded-[14px] border px-4 py-3 text-sm font-semibold"
+                  style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
+                >
+                  {activeFormSlide.title}
+                </div>
+              </label>
+              <label className="grid gap-1.5">
+                <span className="text-[0.68rem] font-black uppercase tracking-[0.16em]" style={{ color: "var(--about-text-secondary)" }}>
+                  Company Name
+                </span>
+                <input
+                  type="text"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="Your company name"
+                  className="h-12 rounded-[14px] border bg-white/60 px-4 text-sm font-semibold outline-none [html[data-theme='dark']_&]:bg-slate-900/88"
+                  style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
+                  required
+                />
+              </label>
+              <label className="grid gap-1.5">
+                <span className="text-[0.68rem] font-black uppercase tracking-[0.16em]" style={{ color: "var(--about-text-secondary)" }}>
+                  Mobile Number
+                </span>
+                <input
+                  type="tel"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  placeholder="+91 XXXXX XXXXX"
+                  className="h-12 rounded-[14px] border bg-white/60 px-4 text-sm font-semibold outline-none [html[data-theme='dark']_&]:bg-slate-900/88"
+                  style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
+                  required
+                />
+              </label>
+
+              {submitMessage ? (
+                <div
+                  className="rounded-[16px] border px-4 py-3 text-sm font-semibold"
+                  style={{
+                    borderColor: "rgba(159,123,40,0.22)",
+                    backgroundColor: submitState === "success" ? "rgba(159,123,40,0.08)" : "rgba(47,35,24,0.06)",
+                    color: "var(--about-text-primary)",
+                  }}
+                >
+                  {submitMessage}
+                </div>
+              ) : null}
+
+              <button
+                type="submit"
+                disabled={submitState === "submitting"}
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#2f2318] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-white transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 [html[data-theme='dark']_&]:bg-[#d8b766] [html[data-theme='dark']_&]:text-[#071018]"
+              >
+                {submitState === "submitting" ? "Submitting..." : "Submit Interest"}
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

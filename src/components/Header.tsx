@@ -27,7 +27,7 @@ const navItems = [
     name: "Exhibitors", 
     href: "/exhibitors",
     subMenu: [
-      { name: "Booth Application", href: "https://gesworldex.com/ep/ssiexb.php", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Booth Application", href: "/exhibitors/booth-application", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Floor Plan", href: "/exhibitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Exhibitor Portal", href: "https://gesworldex.com/ep/index.php", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Hotel Info", href: "/exhibitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },
@@ -39,7 +39,7 @@ const navItems = [
     name: "Visitors", 
     href: "/visitors",
     subMenu: [
-      { name: "Visitor Registration", href: "https://gesworldex.com/ssidelhi", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Visitor Registration", href: "/visitors/registration", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Floor Plan", href: "/visitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Exhibitor List", href: "/visitors/exhibitor-list", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Hotel Info", href: "/visitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },
@@ -192,7 +192,7 @@ export function Header() {
           y: isVisible ? 0 : -110,
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed top-0 inset-x-0 z-50 py-4 will-change-transform"
+        className="fixed top-0 inset-x-0 z-[300] py-4 will-change-transform"
       >
         <div className="mx-auto px-4 lg:px-6 w-full max-w-full">
           <div
@@ -245,10 +245,11 @@ export function Header() {
                       <Link
                         href={item.href}
                         onClick={(e) => {
-                          // Touch/tablet (no-hover): tap should open submenu, not navigate.
-                          if (item.subMenu && !canHover) {
+                          if (item.subMenu) {
                             e.preventDefault();
-                            setHoveredNav((prev) => (prev === item.name ? null : item.name));
+                            if (!canHover) {
+                              setHoveredNav((prev) => (prev === item.name ? null : item.name));
+                            }
                             return;
                           }
                           handleNavClick(e, item.href);
@@ -288,7 +289,7 @@ export function Header() {
                               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                               onMouseEnter={() => setHoveredNav(item.name)}
                               onMouseLeave={() => setHoveredNav(null)}
-                              className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[100]"
+                              className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[400]"
                             >
                               <div className="bg-background border border-[color:var(--border)] p-2.5 rounded-[24px] shadow-[0_30px_90px_rgba(0,0,0,0.22)] min-w-[320px]">
                                 <motion.div
@@ -497,6 +498,11 @@ export function Header() {
                             <Link
                               href={item.href}
                               onClick={(e) => {
+                                if (item.hasSub) {
+                                  e.preventDefault();
+                                  setExpandedMobileSub(isExpanded ? null : item.name);
+                                  return;
+                                }
                                 handleNavClick(e, item.href);
                                 setIsMobileMenuOpen(false);
                               }}

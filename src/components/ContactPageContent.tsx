@@ -212,13 +212,13 @@ export function ContactPageContent({ content }: { content?: any }) {
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </button>
 
-              <Link
+              <a
                 href={`mailto:${content?.email || "support@gesworldex.com"}`}
                 className="inline-flex w-full items-center justify-center rounded-full border px-7 py-4 text-sm font-black uppercase tracking-widest transition-all hover:border-[#9f7b28] active:scale-95 sm:w-fit"
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
               >
                 Email Instead
-              </Link>
+              </a>
             </div>
           </form>
         </div>
