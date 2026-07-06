@@ -21,15 +21,15 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
-  { name: "Home", href: "/" },
+  { name: "Home", href: "/home" },
   { name: "About Us", href: "/about" },
   { 
     name: "Exhibitors", 
     href: "/exhibitors",
     subMenu: [
-      { name: "Booth Application", href: "https://portal.gesworldex.com/ep/ssiexb.php", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Booth Application", href: "https://gesworldex.com/ep/ssiexb.php", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Floor Plan", href: "/exhibitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
-      { name: "Exhibitor Portal", href: "https://portal.gesworldex.com/ep/index.php", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Exhibitor Portal", href: "https://gesworldex.com/ep/index.php", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Hotel Info", href: "/exhibitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Vendor Info", href: "/exhibitors/vendor-info", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Sponsorship Info", href: "/exhibitors/sponsorship", icon: <ArrowRight className="w-4 h-4" /> },
@@ -39,7 +39,7 @@ const navItems = [
     name: "Visitors", 
     href: "/visitors",
     subMenu: [
-      { name: "Visitor Registration", href: "https://portal.gesworldex.com/ssidelhi", icon: <ArrowRight className="w-4 h-4" /> },
+      { name: "Visitor Registration", href: "https://gesworldex.com/ssidelhi", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Floor Plan", href: "/visitors/floor-plan", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Exhibitor List", href: "/visitors/exhibitor-list", icon: <ArrowRight className="w-4 h-4" /> },
       { name: "Hotel Info", href: "/visitors/hotel-info", icon: <ArrowRight className="w-4 h-4" /> },
@@ -154,7 +154,7 @@ export function Header() {
   }, [canHover, hoveredNav]);
 
   const activeNav =
-    navItems.find((item) => item.href === pathname || (item.href !== "/" && pathname.startsWith(`${item.href}/`)))?.name ||
+    navItems.find((item) => item.href === pathname || (item.href !== "/home" && pathname.startsWith(`${item.href}/`)))?.name ||
     "Home";
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -208,7 +208,7 @@ export function Header() {
                 transition={dropAnimation.transition()}
               >
                 <Link
-                  href="/"
+                  href="/home"
                   className="flex items-center group transition-transform duration-300 active:scale-95"
                 >
                   <img
@@ -464,7 +464,7 @@ export function Header() {
               >
                 {/* Header inside mobile menu - Integrated feel */}
                 <div className="flex items-center justify-between px-7 py-8 border-b border-foreground/5 mb-2">
-                  <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link href="/home" onClick={() => setIsMobileMenuOpen(false)}>
                     <img src="/logo-light.png" alt="Logo" className="block [html[data-theme='dark']_&]:hidden h-8 w-auto opacity-90" />
                     <img src="/logo-dark.png" alt="Logo" className="hidden [html[data-theme='dark']_&]:block h-8 w-auto opacity-90" />
                   </Link>
@@ -480,7 +480,7 @@ export function Header() {
                 <div className="flex-1 overflow-y-auto px-7 py-4">
                   <nav className="flex flex-col gap-2">
                     {[
-                      { name: "Home", href: "/" },
+                      { name: "Home", href: "/home" },
                       { name: "About Us", href: "/about" },
                       { name: "Exhibitors", href: "/exhibitors", hasSub: true },
                       { name: "Visitors", href: "/visitors", hasSub: true },

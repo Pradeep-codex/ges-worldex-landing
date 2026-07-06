@@ -73,7 +73,7 @@ const demoSlides: DemoSlide[] = [
 ];
 
 const demoNavItems = [
-  { name: "Home", href: "/" },
+  { name: "Home", href: "/home" },
   { name: "About Us", href: "/about" },
   { name: "Exhibitors", href: "/exhibitors" },
   { name: "Visitors", href: "/visitors" },
@@ -222,7 +222,7 @@ export function HeroSectionDemo({
           <div className="rounded-[28px] border border-[rgba(216,183,102,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0.02)_100%)] px-4 py-3 shadow-[0_20px_70px_rgba(0,0,0,0.28)] backdrop-blur-2xl lg:px-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <Link href="/" aria-label="GES Worldex home">
+                <Link href="/home" aria-label="GES Worldex home">
                   <Image
                     src="/logo-dark.png"
                     alt="GES Worldex India Pvt. Ltd."
@@ -427,7 +427,7 @@ export function HeroSectionDemo({
               </div>
 
               <Link
-                href="https://portal.gesworldex.com/ssidelhi"
+                href="https://gesworldex.com/ssidelhi"
                 className={`mt-5 inline-flex items-center gap-2.5 rounded-[16px] px-5 py-2.5 text-[0.82rem] font-black transition-transform duration-300 hover:-translate-y-0.5 ${
                   isLightHome
                     ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
@@ -529,7 +529,7 @@ export function HeroSectionDemo({
                 </div>
 
                 <Link
-                  href="https://portal.gesworldex.com/ssidelhi"
+                  href="https://gesworldex.com/ssidelhi"
                   className={`mt-6 inline-flex items-center gap-3 rounded-[18px] px-6 py-3 text-sm font-black transition-transform duration-300 hover:-translate-y-0.5 ${
                     isLightHome
                       ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"

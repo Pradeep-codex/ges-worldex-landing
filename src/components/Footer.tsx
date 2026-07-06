@@ -37,7 +37,7 @@ export function Footer() {
       <div className="mx-auto max-w-[1700px] px-4 py-12 md:px-8 md:py-14 lg:px-12 lg:py-16">
         <div className="grid gap-8 md:gap-10 lg:grid-cols-[1.35fr_0.8fr_0.8fr_1fr]">
           <div className="max-w-[34rem]">
-            <Link href="/" className="inline-flex items-center">
+            <Link href="/home" className="inline-flex items-center">
               <Image
                 src="/logo-light.png"
                 alt="GES Worldex"

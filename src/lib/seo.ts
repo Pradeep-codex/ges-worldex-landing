@@ -10,7 +10,7 @@ export const defaultSeo: DefaultSeoProps = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
+    url: `${siteUrl}/home`,
     siteName: "GES Worldex",
     title: "GES Worldex | Exhibition & Trade Show Company",
     description:

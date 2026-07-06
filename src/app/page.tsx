@@ -1,5 +1,5 @@
-import { HomePageContent } from "@/components/HomePageContent";
+import { notFound } from "next/navigation";
 
-export default async function Home() {
-  return <HomePageContent />;
+export default function RootPage() {
+  notFound();
 }

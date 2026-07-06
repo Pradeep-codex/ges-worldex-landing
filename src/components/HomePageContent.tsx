@@ -23,7 +23,7 @@ export function HomePageContent({ content }: HomePageContentProps) {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "GES Worldex",
-      url: siteUrl,
+      url: `${siteUrl}/home`,
       description: defaultSeo.description,
     }),
     [],
