@@ -6,6 +6,10 @@ type InterestPayload = {
   showTitle: string;
 };
 
+function normalizeMobileNumber(value: string) {
+  return value.replace(/\D/g, "").slice(0, 10);
+}
+
 function getEnv(name: string) {
   const value = process.env[name];
   return value && value.trim().length ? value.trim() : undefined;
@@ -21,15 +25,15 @@ export async function POST(req: Request) {
   }
 
   const companyName = body.companyName?.trim();
-  const mobileNumber = body.mobileNumber?.trim();
+  const mobileNumber = normalizeMobileNumber(body.mobileNumber ?? "");
   const showTitle = body.showTitle?.trim();
 
   if (!companyName || companyName.length < 2) {
-    return NextResponse.json({ ok: false, error: "Please enter a valid company name." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: "Please enter your company name." }, { status: 400 });
   }
 
-  if (!mobileNumber || mobileNumber.length < 8) {
-    return NextResponse.json({ ok: false, error: "Please enter a valid mobile number." }, { status: 400 });
+  if (mobileNumber.length !== 10) {
+    return NextResponse.json({ ok: false, error: "Please enter a valid 10-digit mobile number." }, { status: 400 });
   }
 
   if (!showTitle) {

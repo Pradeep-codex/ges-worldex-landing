@@ -7,6 +7,13 @@ import { ArrowLeft, ArrowRight, CalendarDays, Facebook, Instagram, Mail, MapPin,
 import Link from "next/link";
 import { exhibitionSlides, getSlideOrder, type ExhibitionSlide } from "@/lib/exhibitionSlides";
 
+const INTEREST_ENDPOINT =
+  process.env.NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL || "/api/visitor-interest";
+
+function normalizeMobileNumber(value: string) {
+  return value.replace(/\D/g, "").slice(0, 10);
+}
+
 const demoNavItems = [
   { name: "Home", href: "/home" },
   { name: "About Us", href: "/about" },
@@ -152,19 +159,45 @@ export function HeroSectionDemo({
     e.preventDefault();
     if (!activeFormSlide) return;
 
+    const normalizedCompanyName = companyName.trim();
+    const normalizedMobileNumber = normalizeMobileNumber(mobileNumber);
+
+    if (normalizedCompanyName.length < 2) {
+      setSubmitState("error");
+      setSubmitMessage("Please enter your company name.");
+      return;
+    }
+
+    if (normalizedMobileNumber.length !== 10) {
+      setSubmitState("error");
+      setSubmitMessage("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
     setSubmitState("submitting");
     setSubmitMessage(null);
 
     try {
-      const response = await fetch("/api/visitor-interest", {
+      const isDirectWebhook = INTEREST_ENDPOINT !== "/api/visitor-interest";
+      const response = await fetch(INTEREST_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        mode: isDirectWebhook ? "no-cors" : "cors",
         body: JSON.stringify({
-          companyName,
-          mobileNumber,
+          companyName: normalizedCompanyName,
+          mobileNumber: normalizedMobileNumber,
           showTitle: activeFormSlide.title,
+          submittedAt: new Date().toISOString(),
         }),
       });
+
+      if (isDirectWebhook) {
+        setSubmitState("success");
+        setSubmitMessage("Interest submitted successfully.");
+        setCompanyName("");
+        setMobileNumber("");
+        return;
+      }
 
       const data = (await response.json().catch(() => null)) as null | { ok?: boolean; error?: string };
       if (!response.ok || !data?.ok) {
@@ -742,8 +775,12 @@ export function HeroSectionDemo({
                 <input
                   type="tel"
                   value={mobileNumber}
-                  onChange={(e) => setMobileNumber(e.target.value)}
-                  placeholder="+91 XXXXX XXXXX"
+                  onChange={(e) => setMobileNumber(normalizeMobileNumber(e.target.value))}
+                  placeholder="Enter 10-digit mobile number"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  maxLength={10}
+                  pattern="[0-9]{10}"
                   className="h-12 rounded-[14px] border bg-white/60 px-4 text-sm font-semibold outline-none [html[data-theme='dark']_&]:bg-slate-900/88"
                   style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
                   required

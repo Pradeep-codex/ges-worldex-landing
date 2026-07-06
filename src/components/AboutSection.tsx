@@ -126,7 +126,6 @@ export function AboutSection({
                     alt={card.alt}
                     fill
                     sizes="(min-width: 1024px) 20vw, (min-width: 640px) 28vw, 42vw"
-                    priority={index === 0}
                     className="rounded-[30px] object-cover sm:rounded-[38px]"
                   />
                   <motion.div
