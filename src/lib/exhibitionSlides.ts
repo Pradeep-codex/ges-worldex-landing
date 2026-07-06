@@ -49,10 +49,10 @@ export const exhibitionSlides: ExhibitionSlide[] = [
     edition: "2026 Edition",
     date: "2026",
     location: "Bengaluru, Karnataka",
-    venue: "Bengaluru",
+    venue: "Bangalore International Exhibition Centre (BIEC)",
     image: "/banners/ssi-bengaluru-2026.jpg",
     mapHref:
-      "https://www.google.com/maps/search/?api=1&query=Bengaluru%20Karnataka",
+      "https://www.google.com/maps/search/?api=1&query=Bangalore%20International%20Exhibition%20Centre%20BIEC",
     cityLabel: "Silver Show of India",
   },
   {

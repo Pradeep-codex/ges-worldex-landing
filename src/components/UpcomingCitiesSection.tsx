@@ -23,8 +23,8 @@ const cityCards = [
     copy: "Bengaluru Edition - 2026",
     imageSrc: "/banners/ssi-bengaluru-2026.jpg",
     mapHref:
-      "https://www.google.com/maps/search/?api=1&query=Bengaluru%20Karnataka",
-    venue: "Bengaluru",
+      "https://www.google.com/maps/search/?api=1&query=Bangalore%20International%20Exhibition%20Centre%20BIEC",
+    venue: "Bangalore International Exhibition Centre (BIEC)",
   },
   {
     id: "ssi-mumbai-2027",
