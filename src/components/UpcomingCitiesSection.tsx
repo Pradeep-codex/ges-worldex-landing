@@ -3,40 +3,38 @@
 import Image from "next/image";
 import { CalendarDays, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
+import { exhibitionSlides } from "@/lib/exhibitionSlides";
 
 const cityCards = [
   {
     id: "ssi-delhi-2026",
     city: "Silver Show of India",
-    date: "25th - 28th September, 2026",
-    copy:
-      "Delhi's 3rd Edition - 2026",
-    imageSrc: "/demo-banner.png",
+    date: "25 - 28 September 2026",
+    copy: "Delhi's 3rd Edition - 2026",
+    imageSrc: "/banners/ssi-delhi-2026.jpg",
     mapHref:
-      "https://www.google.com/maps/search/?api=1&query=Sector%2025%20Dwarka%2C%20Dwarka%2C%20New%20Delhi%2C%20Delhi%2C%20110077",
+      "https://www.google.com/maps/search/?api=1&query=Yashobhoomi%20India%20International%20Convention%20%26%20Expo%20Centre%20Dwarka%20New%20Delhi",
     venue: "Sector 25 Dwarka, Dwarka, New Delhi, Delhi, 110077",
-  },
-  {
-    id: "sjs-bengaluru-2026",
-    city: "South Jewellery Show",
-    date: "10th - 12th July, 2026",
-    copy:
-      "Bengaluru's 6th Edition - 2026",
-    imageSrc: "/demo-banner2.png",
-    mapHref:
-      "https://www.google.com/maps/search/?api=1&query=3F4F%2BVF4%2C%20Madanayakanahalli%2C%20Karnataka%20562162",
-    venue: "3F4F+VF4, Madanayakanahalli, Karnataka 562162",
   },
   {
     id: "ssi-bengaluru-2026",
     city: "Silver Show of India",
-    date: "18th - 21st December, 2026",
-    copy:
-      "Bengaluru's 6th Edition - 2026",
-    imageSrc: "/demo-banner3.png",
+    date: "2026",
+    copy: "Bengaluru Edition - 2026",
+    imageSrc: "/banners/ssi-bengaluru-2026.jpg",
     mapHref:
-      "https://www.google.com/maps/search/?api=1&query=3F4F%2BVF4%2C%20Madanayakanahalli%2C%20Karnataka%20562162",
-    venue: "3F4F+VF4, Madanayakanahalli, Karnataka 562162",
+      "https://www.google.com/maps/search/?api=1&query=Bengaluru%20Karnataka",
+    venue: "Bengaluru",
+  },
+  {
+    id: "ssi-mumbai-2027",
+    city: "Silver Show of India",
+    date: "4 - 7 June 2027",
+    copy: "Mumbai's 5th Edition - 2027",
+    imageSrc: "/banners/ssi-mumbai-2027.jpg",
+    mapHref:
+      "https://www.google.com/maps/search/?api=1&query=Jio%20World%20Convention%20Centre%20Bandra%20Kurla%20Complex%20Mumbai",
+    venue: "Bandra Kurla Complex (BKC), Mumbai",
   },
 ];
 
@@ -58,11 +56,21 @@ type IncomingCityItem = {
 };
 
 function resolveUpcomingCities(content?: any) {
+  const fallbackCards = exhibitionSlides.map((slide) => ({
+    id: slide.id,
+    city: slide.cityLabel,
+    date: slide.date,
+    copy: slide.title,
+    imageSrc: slide.image,
+    mapHref: slide.mapHref,
+    venue: slide.venue,
+  }));
+
   const cities: CityCard[] = content?.cities?.length
     ? content.cities
         .filter((city: IncomingCityItem) => city.city || city.date || city.venue || city.copy)
         .map((city: IncomingCityItem, index: number) => {
-          const fallback = cityCards[index % cityCards.length];
+          const fallback = fallbackCards[index % fallbackCards.length];
           const base = (city.city || fallback.city)
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, "-")
@@ -77,7 +85,7 @@ function resolveUpcomingCities(content?: any) {
             copy: city.copy || fallback.copy,
           };
         })
-    : [...cityCards];
+    : fallbackCards;
 
   return {
     title: content?.title || "Upcoming Exhibitions",

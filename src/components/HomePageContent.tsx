@@ -58,7 +58,7 @@ export function HomePageContent({ content }: HomePageContentProps) {
 
       <div
         id="home"
-        className="relative min-h-screen overflow-x-hidden -mt-20 lg:-mt-24 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:-mt-32"
+        className="relative min-h-screen overflow-x-hidden lg:-mt-24 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:-mt-32"
         aria-label="GES Worldex home"
         style={isPortraitTabletHeroTight ? { marginTop: "-24rem" } : undefined}
       >

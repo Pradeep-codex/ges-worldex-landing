@@ -5,72 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, CalendarDays, Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
-
-type DemoSlide = {
-  id: string;
-  eyebrow: string;
-  headline: string;
-  highlight: string;
-  description: string;
-  title: string;
-  subtitle: string;
-  edition: string;
-  date: string;
-  location: string;
-  venue: string;
-  image: string;
-};
-
-const demoSlides: DemoSlide[] = [
-  {
-    id: "silver-show",
-    eyebrow: "Silver Trade Showcase",
-    headline: "India's Biggest Silver Specific",
-    highlight: "Trade Show",
-    description:
-      "India's Biggest Silver Specific Trade Show - An Exclusive B2B Exhibition showcasing Silver Jewellery, Articles, Innovations, Trends, and Business Opportunities for manufacturers, wholesalers, retailers, exporters, and industry professionals.",
-    title: "Mumbai's 5 Edition on 2027",
-    subtitle:
-      "India's Biggest Silver Specific Trade Show - An Exclusive B2B Exhibition showcasing Silver Jewellery, Articles, Innovations, Trends, and Business Opportunities for manufacturers, wholesalers, retailers, exporters, and industry professionals.",
-    edition: "5th Edition",
-    date: "4 - 7 June 2027",
-    location: "Mumbai, Maharashtra",
-    venue: "Jio World Convention Centre, Bandra Kurla Complex (BKC), Mumbai",
-    image: "/banners/1.jpg",
-  },
-  {
-    id: "south-jewellery",
-    eyebrow: "Silver Trade Showcase",
-    headline: "India's Biggest Silver Specific",
-    highlight: "Trade Show",
-    description:
-      "India's Biggest Silver Specific Trade Show - An Exclusive B2B Exhibition showcasing Silver Jewellery, Articles, Innovations, Trends, and Business Opportunities for manufacturers, wholesalers, retailers, exporters, and industry professionals.",
-    title: "Mumbai's 5 Edition on 2027",
-    subtitle:
-      "India's Biggest Silver Specific Trade Show - An Exclusive B2B Exhibition showcasing Silver Jewellery, Articles, Innovations, Trends, and Business Opportunities for manufacturers, wholesalers, retailers, exporters, and industry professionals.",
-    edition: "5th Edition",
-    date: "4 - 7 June 2027",
-    location: "Mumbai, Maharashtra",
-    venue: "Jio World Convention Centre, Bandra Kurla Complex (BKC), Mumbai",
-    image: "/banners/2.jpg",
-  },
-  {
-    id: "industry-lifestyle",
-    eyebrow: "Silver Trade Showcase",
-    headline: "India's Premier B2B Silver",
-    highlight: "Trade Exhibition",
-    description:
-      "India's premier B2B silver trade exhibition, bringing together manufacturers, wholesalers, retailers, exporters, and buyers to explore the latest silver jewellery collections, innovative designs, market trends, and business opportunities.",
-    title: "Delhi's 3rd Edition - 2026",
-    subtitle:
-      "India's premier B2B silver trade exhibition, bringing together manufacturers, wholesalers, retailers, exporters, and buyers to explore the latest silver jewellery collections, innovative designs, market trends, and business opportunities.",
-    edition: "3rd Edition",
-    date: "25 - 28 September 2026",
-    location: "New Delhi",
-    venue: "Yashobhoomi - India International Convention & Expo Centre (IICC), Hall No. 1, Sector 25, Dwarka, New Delhi",
-    image: "/banners/3.jpg",
-  },
-];
+import { exhibitionSlides, getSlideOrder, type ExhibitionSlide } from "@/lib/exhibitionSlides";
 
 const demoNavItems = [
   { name: "Home", href: "/home" },
@@ -97,6 +32,7 @@ type HeroSectionDemoProps = {
 type ThemeMode = "light" | "dark";
 
 type HeroContentSlide = {
+  id?: string;
   title?: string;
   description?: string;
   subtitle?: string;
@@ -105,11 +41,6 @@ type HeroContentSlide = {
   location?: string;
   venue?: string;
   image?: string;
-};
-
-const getImageOrder = (imagePath: string) => {
-  const match = imagePath.match(/(\d+)(?=\.[a-z]+$)/i);
-  return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
 };
 
 export function HeroSectionDemo({
@@ -122,13 +53,11 @@ export function HeroSectionDemo({
       ? content.slides
           .filter((slide: HeroContentSlide) => slide.title)
           .map((slide: HeroContentSlide, index: number) => {
-            const fallback = demoSlides[index % demoSlides.length];
+            const fallback = exhibitionSlides[index % exhibitionSlides.length];
 
             return {
+              ...fallback,
               id: (slide.title || fallback.title).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
-              eyebrow: fallback.eyebrow,
-              headline: fallback.headline,
-              highlight: fallback.highlight,
               description: slide.description || fallback.description,
               title: slide.title || fallback.title,
               subtitle: slide.subtitle || fallback.subtitle,
@@ -139,19 +68,23 @@ export function HeroSectionDemo({
               image: slide.image || fallback.image,
             };
           })
-      : demoSlides;
+      : exhibitionSlides;
 
-    return [...resolvedSlides].sort((a, b) => getImageOrder(a.image) - getImageOrder(b.image));
+    return [...resolvedSlides].sort((a, b) => {
+      const imageOrderDiff = getSlideOrder(a.image) - getSlideOrder(b.image);
+      if (imageOrderDiff !== 0) return imageOrderDiff;
+      return getSlideOrder(a.title) - getSlideOrder(b.title);
+    });
   }, [content]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [themeMode, setThemeMode] = useState<ThemeMode>("light");
   const isHomeHero = shellMode === "home";
   const showHeroNav = shellMode === "demo";
   const isLightHome = shellMode === "home" && themeMode !== "dark";
-  const activeSlide = slides[activeIndex] ?? slides[0] ?? demoSlides[0];
+  const activeSlide = slides[activeIndex] ?? slides[0] ?? exhibitionSlides[0];
 
   const orderedSlides = useMemo(
-    () => slides.map((_: DemoSlide, index: number) => slides[(activeIndex + index) % slides.length]),
+    () => slides.map((_: ExhibitionSlide, index: number) => slides[(activeIndex + index) % slides.length]),
     [activeIndex, slides],
   );
 
@@ -164,8 +97,7 @@ export function HeroSectionDemo({
   };
 
   useEffect(() => {
-    const firstBannerIndex = slides.findIndex((slide) => slide.image.includes("/banners/1.jpg"));
-    setActiveIndex(firstBannerIndex >= 0 ? firstBannerIndex : 0);
+    setActiveIndex(0);
   }, [slides]);
 
   useEffect(() => {
@@ -296,14 +228,14 @@ export function HeroSectionDemo({
                 animate={{ x: `-${activeIndex * 100}%` }}
                 transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
               >
-                {slides.map((slide: DemoSlide) => (
+                {slides.map((slide: ExhibitionSlide) => (
                   <div key={`${slide.id}-compact`} className="relative h-full min-w-full">
                     <Image
                       src={slide.image}
                       alt={`${slide.title} showcase`}
                       fill
                       sizes="(min-width: 768px) 86vw, 94vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                     <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,8,8,0.08)_0%,rgba(8,8,8,0.16)_42%,rgba(8,8,8,0.58)_100%)]" />
                     <div className="absolute inset-x-0 bottom-0 h-20 bg-[radial-gradient(circle_at_bottom,rgba(216,183,102,0.18),transparent_70%)]" />
@@ -314,7 +246,7 @@ export function HeroSectionDemo({
 
             <div className="mt-4 flex justify-center">
               <div className="flex items-center gap-2.5">
-                {slides.map((slide: DemoSlide, index: number) => (
+                {slides.map((slide: ExhibitionSlide, index: number) => (
                   <button
                     key={`${slide.id}-compact-dot`}
                     type="button"
@@ -546,7 +478,7 @@ export function HeroSectionDemo({
 
         <div className="relative overflow-visible min-h-[620px] lg:min-h-[840px]">
           <div className="relative min-h-[620px] w-full overflow-visible lg:min-h-[840px]">
-            {orderedSlides.slice(0, 4).map((slide: DemoSlide, stackIndex: number) => {
+            {orderedSlides.slice(0, 4).map((slide: ExhibitionSlide, stackIndex: number) => {
               const widths = ["72%", "39%", "28%", "20%"];
               const lefts = ["0%", "41%", "55.5%", "66.5%"];
               const bottoms = ["2.8rem", "4.4rem", "5.8rem", "7rem"];
@@ -585,7 +517,7 @@ export function HeroSectionDemo({
                   layout
                   initial={false}
                   transition={{ layout: { duration: 0.72, ease: [0.22, 1, 0.36, 1] } }}
-                  className={`absolute overflow-hidden will-change-transform ${heightClasses[stackIndex]}`}
+                  className={`absolute overflow-hidden rounded-[36px] lg:rounded-[52px] will-change-transform ${heightClasses[stackIndex]}`}
                   style={{
                     left: lefts[stackIndex],
                     bottom: bottoms[stackIndex],
@@ -603,7 +535,7 @@ export function HeroSectionDemo({
                     alt={`${slide.title} showcase`}
                     fill
                     sizes="(min-width: 1024px) 58vw, 90vw"
-                    className="object-contain"
+                    className="rounded-[inherit] object-contain"
                   />
                 </motion.article>
               );
@@ -637,7 +569,7 @@ export function HeroSectionDemo({
           </button>
 
           <div className="absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3">
-            {slides.map((slide: DemoSlide, index: number) => (
+            {slides.map((slide: ExhibitionSlide, index: number) => (
               <button
                 key={slide.id}
                 type="button"
