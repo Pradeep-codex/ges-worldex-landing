@@ -11,6 +11,7 @@ export default async function ExhibitorHotelInfoPage() {
       <HotelInfoPdfSection
         title="Exhibitor Hotel Guide"
         description="Keep the stay guide handy for team planning, accommodation review, and quick access to the full hotel information PDF."
+        skeletonOnly
       />
     </NavRoutePage>
   );
