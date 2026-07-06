@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 
 type ThemeMode = "light" | "dark";
@@ -53,41 +52,29 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
   const isDark = mounted ? theme === "dark" : false;
 
   return (
-    <motion.button
+    <button
       type="button"
       onClick={onToggle}
       aria-label={`Switch to ${nextTheme} mode`}
       title={`Switch to ${nextTheme} mode`}
       className={
-        "theme-toggle cursor-pointer relative grid place-items-center w-10 h-10 rounded-2xl border border-[color:var(--border)] bg-background/55 backdrop-blur-xl transition-all duration-300 shadow-[var(--toggle-shadow)] " +
+        "theme-toggle cursor-pointer relative grid place-items-center w-10 h-10 rounded-2xl border border-[color:var(--border)] bg-background/55 backdrop-blur-xl shadow-[var(--toggle-shadow)] " +
         className
       }
-      whileHover={{ 
-        scale: 1.1,
-        y: -2,
-        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)"
-      }}
-      whileTap={{ scale: 0.92 }}
     >
-      {/* animated glow ring */}
       <span className="pointer-events-none absolute inset-0 rounded-2xl theme-toggle-ring" />
 
       <span className="relative w-5 h-5">
-        <motion.span
-          className="absolute inset-0 grid place-items-center"
-          animate={{ opacity: isDark ? 0 : 1, rotate: isDark ? -50 : 0, y: isDark ? 2 : 0 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
-          <Sun className="w-5 h-5" />
-        </motion.span>
-        <motion.span
-          className="absolute inset-0 grid place-items-center"
-          animate={{ opacity: isDark ? 1 : 0, rotate: isDark ? 0 : 50, y: isDark ? 0 : -2 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
-          <Moon className="w-5 h-5" />
-        </motion.span>
+        {isDark ? (
+          <span className="absolute inset-0 grid place-items-center">
+            <Moon className="w-5 h-5" />
+          </span>
+        ) : (
+          <span className="absolute inset-0 grid place-items-center">
+            <Sun className="w-5 h-5" />
+          </span>
+        )}
       </span>
-    </motion.button>
+    </button>
   );
 }

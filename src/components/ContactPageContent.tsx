@@ -8,6 +8,7 @@ const officeAddress =
   "225 14th Cross, Sampige Rd, opposite Saibaba Temple, Malleshwaram, Bengaluru, Karnataka 560003";
 const officeMapsUrl =
   "https://www.google.com/maps/place/ges+worldex+india+pvt.+ltd./@13.004581,77.5685899,17z/data=!3m1!4b1!4m6!3m5!1s0x3bae1624efa9c1ef:0x317e7a5909a91afa!8m2!3d13.004581!4d77.5711648!16s%2Fg%2F11j0bvh277?entry=ttu";
+const FORM_ACCESS_KEY = "f8dbd777-8090-4c2d-8d9b-5726818e7cf0";
 
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
@@ -34,10 +35,14 @@ export function ContactPageContent({ content }: { content?: any }) {
     setStatus("sending");
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          access_key: FORM_ACCESS_KEY,
+          subject: "New website inquiry from GES Worldex",
+          from_name: name.trim(),
+          botcheck: "",
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
@@ -45,9 +50,11 @@ export function ContactPageContent({ content }: { content?: any }) {
         }),
       });
 
-      const data = (await res.json().catch(() => null)) as null | { ok?: boolean; error?: string };
-      if (!res.ok || !data?.ok) {
-        throw new Error(data?.error || "Something went wrong. Please try again.");
+      const data = (await res.json().catch(() => null)) as
+        | null
+        | { success?: boolean; message?: string };
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.message || "Something went wrong. Please try again.");
       }
 
       setStatus("success");

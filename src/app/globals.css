@@ -256,7 +256,6 @@ body {
   font-family: var(--font-outfit), sans-serif;
   position: relative;
   isolation: isolate;
-  transition: background-color 450ms ease, color 450ms ease;
 }
 
 body::before {
@@ -289,7 +288,6 @@ body::before {
 
   opacity: 1;
   filter: saturate(1.08) contrast(1.03);
-  transition: filter 450ms ease, opacity 450ms ease;
 }
 
 body:has([data-hero-shell="demo"]) > .floating-blobs,
@@ -340,7 +338,6 @@ html[data-theme="dark"] body::before {
   mask-composite: exclude;
   padding: 1px;
   opacity: 0.55;
-  transition: opacity 350ms ease;
 }
 
 .theme-toggle:hover .theme-toggle-ring {

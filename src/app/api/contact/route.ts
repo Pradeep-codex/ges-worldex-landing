@@ -24,6 +24,14 @@ function getEnv(name: string) {
   return v && v.trim().length ? v.trim() : undefined;
 }
 
+function getEnvAny(...names: string[]) {
+  for (const name of names) {
+    const value = getEnv(name);
+    if (value) return value;
+  }
+  return undefined;
+}
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -48,13 +56,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Please enter your query (min 10 characters)." }, { status: 400 });
   }
 
-  const SMTP_HOST = getEnv("SMTP_HOST");
-  const SMTP_PORT = Number(getEnv("SMTP_PORT") ?? "587");
-  const SMTP_SECURE = (getEnv("SMTP_SECURE") ?? "false").toLowerCase() === "true";
-  const SMTP_USER = getEnv("SMTP_USER");
-  const SMTP_PASS = getEnv("SMTP_PASS");
-  const CONTACT_TO = getEnv("CONTACT_TO") ?? "support@gesworldex.com";
-  const CONTACT_FROM = getEnv("CONTACT_FROM") ?? SMTP_USER ?? CONTACT_TO;
+  const SMTP_HOST = getEnvAny("SMTP_HOST", "MAIL_HOST", "EMAIL_HOST");
+  const SMTP_PORT = Number(getEnvAny("SMTP_PORT", "MAIL_PORT", "EMAIL_PORT") ?? "587");
+  const SMTP_SECURE =
+    (getEnvAny("SMTP_SECURE", "MAIL_SECURE", "EMAIL_SECURE") ?? "false").toLowerCase() ===
+    "true";
+  const SMTP_USER = getEnvAny("SMTP_USER", "MAIL_USER", "EMAIL_USER");
+  const SMTP_PASS = getEnvAny("SMTP_PASS", "MAIL_PASS", "EMAIL_PASS", "SMTP_PASSWORD");
+  const CONTACT_TO =
+    getEnvAny("CONTACT_TO", "MAIL_TO", "EMAIL_TO", "CONTACT_EMAIL") ?? "support@gesworldex.com";
+  const CONTACT_FROM = getEnvAny("CONTACT_FROM", "MAIL_FROM", "EMAIL_FROM") ?? SMTP_USER;
 
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
     return NextResponse.json(
@@ -89,6 +100,7 @@ export async function POST(req: Request) {
       to: CONTACT_TO,
       from: CONTACT_FROM,
       replyTo: safeEmail,
+      sender: SMTP_USER,
       subject,
       text,
     });
