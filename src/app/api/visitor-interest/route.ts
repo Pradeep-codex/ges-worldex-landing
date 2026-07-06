@@ -40,14 +40,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Show selection is missing." }, { status: 400 });
   }
 
-  const webhookUrl = getEnv("GOOGLE_SHEET_WEBHOOK_URL");
+  const webhookUrl =
+    getEnv("GOOGLE_SHEET_WEBHOOK_URL") ||
+    getEnv("NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL");
 
   if (!webhookUrl) {
     return NextResponse.json(
       {
         ok: false,
         error:
-          "Sheet submission is not configured yet. Add GOOGLE_SHEET_WEBHOOK_URL to connect this form to your spreadsheet.",
+          "Sheet submission is not configured yet. Add GOOGLE_SHEET_WEBHOOK_URL or NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL to connect this form to your spreadsheet.",
       },
       { status: 500 },
     );
