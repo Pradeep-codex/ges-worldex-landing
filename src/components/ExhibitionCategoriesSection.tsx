@@ -154,11 +154,6 @@ const exhibitionHighlights: ExhibitionHighlight[] = [
     darkImageSrc: "/logo/ Auto Expo darkmode.png",
   },
   {
-    id: "interior-furniture",
-    title: "Interior & Furniture",
-    imageSrc: "/logo/INTERIOR & Furniture .png",
-  },
-  {
     id: "esel",
     title: "Esel",
     imageSrc: "/logo/Esel.png",
