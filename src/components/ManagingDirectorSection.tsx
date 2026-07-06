@@ -26,7 +26,7 @@ export function ManagingDirectorSection() {
 
         <div className="space-y-6">
           <p className="bg-[linear-gradient(90deg,#9f7b28,#d8b766,#8d6a1e)] bg-clip-text text-xs font-black uppercase tracking-[0.28em] text-transparent md:text-sm">
-            Message from the MD
+            Message from the Managing Director
           </p>
 
           <h2 className="text-2xl font-black leading-[1.04] tracking-[-0.05em] sm:text-3xl md:text-4xl lg:text-5xl" style={{ color: 'var(--about-text-primary)' }}>
@@ -55,9 +55,6 @@ export function ManagingDirectorSection() {
               </div>
               <div className="text-lg font-black leading-tight" style={{ color: 'var(--about-text-primary)' }}>
                 Sreekanth Urs
-              </div>
-              <div className="text-sm font-bold uppercase tracking-[0.18em] leading-tight" style={{ color: 'var(--about-text-secondary)' }}>
-                MD
               </div>
               <div className="text-sm font-bold uppercase tracking-[0.18em] leading-tight" style={{ color: 'var(--about-text-secondary)' }}>
                 GES Worldex India Pvt Ltd
