@@ -13,8 +13,9 @@ export type ExhibitionSlide = {
   image: string;
   mapHref: string;
   cityLabel: string;
-  buttonAction?: "register" | "interested";
-  registerUrl?: string;
+  enableVisitorRegistration?: boolean;
+  visitorRegistrationUrl?: string;
+  visitorRegistrationButtonLabel?: string;
   enableExhibitorBooking?: boolean;
   boothBookingUrl?: string;
   boothBookingButtonLabel?: string;
@@ -40,7 +41,6 @@ export const exhibitionSlides: ExhibitionSlide[] = [
     mapHref:
       "https://www.google.com/maps/search/?api=1&query=Yashobhoomi%20India%20International%20Convention%20%26%20Expo%20Centre%20Dwarka%20New%20Delhi",
     cityLabel: "Silver Show of India",
-    buttonAction: "interested",
   },
   {
     id: "ssi-bengaluru-2026",

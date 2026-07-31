@@ -48,11 +48,14 @@ type HeroContentSlide = {
   location?: string;
   venue?: string;
   image?: string;
-  buttonAction?: "register" | "interested";
-  registerUrl?: string;
+  enableVisitorRegistration?: boolean;
+  visitorRegistrationUrl?: string;
+  visitorRegistrationButtonLabel?: string;
   enableExhibitorBooking?: boolean;
   boothBookingUrl?: string;
   boothBookingButtonLabel?: string;
+  buttonAction?: "register" | "interested";
+  registerUrl?: string;
 };
 
 type InterestType = "visiting" | "exhibiting";
@@ -81,8 +84,15 @@ export function HeroSectionDemo({
               location: slide.location || fallback.location,
               venue: slide.venue || fallback.venue,
               image: slide.image || fallback.image,
-              buttonAction: slide.buttonAction || fallback.buttonAction,
-              registerUrl: slide.registerUrl || fallback.registerUrl,
+              enableVisitorRegistration:
+                slide.enableVisitorRegistration ??
+                (slide.buttonAction === "register"
+                  ? true
+                  : fallback.enableVisitorRegistration),
+              visitorRegistrationUrl:
+                slide.visitorRegistrationUrl || slide.registerUrl || fallback.visitorRegistrationUrl,
+              visitorRegistrationButtonLabel:
+                slide.visitorRegistrationButtonLabel || fallback.visitorRegistrationButtonLabel,
               enableExhibitorBooking: slide.enableExhibitorBooking ?? fallback.enableExhibitorBooking,
               boothBookingUrl: slide.boothBookingUrl || fallback.boothBookingUrl,
               boothBookingButtonLabel:
@@ -112,14 +122,17 @@ export function HeroSectionDemo({
   const isLightHome = shellMode === "home" && themeMode !== "dark";
   const activeSlide = slides[activeIndex] ?? slides[0] ?? exhibitionSlides[0];
   const activeFormSlide = slides.find((slide) => slide.id === activeFormId) ?? null;
-  const activeRegisterUrl = activeSlide.registerUrl;
-  const isRegistrationActive = activeSlide.buttonAction === "register" && Boolean(activeRegisterUrl);
+  const canRegisterAsVisitor =
+    interestedIn === "visiting" &&
+    Boolean(activeFormSlide?.enableVisitorRegistration && activeFormSlide?.visitorRegistrationUrl);
   const canBookStall =
     interestedIn === "exhibiting" &&
     Boolean(activeFormSlide?.enableExhibitorBooking && activeFormSlide?.boothBookingUrl);
   const submitLabel =
     submitState === "submitting"
       ? "Submitting..."
+      : canRegisterAsVisitor
+        ? activeFormSlide?.visitorRegistrationButtonLabel?.trim() || "Register as Visitor"
       : canBookStall
         ? activeFormSlide?.boothBookingButtonLabel?.trim() || "Book Booth Now"
         : "Submit";
@@ -215,6 +228,12 @@ export function HeroSectionDemo({
     setSubmitMessage(null);
   };
 
+  const resetInterestForm = () => {
+    setCompanyName("");
+    setMobileNumber("");
+    setInterestedIn("visiting");
+  };
+
   async function handleInterestSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!activeFormSlide) return;
@@ -259,6 +278,15 @@ export function HeroSectionDemo({
       });
 
       if (isDirectWebhook) {
+        if (
+          interestedIn === "visiting" &&
+          activeFormSlide.enableVisitorRegistration &&
+          activeFormSlide.visitorRegistrationUrl
+        ) {
+          window.location.href = activeFormSlide.visitorRegistrationUrl;
+          return;
+        }
+
         if (interestedIn === "exhibiting" && activeFormSlide.enableExhibitorBooking && activeFormSlide.boothBookingUrl) {
           window.location.href = activeFormSlide.boothBookingUrl;
           return;
@@ -266,9 +294,10 @@ export function HeroSectionDemo({
 
         setSubmitState("success");
         setSubmitMessage("Interest submitted successfully.");
-        setCompanyName("");
-        setMobileNumber("");
-        setInterestedIn("visiting");
+        resetInterestForm();
+        window.setTimeout(() => {
+          closeInterestModal();
+        }, 900);
         return;
       }
 
@@ -279,13 +308,25 @@ export function HeroSectionDemo({
 
       setSubmitState("success");
       setSubmitMessage("Interest submitted successfully.");
-      setCompanyName("");
-      setMobileNumber("");
-      setInterestedIn("visiting");
+      resetInterestForm();
+
+      if (
+        interestedIn === "visiting" &&
+        activeFormSlide.enableVisitorRegistration &&
+        activeFormSlide.visitorRegistrationUrl
+      ) {
+        window.location.href = activeFormSlide.visitorRegistrationUrl;
+        return;
+      }
 
       if (interestedIn === "exhibiting" && activeFormSlide.enableExhibitorBooking && activeFormSlide.boothBookingUrl) {
         window.location.href = activeFormSlide.boothBookingUrl;
+        return;
       }
+
+      window.setTimeout(() => {
+        closeInterestModal();
+      }, 900);
     } catch (error) {
       setSubmitState("error");
       setSubmitMessage(error instanceof Error ? error.message : "Unable to submit your interest.");
@@ -528,32 +569,18 @@ export function HeroSectionDemo({
                 </div>
               </div>
 
-              {isRegistrationActive ? (
-                <Link
-                  href={activeRegisterUrl}
-                  className={`mt-5 inline-flex items-center gap-2.5 rounded-[16px] px-5 py-2.5 text-[0.82rem] font-black transition-transform duration-300 hover:-translate-y-0.5 ${
-                    isLightHome
-                      ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
-                      : "border border-[rgba(255,242,203,0.72)] bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] text-[#071018] shadow-[0_22px_42px_rgba(0,0,0,0.32)] hover:shadow-[0_26px_52px_rgba(0,0,0,0.38)]"
-                  }`}
-                >
-                  Register
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => openInterestModal(activeSlide)}
-                  className={`group mt-5 inline-flex cursor-pointer items-center gap-3 rounded-[18px] px-6 py-3.5 text-[0.88rem] font-black uppercase tracking-[0.12em] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] ${
-                    isLightHome
-                      ? "border border-[rgba(177,132,63,0.3)] bg-[linear-gradient(180deg,#fff7e8_0%,#f4ddab_100%)] text-[#20170f] shadow-[0_22px_38px_rgba(177,132,63,0.2)] hover:border-[rgba(177,132,63,0.44)]"
-                      : "border border-[rgba(243,223,171,0.72)] bg-[linear-gradient(180deg,rgba(255,242,203,0.18)_0%,rgba(243,223,171,0.12)_100%)] text-[#fff6df] shadow-[0_22px_38px_rgba(0,0,0,0.26)] hover:border-[rgba(255,242,203,0.92)] hover:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] hover:text-[#071018] hover:shadow-[0_26px_50px_rgba(0,0,0,0.36)]"
-                  }`}
-                >
-                  Interested
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => openInterestModal(activeSlide)}
+                className={`group mt-5 inline-flex cursor-pointer items-center gap-3 rounded-[18px] px-6 py-3.5 text-[0.88rem] font-black uppercase tracking-[0.12em] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] ${
+                  isLightHome
+                    ? "border border-[rgba(177,132,63,0.3)] bg-[linear-gradient(180deg,#fff7e8_0%,#f4ddab_100%)] text-[#20170f] shadow-[0_22px_38px_rgba(177,132,63,0.2)] hover:border-[rgba(177,132,63,0.44)]"
+                    : "border border-[rgba(243,223,171,0.72)] bg-[linear-gradient(180deg,rgba(255,242,203,0.18)_0%,rgba(243,223,171,0.12)_100%)] text-[#fff6df] shadow-[0_22px_38px_rgba(0,0,0,0.26)] hover:border-[rgba(255,242,203,0.92)] hover:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] hover:text-[#071018] hover:shadow-[0_26px_50px_rgba(0,0,0,0.36)]"
+                }`}
+              >
+                Interested
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -645,32 +672,18 @@ export function HeroSectionDemo({
                   </div>
                 </div>
 
-                {isRegistrationActive ? (
-                  <Link
-                    href={activeRegisterUrl}
-                    className={`mt-6 inline-flex items-center gap-3 rounded-[18px] px-6 py-3 text-sm font-black transition-transform duration-300 hover:-translate-y-0.5 ${
-                      isLightHome
-                        ? "bg-[linear-gradient(180deg,#efcf88_0%,#d6ad5e_100%)] text-[#20170f] shadow-[0_18px_30px_rgba(177,132,63,0.22)]"
-                        : "border border-[rgba(255,242,203,0.72)] bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] text-[#071018] shadow-[0_22px_42px_rgba(0,0,0,0.32)] hover:shadow-[0_26px_52px_rgba(0,0,0,0.38)]"
-                    }`}
-                  >
-                    Register
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => openInterestModal(activeSlide)}
-                    className={`group mt-6 inline-flex cursor-pointer items-center gap-3 rounded-[18px] px-6 py-3.5 text-sm font-black uppercase tracking-[0.12em] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] ${
-                      isLightHome
-                        ? "border border-[rgba(177,132,63,0.3)] bg-[linear-gradient(180deg,#fff7e8_0%,#f4ddab_100%)] text-[#20170f] shadow-[0_22px_38px_rgba(177,132,63,0.2)] hover:border-[rgba(177,132,63,0.44)]"
-                        : "border border-[rgba(243,223,171,0.72)] bg-[linear-gradient(180deg,rgba(255,242,203,0.18)_0%,rgba(243,223,171,0.12)_100%)] text-[#fff6df] shadow-[0_22px_38px_rgba(0,0,0,0.26)] hover:border-[rgba(255,242,203,0.92)] hover:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] hover:text-[#071018] hover:shadow-[0_26px_50px_rgba(0,0,0,0.36)]"
-                    }`}
-                  >
-                    Interested
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => openInterestModal(activeSlide)}
+                  className={`group mt-6 inline-flex cursor-pointer items-center gap-3 rounded-[18px] px-6 py-3.5 text-sm font-black uppercase tracking-[0.12em] transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] ${
+                    isLightHome
+                      ? "border border-[rgba(177,132,63,0.3)] bg-[linear-gradient(180deg,#fff7e8_0%,#f4ddab_100%)] text-[#20170f] shadow-[0_22px_38px_rgba(177,132,63,0.2)] hover:border-[rgba(177,132,63,0.44)]"
+                      : "border border-[rgba(243,223,171,0.72)] bg-[linear-gradient(180deg,rgba(255,242,203,0.18)_0%,rgba(243,223,171,0.12)_100%)] text-[#fff6df] shadow-[0_22px_38px_rgba(0,0,0,0.26)] hover:border-[rgba(255,242,203,0.92)] hover:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] hover:text-[#071018] hover:shadow-[0_26px_50px_rgba(0,0,0,0.36)]"
+                  }`}
+                >
+                  Interested
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
               </motion.div>
             </AnimatePresence>
           </div>

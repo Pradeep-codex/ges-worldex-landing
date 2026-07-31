@@ -25,18 +25,37 @@ export default {
                 { name: 'venue', title: 'Venue', type: 'text' },
                 { name: 'image', title: 'Banner Image', type: 'image' },
                 {
-                  name: 'buttonAction',
-                  title: 'Button Action',
+                  name: 'enableVisitorRegistration',
+                  title: 'Enable Visitor Registration Redirect',
+                  type: 'boolean',
+                  description:
+                    'Turn this on when visitors should be redirected to the visitor registration page after the interest form is saved to Excel.',
+                  initialValue: false,
+                },
+                {
+                  name: 'visitorRegistrationUrl',
+                  title: 'Visitor Registration URL',
+                  type: 'url',
+                  description:
+                    'Paste the visitor registration page URL here. Leave empty if visitor interest should only submit the form.',
+                  validation: (rule) =>
+                    rule
+                      .uri({
+                        scheme: ['http', 'https'],
+                      })
+                      .custom((value, context) =>
+                        context.parent?.enableVisitorRegistration && !value
+                          ? 'Visitor Registration URL is required when Visitor Registration Redirect is enabled.'
+                          : true
+                      ),
+                },
+                {
+                  name: 'visitorRegistrationButtonLabel',
+                  title: 'Visitor Button Label',
                   type: 'string',
-                  description: 'Choose whether this show should open a registration URL or collect interest through the form.',
-                  options: {
-                    list: [
-                      { title: 'Interested Form', value: 'interested' },
-                      { title: 'Register Link', value: 'register' },
-                    ],
-                    layout: 'radio',
-                  },
-                  initialValue: 'interested',
+                  description:
+                    'Optional. Example: Register as Visitor. If left empty, the popup button uses the default label.',
+                  initialValue: 'Register as Visitor',
                 },
                 {
                   name: 'enableExhibitorBooking',
@@ -45,7 +64,6 @@ export default {
                   description:
                     'Turn this on when users selecting Exhibitor Interest should be redirected to the booth booking page after the form is saved to Excel.',
                   initialValue: false,
-                  hidden: ({ parent }) => parent?.buttonAction !== 'interested',
                 },
                 {
                   name: 'boothBookingUrl',
@@ -53,16 +71,13 @@ export default {
                   type: 'url',
                   description:
                     'Paste the booth / stall booking page URL here. Leave empty if exhibitor booking is closed and the popup should only submit the form.',
-                  hidden: ({ parent }) => parent?.buttonAction !== 'interested',
                   validation: (rule) =>
                     rule
                       .uri({
                         scheme: ['http', 'https'],
                       })
                       .custom((value, context) =>
-                        context.parent?.buttonAction === 'interested' &&
-                        context.parent?.enableExhibitorBooking &&
-                        !value
+                        context.parent?.enableExhibitorBooking && !value
                           ? 'Booth Booking URL is required when Exhibitor Booking Redirect is enabled.'
                           : true
                       ),
@@ -74,25 +89,6 @@ export default {
                   description:
                     'Optional. Example: Book Booth Now. If left empty, the popup button uses the default label.',
                   initialValue: 'Book Booth Now',
-                  hidden: ({ parent }) => parent?.buttonAction !== 'interested',
-                },
-                {
-                  name: 'registerUrl',
-                  title: 'Register URL',
-                  type: 'url',
-                  description:
-                    'Used when Button Action is set to Register Link. Leave empty if this show should use the Interested popup instead.',
-                  hidden: ({ parent }) => parent?.buttonAction !== 'register',
-                  validation: (rule) =>
-                    rule
-                      .uri({
-                        scheme: ['http', 'https'],
-                      })
-                      .custom((value, context) =>
-                        context.parent?.buttonAction === 'register' && !value
-                          ? 'Register URL is required when Button Action is Register Link.'
-                          : true
-                      ),
                 },
               ],
               preview: {

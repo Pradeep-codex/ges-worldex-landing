@@ -22,11 +22,14 @@ type HeroContentSlide = {
   location?: string;
   venue?: string;
   image?: string;
-  buttonAction?: "register" | "interested";
-  registerUrl?: string;
+  enableVisitorRegistration?: boolean;
+  visitorRegistrationUrl?: string;
+  visitorRegistrationButtonLabel?: string;
   enableExhibitorBooking?: boolean;
   boothBookingUrl?: string;
   boothBookingButtonLabel?: string;
+  buttonAction?: "register" | "interested";
+  registerUrl?: string;
 };
 
 type InterestType = "visiting" | "exhibiting";
@@ -74,8 +77,13 @@ function resolveRegistrationCards(content?: RegistrationHeroContent): Registrati
             location: slide.location || fallback.location,
             venue: slide.venue || fallback.venue,
             image: slide.image || fallback.image,
-            buttonAction: slide.buttonAction || fallback.buttonAction,
-            registerUrl: slide.registerUrl || fallback.registerUrl,
+            enableVisitorRegistration:
+              slide.enableVisitorRegistration ??
+              (slide.buttonAction === "register" ? true : fallback.enableVisitorRegistration),
+            visitorRegistrationUrl:
+              slide.visitorRegistrationUrl || slide.registerUrl || fallback.visitorRegistrationUrl,
+            visitorRegistrationButtonLabel:
+              slide.visitorRegistrationButtonLabel || fallback.visitorRegistrationButtonLabel,
             enableExhibitorBooking: slide.enableExhibitorBooking ?? fallback.enableExhibitorBooking,
             boothBookingUrl: slide.boothBookingUrl || fallback.boothBookingUrl,
             boothBookingButtonLabel:
@@ -93,7 +101,7 @@ function resolveRegistrationCards(content?: RegistrationHeroContent): Registrati
   return [
     ...orderedSlides.map((slide) => ({
       ...slide,
-      isActive: slide.buttonAction === "register" && Boolean(slide.registerUrl),
+      isActive: Boolean(slide.enableVisitorRegistration && slide.visitorRegistrationUrl),
     })),
   ];
 }
@@ -112,12 +120,17 @@ export function VisitorRegistrationClient({
   const [submitState, setSubmitState] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const activeSlide = registrationCards.find((slide) => slide.id === activeFormId) ?? null;
+  const canRegisterAsVisitor =
+    interestedIn === "visiting" &&
+    Boolean(activeSlide?.enableVisitorRegistration && activeSlide?.visitorRegistrationUrl);
   const canBookStall =
     interestedIn === "exhibiting" &&
     Boolean(activeSlide?.enableExhibitorBooking && activeSlide?.boothBookingUrl);
   const submitLabel =
     submitState === "submitting"
       ? "Submitting..."
+      : canRegisterAsVisitor
+        ? activeSlide?.visitorRegistrationButtonLabel?.trim() || "Register as Visitor"
       : canBookStall
         ? activeSlide?.boothBookingButtonLabel?.trim() || "Book Booth Now"
         : "Submit";
@@ -129,6 +142,12 @@ export function VisitorRegistrationClient({
     setInterestedIn("visiting");
     setSubmitState("idle");
     setSubmitMessage(null);
+  };
+
+  const resetInterestForm = () => {
+    setCompanyName("");
+    setMobileNumber("");
+    setInterestedIn("visiting");
   };
 
   async function handleInterestSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -175,6 +194,15 @@ export function VisitorRegistrationClient({
       });
 
       if (isDirectWebhook) {
+        if (
+          interestedIn === "visiting" &&
+          activeSlide.enableVisitorRegistration &&
+          activeSlide.visitorRegistrationUrl
+        ) {
+          window.location.href = activeSlide.visitorRegistrationUrl;
+          return;
+        }
+
         if (interestedIn === "exhibiting" && activeSlide.enableExhibitorBooking && activeSlide.boothBookingUrl) {
           window.location.href = activeSlide.boothBookingUrl;
           return;
@@ -182,9 +210,10 @@ export function VisitorRegistrationClient({
 
         setSubmitState("success");
         setSubmitMessage("Interest submitted successfully.");
-        setCompanyName("");
-        setMobileNumber("");
-        setInterestedIn("visiting");
+        resetInterestForm();
+        window.setTimeout(() => {
+          closeModal();
+        }, 900);
         return;
       }
 
@@ -195,13 +224,25 @@ export function VisitorRegistrationClient({
 
       setSubmitState("success");
       setSubmitMessage("Interest submitted successfully.");
-      setCompanyName("");
-      setMobileNumber("");
-      setInterestedIn("visiting");
+      resetInterestForm();
+
+      if (
+        interestedIn === "visiting" &&
+        activeSlide.enableVisitorRegistration &&
+        activeSlide.visitorRegistrationUrl
+      ) {
+        window.location.href = activeSlide.visitorRegistrationUrl;
+        return;
+      }
 
       if (interestedIn === "exhibiting" && activeSlide.enableExhibitorBooking && activeSlide.boothBookingUrl) {
         window.location.href = activeSlide.boothBookingUrl;
+        return;
       }
+
+      window.setTimeout(() => {
+        closeModal();
+      }, 900);
     } catch (error) {
       setSubmitState("error");
       setSubmitMessage(error instanceof Error ? error.message : "Unable to submit your interest.");
@@ -285,29 +326,19 @@ export function VisitorRegistrationClient({
                   </div>
 
                   <div className="mt-auto space-y-3">
-                    {slide.isActive ? (
-                      <a
-                        href={slide.registerUrl}
-                        className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-[#2f2318] px-4 py-3 text-sm font-black uppercase tracking-[0.12em] text-white transition-all hover:bg-[#9f7b28] active:scale-95 [html[data-theme='dark']_&]:border [html[data-theme='dark']_&]:border-[rgba(255,242,203,0.72)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] [html[data-theme='dark']_&]:text-[#071018] [html[data-theme='dark']_&]:shadow-[0_22px_42px_rgba(0,0,0,0.32)] [html[data-theme='dark']_&]:hover:bg-[linear-gradient(180deg,#fff7de_0%,#f6e5b8_52%,#e0c279_100%)] [html[data-theme='dark']_&]:hover:shadow-[0_26px_52px_rgba(0,0,0,0.38)]"
-                      >
-                        Register
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setActiveFormId(slide.id);
-                          setInterestedIn("visiting");
-                          setSubmitState("idle");
-                          setSubmitMessage(null);
-                        }}
-                        className="group inline-flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#cda24c] bg-[linear-gradient(180deg,rgba(255,247,232,0.95)_0%,rgba(244,221,171,0.92)_100%)] px-5 py-3.5 text-sm font-black uppercase tracking-[0.12em] text-[#20170f] shadow-[0_18px_34px_rgba(159,123,40,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#9f7b28] hover:shadow-[0_24px_40px_rgba(159,123,40,0.2)] active:scale-95 [html[data-theme='dark']_&]:border-[rgba(243,223,171,0.72)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(255,242,203,0.18)_0%,rgba(243,223,171,0.12)_100%)] [html[data-theme='dark']_&]:text-[#fff6df] [html[data-theme='dark']_&]:shadow-[0_22px_38px_rgba(0,0,0,0.26)] [html[data-theme='dark']_&]:hover:border-[rgba(255,242,203,0.92)] [html[data-theme='dark']_&]:hover:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] [html[data-theme='dark']_&]:hover:text-[#071018] [html[data-theme='dark']_&]:hover:shadow-[0_26px_50px_rgba(0,0,0,0.36)]"
-                      >
-                        Interested
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveFormId(slide.id);
+                        setInterestedIn("visiting");
+                        setSubmitState("idle");
+                        setSubmitMessage(null);
+                      }}
+                      className="group inline-flex w-full cursor-pointer items-center justify-center gap-3 rounded-full border border-[#cda24c] bg-[linear-gradient(180deg,rgba(255,247,232,0.95)_0%,rgba(244,221,171,0.92)_100%)] px-5 py-3.5 text-sm font-black uppercase tracking-[0.12em] text-[#20170f] shadow-[0_18px_34px_rgba(159,123,40,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#9f7b28] hover:shadow-[0_24px_40px_rgba(159,123,40,0.2)] active:scale-95 [html[data-theme='dark']_&]:border-[rgba(243,223,171,0.72)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(255,242,203,0.18)_0%,rgba(243,223,171,0.12)_100%)] [html[data-theme='dark']_&]:text-[#fff6df] [html[data-theme='dark']_&]:shadow-[0_22px_38px_rgba(0,0,0,0.26)] [html[data-theme='dark']_&]:hover:border-[rgba(255,242,203,0.92)] [html[data-theme='dark']_&]:hover:bg-[linear-gradient(180deg,#fff2cb_0%,#f3dfab_52%,#d8b766_100%)] [html[data-theme='dark']_&]:hover:text-[#071018] [html[data-theme='dark']_&]:hover:shadow-[0_26px_50px_rgba(0,0,0,0.36)]"
+                    >
+                      Interested
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </button>
                   </div>
                 </div>
               </>
