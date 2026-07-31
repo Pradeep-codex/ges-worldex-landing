@@ -1,0 +1,976 @@
+"use client";
+
+import type { CSSProperties } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { getEditionMetrics, portfolioExhibitions, type PortfolioExhibition } from "@/lib/portfolio";
+
+type PortfolioThemeStyle = CSSProperties & {
+  "--portfolio-accent": string;
+  "--portfolio-accent-soft": string;
+  "--portfolio-ink": string;
+};
+
+const numberFormatter = new Intl.NumberFormat("en-IN");
+const compactFormatter = new Intl.NumberFormat("en-IN", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+const DESKTOP_SIDEBAR_TOP = 96;
+const DESKTOP_BREAKPOINT = 1024;
+const EDITION_GALLERY_INTERVAL_MS = 4200;
+const EDITION_GALLERY_TRANSITION = { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const };
+
+const metricMeta: Record<string, { label: string; note: string }> = {
+  visitors: { label: "Visitors", note: "Across editions" },
+  exhibitors: { label: "Exhibitors", note: "Participated" },
+  reputedJewellers: { label: "Jewellers", note: "Featured" },
+  stalls: { label: "Stalls", note: "Built and managed" },
+  hostedBuyers: { label: "Hosted buyers", note: "Curated attendance" },
+  jewelleryDesigns: { label: "Designs", note: "On showcase" },
+};
+
+function extractYear(date: string) {
+  const match = date.match(/\b(19|20)\d{2}\b/);
+  return match?.[0] ?? "Recent";
+}
+
+function getPrimaryLocation(cities: string[]) {
+  if (cities.length === 0) {
+    return "Pan India";
+  }
+
+  const counts = cities.reduce<Record<string, number>>((acc, city) => {
+    acc[city] = (acc[city] ?? 0) + 1;
+    return acc;
+  }, {});
+
+  return Object.entries(counts).sort((left, right) => right[1] - left[1])[0]?.[0] ?? cities[0];
+}
+
+function getShowcaseLocation(exhibition: PortfolioExhibition, fallbackLocation: string) {
+  if (exhibition.id === "silver-show-of-india") {
+    return "Bengaluru, Delhi & Mumbai";
+  }
+
+  if (exhibition.id === "south-jewellery-show") {
+    return "Bengaluru, South India";
+  }
+
+  if (exhibition.id === "jewellery-show-of-india") {
+    return "Retail Exhibition, Bengaluru";
+  }
+
+  if (fallbackLocation === "Bengaluru") {
+    return "Bengaluru, Karnataka";
+  }
+
+  if (fallbackLocation === "Mumbai") {
+    return "Mumbai, Maharashtra";
+  }
+
+  if (fallbackLocation === "Delhi") {
+    return "New Delhi, India";
+  }
+
+  return fallbackLocation;
+}
+
+function formatCount(value: number) {
+  if (value >= 1000) {
+    return compactFormatter.format(value).toUpperCase();
+  }
+
+  return numberFormatter.format(value);
+}
+
+function buildEditionPreviewImages(images: string[], fallback: string) {
+  const source = Array.from(new Set(images.filter(Boolean)));
+  return source.length > 0 ? source : [fallback];
+}
+
+function getEditionGalleryImages(exhibition: PortfolioExhibition, edition?: PortfolioExhibition["editions"][number] | null) {
+  if (!edition) {
+    return [exhibition.detailImage, ...exhibition.galleryImages];
+  }
+
+  return buildEditionPreviewImages(
+    [
+      edition.image ?? "",
+      ...(edition.galleryImages ?? []),
+      exhibition.detailImage,
+      ...exhibition.galleryImages,
+    ],
+    exhibition.image,
+  );
+}
+
+function EditionGallery({
+  accent,
+  images,
+  title,
+}: {
+  accent: string;
+  images: string[];
+  title: string;
+}) {
+  const totalImages = images.length;
+  const carouselImages =
+    totalImages > 1 ? [images[totalImages - 1], ...images, images[0]] : images;
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [displayedIndex, setDisplayedIndex] = useState(totalImages > 1 ? 1 : 0);
+  const [isResettingTrack, setIsResettingTrack] = useState(false);
+
+  const showImage = (nextIndex: number) => {
+    if (totalImages <= 0) {
+      return;
+    }
+
+    const normalizedIndex = (nextIndex + totalImages) % totalImages;
+    setActiveImageIndex(normalizedIndex);
+    setDisplayedIndex(totalImages > 1 ? normalizedIndex + 1 : normalizedIndex);
+  };
+
+  const goToPreviousImage = () => {
+    if (totalImages <= 1) {
+      return;
+    }
+
+    setDisplayedIndex((current) => current - 1);
+    setActiveImageIndex((current) => (current - 1 + totalImages) % totalImages);
+  };
+
+  const goToNextImage = () => {
+    if (totalImages <= 1) {
+      return;
+    }
+
+    setDisplayedIndex((current) => current + 1);
+    setActiveImageIndex((current) => (current + 1) % totalImages);
+  };
+
+  useEffect(() => {
+    if (totalImages <= 1) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setDisplayedIndex((current) => current + 1);
+      setActiveImageIndex((current) => (current + 1) % totalImages);
+    }, EDITION_GALLERY_INTERVAL_MS);
+
+    return () => window.clearInterval(timer);
+  }, [totalImages]);
+
+  return (
+    <div className="space-y-4 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:space-y-3">
+      <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] bg-[color:var(--portfolio-accent-soft)] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:aspect-[16/7]">
+        <motion.div
+          className="flex h-full"
+          animate={{ x: `${displayedIndex * -100}%` }}
+          transition={isResettingTrack ? { duration: 0 } : EDITION_GALLERY_TRANSITION}
+          onAnimationComplete={() => {
+            if (totalImages <= 1) {
+              return;
+            }
+
+            if (displayedIndex === 0) {
+              setIsResettingTrack(true);
+              setDisplayedIndex(totalImages);
+              window.requestAnimationFrame(() => {
+                setIsResettingTrack(false);
+              });
+              return;
+            }
+
+            if (displayedIndex === totalImages + 1) {
+              setIsResettingTrack(true);
+              setDisplayedIndex(1);
+              window.requestAnimationFrame(() => {
+                setIsResettingTrack(false);
+              });
+            }
+          }}
+        >
+          {carouselImages.map((image, index) => (
+            <div key={`${image}-${index}`} className="relative h-full min-w-full">
+              {(() => {
+                const realIndex =
+                  totalImages > 1
+                    ? index === 0
+                      ? totalImages - 1
+                      : index === carouselImages.length - 1
+                        ? 0
+                        : index - 1
+                    : index;
+
+                return (
+                  <Image
+                    src={image}
+                    alt={`${title} gallery ${realIndex + 1}`}
+                    fill
+                    sizes="(min-width: 1024px) 44vw, 92vw"
+                    className="object-cover"
+                  />
+                );
+              })()}
+            </div>
+          ))}
+        </motion.div>
+
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0.04)_0%,rgba(10,10,10,0.18)_100%)]" />
+      </div>
+
+      {totalImages > 1 ? (
+        <div className="flex items-center justify-center gap-3 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:gap-2.5">
+          <button
+            type="button"
+            onClick={goToPreviousImage}
+            className="grid h-9 w-9 place-items-center rounded-full border border-[color:var(--about-card-border)] bg-white/80 text-slate-700 transition-colors hover:text-[color:var(--portfolio-accent)] [html[data-theme='dark']_&]:bg-slate-950/80 [html[data-theme='dark']_&]:text-slate-200 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:h-8 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:w-8"
+            aria-label={`Show previous ${title} gallery image`}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          <div className="flex items-center justify-center gap-2">
+            {images.map((image, index) => {
+              const isActive = index === activeImageIndex;
+
+              return (
+                <button
+                  key={`${image}-dot-${index}`}
+                  type="button"
+                  onClick={() => showImage(index)}
+                  className="h-2.5 rounded-full transition-all duration-300"
+                  aria-label={`Show ${title} gallery image ${index + 1}`}
+                  style={{
+                    width: isActive ? "1.9rem" : "0.55rem",
+                    background: isActive ? accent : "rgba(148,163,184,0.34)",
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={goToNextImage}
+            className="grid h-9 w-9 place-items-center rounded-full border border-[color:var(--about-card-border)] bg-white/80 text-slate-700 transition-colors hover:text-[color:var(--portfolio-accent)] [html[data-theme='dark']_&]:bg-slate-950/80 [html[data-theme='dark']_&]:text-slate-200 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:h-8 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:w-8"
+            aria-label={`Show next ${title} gallery image`}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function MobilePortfolioSection({
+  exhibition,
+  activeEditionIndex,
+  isLast,
+  onEditionChange,
+}: {
+  exhibition: PortfolioExhibition;
+  activeEditionIndex: number;
+  isLast: boolean;
+  onEditionChange: (editionIndex: number) => void;
+}) {
+  const sectionStyle: PortfolioThemeStyle = {
+    "--portfolio-accent": exhibition.theme.accent,
+    "--portfolio-accent-soft": exhibition.theme.accentSoft,
+    "--portfolio-ink": exhibition.theme.ink,
+  };
+  const hasEditions = exhibition.editions.length > 0;
+  const displayedEditions = hasEditions ? [...exhibition.editions].reverse() : [];
+  const safeEditionIndex = hasEditions
+    ? Math.min(activeEditionIndex, displayedEditions.length - 1)
+    : 0;
+  const activeEdition = hasEditions ? displayedEditions[safeEditionIndex] : null;
+  const activeEditionSourceIndex = activeEdition
+    ? exhibition.editions.indexOf(activeEdition)
+    : 0;
+  const metrics = activeEdition ? getEditionMetrics(activeEdition) : [];
+  const previewImages = activeEdition
+    ? getEditionGalleryImages(exhibition, activeEdition)
+    : getEditionGalleryImages(exhibition, null);
+
+  return (
+    <article id={`show-${exhibition.id}`} className="overflow-hidden scroll-mt-[110px]" style={sectionStyle}>
+      <div className="px-3 pb-4">
+        <div className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-[color:var(--portfolio-accent)]">
+          {exhibition.label}
+        </div>
+        <div className="mt-2">
+          <h2 className="welcome-display-font max-w-[11ch] text-[2rem] font-black leading-[0.92] tracking-[-0.03em] text-slate-950 [html[data-theme='dark']_&]:text-slate-50">
+            {exhibition.title}
+          </h2>
+        </div>
+      </div>
+
+      {hasEditions ? (
+        <>
+          <div className="border-b border-[color:var(--about-card-border)] px-3 pb-2">
+            <div className="-mx-3 flex gap-5 overflow-x-auto px-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {displayedEditions.map((edition, index) => {
+                  const isActive = index === safeEditionIndex;
+
+                  return (
+                    <button
+                      key={`${exhibition.id}-${edition.name}-${edition.date}`}
+                      type="button"
+                      onClick={() => onEditionChange(index)}
+                      className="relative shrink-0 pb-2 text-left transition-colors duration-300"
+                      style={{
+                        color: isActive ? "var(--portfolio-accent)" : "var(--about-text-secondary)",
+                      }}
+                      aria-pressed={isActive}
+                    >
+                      <div className="text-[0.82rem] font-semibold leading-tight text-slate-950 [html[data-theme='dark']_&]:text-slate-100">
+                        {edition.name}
+                      </div>
+                      <div
+                        className="absolute bottom-0 left-0 h-[3px] rounded-full transition-all duration-300"
+                        style={{
+                          width: isActive ? "100%" : "0%",
+                          background: "var(--portfolio-accent)",
+                          boxShadow: isActive
+                            ? "0 0 0.75rem color-mix(in srgb, var(--portfolio-accent) 45%, transparent)"
+                            : "none",
+                          opacity: isActive ? 1 : 0.2,
+                        }}
+                      />
+                    </button>
+                  );
+                })}
+            </div>
+          </div>
+
+          {activeEdition ? (
+            <motion.div
+              key={`${exhibition.id}-${activeEdition.name}-${activeEdition.date}`}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="space-y-4 px-0 pb-6"
+            >
+              <div className="px-3">
+                <div className="flex flex-wrap gap-x-4 gap-y-2 text-[0.8rem] font-semibold text-slate-500 [html[data-theme='dark']_&]:text-slate-300">
+                  <span className="inline-flex items-center gap-2">
+                    <CalendarDays className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
+                    {activeEdition.date}
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
+                    {activeEdition.city}
+                  </span>
+                </div>
+
+                {metrics.length > 0 ? (
+                  <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:gap-3">
+                    {metrics.map(({ label, value }) => (
+                      <div
+                        key={label}
+                        className="rounded-[14px] border border-[color:var(--about-card-border)] bg-white/84 px-2.5 py-2 [html[data-theme='dark']_&]:bg-slate-900/80 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:px-3.5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:py-3"
+                      >
+                        <div className="text-[1rem] font-black leading-none text-slate-950 [html[data-theme='dark']_&]:text-slate-50 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[1.5rem]">
+                          {numberFormatter.format(value)}
+                        </div>
+                        <div className="mt-1 text-[0.52rem] font-black uppercase tracking-[0.08em] text-[color:var(--portfolio-accent)] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[0.62rem]">
+                          {label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-4 rounded-[18px] border border-dashed border-[color:var(--about-card-border)] px-3 py-3 text-sm text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+                    Stats for this edition will be added soon.
+                  </div>
+                )}
+              </div>
+
+              <EditionGallery
+                key={`${activeEdition.name}-${previewImages.join("|")}`}
+                accent={exhibition.theme.accent}
+                images={previewImages}
+                title={activeEdition.name}
+              />
+            </motion.div>
+          ) : null}
+        </>
+      ) : (
+        <div className="space-y-4 px-0 pb-6">
+          <EditionGallery
+            key={`${exhibition.id}-${previewImages.join("|")}`}
+            accent={exhibition.theme.accent}
+            images={previewImages}
+            title={exhibition.title}
+          />
+
+          <div className="px-3 text-sm leading-relaxed text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+            Edition archive coming soon for this show.
+          </div>
+        </div>
+      )}
+
+      {!isLast ? (
+        <div className="px-3 pb-1">
+          <div className="h-px bg-[linear-gradient(90deg,transparent,rgba(15,23,42,0.16),transparent)] shadow-[0_8px_18px_rgba(15,23,42,0.08)] [html[data-theme='dark']_&]:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)] [html[data-theme='dark']_&]:shadow-[0_8px_18px_rgba(0,0,0,0.28)]" />
+        </div>
+      ) : null}
+    </article>
+  );
+}
+
+export function PortfolioShowcase({
+  exhibitions = portfolioExhibitions,
+}: {
+  exhibitions?: PortfolioExhibition[];
+}) {
+  const [activeExhibitionIndex, setActiveExhibitionIndex] = useState(0);
+  const [hoveredExhibitionIndex, setHoveredExhibitionIndex] = useState<number | null>(null);
+  const [mobileEditionIndexes, setMobileEditionIndexes] = useState(() =>
+    exhibitions.map(() => 0),
+  );
+  const [sidebarStyle, setSidebarStyle] = useState<CSSProperties>({});
+  const [sidebarActiveStyle, setSidebarActiveStyle] = useState<CSSProperties>({ opacity: 0 });
+  const [sidebarHoverStyle, setSidebarHoverStyle] = useState<CSSProperties>({ opacity: 0 });
+  const contentTopRef = useRef<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const sidebarTrackRef = useRef<HTMLElement | null>(null);
+  const sidebarPanelRef = useRef<HTMLDivElement | null>(null);
+  const sidebarListRef = useRef<HTMLDivElement | null>(null);
+  const sidebarItemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const exhibition = exhibitions[activeExhibitionIndex] ?? exhibitions[0] ?? portfolioExhibitions[0];
+  const editionCount = exhibition.editions.length;
+  const maxSummaryCards = 5;
+  const isHoverHighlightVisible =
+    hoveredExhibitionIndex != null && hoveredExhibitionIndex !== activeExhibitionIndex;
+  const sidebarLineStyle = isHoverHighlightVisible
+    ? { ...sidebarHoverStyle, opacity: 1 }
+    : sidebarActiveStyle;
+  const sidebarLineTransitionDuration = isHoverHighlightVisible ? "200ms" : "500ms";
+
+  const summaryCards = useMemo(() => {
+    const totals = exhibition.editions.reduce<Record<string, number>>((acc, edition) => {
+      Object.entries(edition.stats).forEach(([key, value]) => {
+        if (typeof value === "number") {
+          acc[key] = (acc[key] ?? 0) + value;
+        }
+      });
+      return acc;
+    }, {});
+
+    const cards = [
+      {
+        label: "Editions",
+        note: editionCount > 0 ? "Completed" : "Pipeline",
+        value: String(editionCount),
+      },
+    ];
+
+    const preferredKeys = [
+      "visitors",
+      "exhibitors",
+      "reputedJewellers",
+      "stalls",
+      "hostedBuyers",
+      "jewelleryDesigns",
+    ];
+
+    preferredKeys.forEach((key) => {
+      const value = totals[key];
+      const meta = metricMeta[key];
+
+      if (cards.length >= maxSummaryCards || value == null || !meta) {
+        return;
+      }
+
+      cards.push({
+        label: meta.label,
+        note: meta.note,
+        value: formatCount(value),
+      });
+    });
+
+    if (cards.length < maxSummaryCards) {
+      cards.push({
+        label: "Cities",
+        note: "Host locations",
+        value: String(new Set(exhibition.editions.map((edition) => edition.city)).size || 1),
+      });
+    }
+
+    while (cards.length < maxSummaryCards) {
+      cards.push({
+        label: "Focus tracks",
+        note: "Show pillars",
+        value: String(exhibition.focus.length),
+      });
+    }
+
+    return cards.slice(0, maxSummaryCards);
+  }, [editionCount, exhibition.editions, exhibition.focus.length, maxSummaryCards]);
+
+  const showcaseMeta = useMemo(() => {
+    const cities = exhibition.editions.map((edition) => edition.city);
+    const firstYear = exhibition.editions[0]?.date ? extractYear(exhibition.editions[0].date) : "Ongoing";
+    const primaryLocation = getPrimaryLocation(cities);
+
+    return {
+      firstYear,
+      location: getShowcaseLocation(exhibition, primaryLocation),
+    };
+  }, [exhibition]);
+
+  const themeStyle: PortfolioThemeStyle = {
+    "--portfolio-accent": exhibition.theme.accent,
+    "--portfolio-accent-soft": exhibition.theme.accentSoft,
+    "--portfolio-ink": exhibition.theme.ink,
+  };
+
+  const handleExhibitionChange = (index: number) => {
+    setActiveExhibitionIndex(index);
+    setHoveredExhibitionIndex(null);
+
+    const exhibitionId = exhibitions[index]?.id;
+    if (exhibitionId) {
+      window.history.replaceState(null, "", `#${exhibitionId}`);
+    }
+
+    const contentTop = contentTopRef.current;
+    if (!contentTop) {
+      return;
+    }
+
+    const targetTop = window.scrollY + contentTop.getBoundingClientRect().top - 96;
+    window.scrollTo({
+      top: Math.max(targetTop, 0),
+      behavior: "smooth",
+    });
+  };
+
+  const handleMobileEditionChange = (showIndex: number, editionIndex: number) => {
+    setMobileEditionIndexes((current) =>
+      current.map((value, index) => (index === showIndex ? editionIndex : value)),
+    );
+  };
+
+  useEffect(() => {
+    const applyHashSelection = () => {
+      const raw = window.location.hash ? window.location.hash.slice(1) : "";
+      const hash = decodeURIComponent(raw);
+      if (!hash) {
+        return;
+      }
+
+      const idx = exhibitions.findIndex((item) => item.id === hash);
+      if (idx < 0) {
+        return;
+      }
+
+      setActiveExhibitionIndex(idx);
+      setHoveredExhibitionIndex(null);
+
+      // Mobile renders all sections, so we can scroll to the anchor.
+      // Desktop renders a single detail panel; the anchor is rendered for the active show below.
+      window.setTimeout(() => {
+        const contentTop = contentTopRef.current;
+        if (!contentTop) return;
+
+        // On mobile/tablet we have a real anchor per show.
+        // On desktop we scroll to the content top so the active panel is aligned correctly.
+        const mobileAnchor = document.getElementById(`show-${hash}`);
+        if (mobileAnchor) {
+          mobileAnchor.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        const targetTop = window.scrollY + contentTop.getBoundingClientRect().top - 96;
+        window.scrollTo({ top: Math.max(targetTop, 0), behavior: "smooth" });
+      }, 50);
+    };
+
+    applyHashSelection();
+    window.addEventListener("hashchange", applyHashSelection);
+    return () => window.removeEventListener("hashchange", applyHashSelection);
+  }, [exhibitions]);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateSidebarPosition = () => {
+      const section = sectionRef.current;
+      const sidebarTrack = sidebarTrackRef.current;
+      const sidebarPanel = sidebarPanelRef.current;
+
+      if (!section || !sidebarTrack || !sidebarPanel || window.innerWidth < DESKTOP_BREAKPOINT) {
+        setSidebarStyle({});
+        return;
+      }
+
+      const sectionRect = section.getBoundingClientRect();
+      const sidebarTrackRect = sidebarTrack.getBoundingClientRect();
+      const panelHeight = sidebarPanel.offsetHeight;
+      const sidebarTrackHeight = sidebarTrackRect.height;
+      const startFixedScrollY = window.scrollY + sidebarTrackRect.top - DESKTOP_SIDEBAR_TOP;
+      const stopFixedScrollY =
+        window.scrollY + sectionRect.bottom - DESKTOP_SIDEBAR_TOP - panelHeight;
+
+      if (window.scrollY <= startFixedScrollY) {
+        setSidebarStyle({
+          position: "relative",
+          width: "100%",
+        });
+        return;
+      }
+
+      if (window.scrollY < stopFixedScrollY) {
+        setSidebarStyle({
+          position: "fixed",
+          top: `${DESKTOP_SIDEBAR_TOP}px`,
+          left: `${sidebarTrackRect.left}px`,
+          width: `${sidebarTrackRect.width}px`,
+          zIndex: 20,
+        });
+        return;
+      }
+
+      setSidebarStyle({
+        position: "absolute",
+        top: `${Math.max(sidebarTrackHeight - panelHeight, 0)}px`,
+        left: 0,
+        width: "100%",
+      });
+    };
+
+    const scheduleUpdate = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(updateSidebarPosition);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [activeExhibitionIndex]);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateSidebarHighlights = () => {
+      const list = sidebarListRef.current;
+      const activeItem = sidebarItemRefs.current[activeExhibitionIndex];
+
+      if (!list || !activeItem) {
+        setSidebarActiveStyle({ opacity: 0 });
+        setSidebarHoverStyle({ opacity: 0 });
+        return;
+      }
+
+      setSidebarActiveStyle({
+        top: `${activeItem.offsetTop}px`,
+        height: `${activeItem.offsetHeight}px`,
+        opacity: 1,
+      });
+
+      const hoverItem =
+        hoveredExhibitionIndex == null ? null : sidebarItemRefs.current[hoveredExhibitionIndex];
+
+      if (!hoverItem || hoveredExhibitionIndex === activeExhibitionIndex) {
+        setSidebarHoverStyle((current) => ({ ...current, opacity: 0 }));
+        return;
+      }
+
+      setSidebarHoverStyle({
+        top: `${hoverItem.offsetTop}px`,
+        height: `${hoverItem.offsetHeight}px`,
+        opacity: 1,
+      });
+    };
+
+    const scheduleUpdate = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(updateSidebarHighlights);
+    };
+
+    scheduleUpdate();
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
+  }, [activeExhibitionIndex, hoveredExhibitionIndex]);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative mx-auto w-full max-w-[1720px] px-3 pb-16 pt-5 sm:px-4 md:px-8 md:pb-20 md:pt-6 lg:px-12 lg:pb-24 lg:pt-8"
+      style={themeStyle}
+    >
+      <div className="pointer-events-none absolute inset-x-10 top-0 h-56 bg-[radial-gradient(circle_at_center,rgba(212,180,101,0.16),transparent_68%)] blur-3xl" />
+
+      <div className="relative -mx-3 space-y-8 lg:hidden">
+        {exhibitions.map((item, index) => (
+          <MobilePortfolioSection
+            key={item.id}
+            exhibition={item}
+            activeEditionIndex={mobileEditionIndexes[index] ?? 0}
+            isLast={index === exhibitions.length - 1}
+            onEditionChange={(editionIndex) => handleMobileEditionChange(index, editionIndex)}
+          />
+        ))}
+      </div>
+
+      <div className="relative hidden lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-6 xl:grid-cols-[320px_minmax(0,1fr)] xl:gap-7">
+        <aside ref={sidebarTrackRef} className="relative">
+          <div
+            ref={sidebarPanelRef}
+            className="flex flex-col overflow-hidden rounded-[30px] border border-[color:var(--about-card-border)] bg-white/88 p-4 shadow-[0_24px_80px_rgba(34,24,14,0.08)] backdrop-blur-xl [html[data-theme='dark']_&]:bg-slate-950/80 lg:h-[calc(100vh-7rem)]"
+            style={sidebarStyle}
+          >
+            <div className="border-b border-[color:var(--about-card-border)] pb-4">
+              <h1 className="text-3xl font-black tracking-tight text-slate-950 [html[data-theme='dark']_&]:text-slate-50">
+                Our Shows
+              </h1>
+            </div>
+
+            <div className="mt-4 flex-1 overflow-y-auto pr-1">
+              <div ref={sidebarListRef} className="relative space-y-2 pb-1">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 z-10 w-[2px] bg-[linear-gradient(180deg,#f0c680_0%,#d0923e_100%)] transition-[top,height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{
+                    ...sidebarLineStyle,
+                    transitionDuration: sidebarLineTransitionDuration,
+                  }}
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 right-0 z-0 bg-[linear-gradient(130deg,rgba(244,224,195,0.96)_0%,rgba(236,207,167,0.95)_58%,rgba(226,189,145,0.93)_100%)] shadow-[0_18px_34px_rgba(62,41,22,0.16)] transition-[top,height,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] [html[data-theme='dark']_&]:bg-[linear-gradient(130deg,rgba(67,52,35,0.88)_0%,rgba(49,38,27,0.86)_52%,rgba(36,29,22,0.92)_100%)] [html[data-theme='dark']_&]:shadow-[0_18px_34px_rgba(0,0,0,0.28)]"
+                  style={sidebarActiveStyle}
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 right-0 z-[1] bg-[rgba(166,125,82,0.16)] transition-[top,height,opacity] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] [html[data-theme='dark']_&]:bg-[rgba(216,183,102,0.1)]"
+                  style={sidebarHoverStyle}
+                />
+
+                {exhibitions.map((item, index) => {
+                  const isActive = index === activeExhibitionIndex;
+
+                  return (
+                    <button
+                      key={item.id}
+                      ref={(node) => {
+                        sidebarItemRefs.current[index] = node;
+                      }}
+                      type="button"
+                      onClick={() => handleExhibitionChange(index)}
+                      onMouseEnter={() => setHoveredExhibitionIndex(index)}
+                      onMouseLeave={() => setHoveredExhibitionIndex(null)}
+                      onFocus={() => setHoveredExhibitionIndex(index)}
+                      onBlur={() => setHoveredExhibitionIndex(null)}
+                      className="group relative isolate z-[2] w-full cursor-pointer overflow-hidden px-3 py-3 text-left transition-colors duration-300"
+                    >
+                      <div className="relative z-10 flex items-start justify-between gap-3">
+                        <div className="relative z-10 min-w-0">
+                          <div
+                            className={`text-[1rem] font-semibold leading-snug transition-colors duration-300 ${
+                              isActive
+                                ? "text-[color:var(--portfolio-accent)]"
+                                : "text-slate-900 group-hover:text-[color:var(--portfolio-accent)] [html[data-theme='dark']_&]:text-slate-100"
+                            }`}
+                          >
+                            {item.title}
+                          </div>
+                          {item.editions.length > 0 ? (
+                            <div
+                              className={`mt-1 text-[0.72rem] font-black uppercase tracking-[0.16em] transition-colors duration-300 ${
+                                isActive
+                                  ? "text-slate-800 [html[data-theme='dark']_&]:text-slate-50"
+                                  : "text-slate-500 [html[data-theme='dark']_&]:text-slate-400"
+                              }`}
+                            >
+                              {`${item.editions.length} Editions`}
+                            </div>
+                          ) : null}
+                        </div>
+
+                        <div
+                          className={`mt-1 shrink-0 text-[0.72rem] font-black transition-colors duration-300 ${
+                            isActive
+                              ? "text-[color:var(--portfolio-accent)]"
+                              : "text-slate-400 group-hover:text-[color:var(--portfolio-accent)]"
+                          }`}
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </div>
+                      </div>
+
+                      <div
+                        className={`relative z-10 mt-3 h-px w-full transition-all duration-300 ${
+                          isActive ? "opacity-100" : "opacity-55 group-hover:opacity-100"
+                        }`}
+                        style={{
+                          background: isActive
+                            ? "linear-gradient(90deg,var(--portfolio-accent),rgba(159,123,40,0.12))"
+                            : "linear-gradient(90deg,rgba(148,163,184,0.45),rgba(148,163,184,0.08))",
+                        }}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div ref={contentTopRef} className="min-w-0 space-y-6">
+          <article className="overflow-hidden rounded-[32px] border border-[color:var(--about-card-border)] bg-white/84 shadow-[0_26px_90px_rgba(22,16,10,0.08)] backdrop-blur-xl [html[data-theme='dark']_&]:bg-slate-950/82">
+            <div className="relative min-h-[280px] overflow-hidden rounded-[32px] bg-[#fbf6ec] md:min-h-[320px] [html[data-theme='dark']_&]:bg-[#121820]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--portfolio-accent)_16%,transparent),transparent_34%)] [html[data-theme='dark']_&]:bg-[radial-gradient(circle_at_18%_20%,color-mix(in_srgb,var(--portfolio-accent)_22%,transparent),transparent_36%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.72),rgba(255,255,255,0.12))] [html[data-theme='dark']_&]:bg-[linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))]" />
+
+              <div className="relative z-10 flex min-h-[280px] flex-col justify-between p-6 text-slate-950 md:min-h-[320px] md:p-8 lg:p-10 [html[data-theme='dark']_&]:text-white">
+                <div className="max-w-[56rem] space-y-4">
+                  <div className="inline-flex w-fit rounded-full border border-[color:var(--portfolio-accent)]/20 bg-white/70 px-4 py-2 text-[0.72rem] font-black uppercase tracking-[0.18em] text-[color:var(--portfolio-accent)] [html[data-theme='dark']_&]:bg-white/6">
+                    {exhibition.label}
+                  </div>
+                  <h2 className="welcome-display-font max-w-[16ch] text-[2.7rem] font-black leading-[0.92] tracking-tight sm:text-[3.3rem] lg:text-[4.1rem]">
+                    {exhibition.title}
+                  </h2>
+                  <p className="max-w-[48rem] text-base leading-relaxed text-slate-600 md:text-lg [html[data-theme='dark']_&]:text-white/76">
+                    {exhibition.overview}
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-wrap gap-5 text-sm font-semibold text-slate-700 [html[data-theme='dark']_&]:text-white/84">
+                  <div className="inline-flex items-center gap-2">
+                    <CalendarDays className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
+                    Since {showcaseMeta.firstYear}
+                  </div>
+                  <div className="inline-flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
+                    {showcaseMeta.location}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-[color:var(--about-card-border)] bg-white/94 [html[data-theme='dark']_&]:bg-slate-950">
+              <div className="grid gap-px bg-[color:var(--about-card-border)] sm:grid-cols-2 md:max-lg:grid-cols-3 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:grid-cols-5 [@media(min-width:1181px)_and_(max-width:1279px)]:grid-cols-5 xl:grid-cols-5">
+                {summaryCards.map((card, index) => (
+                  <div
+                    key={`${exhibition.id}-${card.label}-${card.note}-${card.value}-${index}`}
+                    className="flex min-h-[132px] flex-col justify-center bg-white/94 px-5 py-5 text-left [html[data-theme='dark']_&]:bg-slate-950 md:px-6 md:max-lg:min-h-[92px] md:max-lg:px-3.5 md:max-lg:py-3.5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:min-h-[108px] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:px-4.5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:py-4 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:min-h-[92px] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:px-3 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:py-3 [@media(min-width:1181px)_and_(max-width:1279px)]:min-h-[96px] [@media(min-width:1181px)_and_(max-width:1279px)]:px-3.5 [@media(min-width:1181px)_and_(max-width:1279px)]:py-3.5"
+                  >
+                    <div className="text-[2.4rem] font-black leading-none tracking-tight text-slate-950 [html[data-theme='dark']_&]:text-slate-50 md:text-[2.8rem] md:max-lg:text-[1.7rem] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[2.2rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:text-[1.65rem] [@media(min-width:1181px)_and_(max-width:1279px)]:text-[1.8rem]">
+                      {card.value}
+                    </div>
+                    <div className="mt-3 text-[0.72rem] font-black uppercase tracking-[0.18em] text-[color:var(--portfolio-accent)] md:max-lg:mt-2 md:max-lg:text-[0.58rem] md:max-lg:tracking-[0.14em] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[0.64rem] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:tracking-[0.15em] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:mt-2 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:text-[0.56rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:tracking-[0.14em] [@media(min-width:1181px)_and_(max-width:1279px)]:mt-2 [@media(min-width:1181px)_and_(max-width:1279px)]:text-[0.6rem] [@media(min-width:1181px)_and_(max-width:1279px)]:tracking-[0.14em]">
+                      {card.label}
+                    </div>
+                    <div className="mt-1 text-sm leading-snug text-slate-500 [html[data-theme='dark']_&]:text-slate-400 md:max-lg:text-[0.74rem] md:max-lg:leading-[1.2] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[0.8rem] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:leading-[1.25] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:text-[0.72rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1180px)]:leading-[1.2] [@media(min-width:1181px)_and_(max-width:1279px)]:text-[0.76rem] [@media(min-width:1181px)_and_(max-width:1279px)]:leading-[1.2]">
+                      {card.note}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </article>
+
+          <section className="space-y-4">
+            {editionCount > 0 ? (
+              exhibition.editions.map((edition, index) => {
+                const metrics = getEditionMetrics(edition);
+                const visual = edition.image ?? exhibition.galleryImages[index % exhibition.galleryImages.length] ?? exhibition.image;
+                const previewImages = getEditionGalleryImages(exhibition, edition);
+                const year = extractYear(edition.date);
+
+                return (
+                  <article
+                    key={`${exhibition.id}-${edition.name}-${edition.date}`}
+                    className="border-b border-[color:var(--about-card-border)] pb-8 last:border-b-0 last:pb-0"
+                  >
+                    <div className="grid gap-8 py-4 lg:grid-cols-[minmax(0,0.54fr)_minmax(0,1fr)] lg:items-start">
+                      <div className="flex flex-col gap-6 pt-2 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:contents">
+                        <div className="space-y-4 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:order-1">
+                          <h3 className="text-[2.2rem] font-black tracking-tight text-slate-950 [html[data-theme='dark']_&]:text-slate-50 md:text-[2.8rem]">
+                            {edition.name}
+                          </h3>
+
+                          <div className="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+                            <span className="inline-flex items-center gap-2">
+                              <CalendarDays className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
+                              {edition.date}
+                            </span>
+                            <span className="inline-flex items-center gap-2">
+                              <MapPin className="h-4 w-4 text-[color:var(--portfolio-accent)]" />
+                              {edition.city}
+                            </span>
+                          </div>
+
+                          <p className="max-w-[29rem] text-sm leading-relaxed text-slate-600 [html[data-theme='dark']_&]:text-slate-300 md:text-base">
+                            {edition.description ||
+                              `${exhibition.title} in ${edition.city}, ${year}. Clean highlights, key numbers, and a quick gallery view from this edition.`}
+                          </p>
+                        </div>
+
+                        {metrics.length > 0 ? (
+                          <div className="grid grid-cols-2 gap-x-5 gap-y-4 border-t border-[color:var(--about-card-border)] pt-5 lg:rounded-[18px] lg:border lg:border-[color:var(--about-card-border)] lg:bg-white/78 lg:px-4 lg:py-3 lg:shadow-[0_10px_28px_rgba(18,18,18,0.05)] lg:border-t-0 lg:pt-3 lg:[html[data-theme='dark']_&]:bg-slate-950/78 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:gap-x-6 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:gap-y-5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:px-5 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:py-4 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:order-3 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:col-span-2 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:grid-cols-4 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:items-center [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:gap-x-2 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:gap-y-0 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:rounded-[18px] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:border [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:border-[color:var(--about-card-border)] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:bg-white/78 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:px-4 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:py-3 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:shadow-[0_10px_28px_rgba(18,18,18,0.05)] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:[html[data-theme='dark']_&]:bg-slate-950/78 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:border-t-0 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:pt-3">
+                            {metrics.map(({ label, value }) => (
+                              <div key={label} className="min-w-0 [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:text-center">
+                                <div className="text-[1.7rem] font-black leading-none text-slate-950 [html[data-theme='dark']_&]:text-slate-50 [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[2.2rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:text-[1.25rem]">
+                                  {numberFormatter.format(value)}
+                                </div>
+                                <div className="mt-1 text-[0.74rem] font-black uppercase tracking-[0.14em] text-[color:var(--portfolio-accent)] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:text-[0.76rem] [@media(orientation:portrait)_and_(min-width:768px)_and_(max-width:1023px)]:tracking-[0.12em] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:text-[0.58rem] [@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:tracking-[0.1em]">
+                                  {label}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="border-t border-[color:var(--about-card-border)] pt-5 text-sm text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+                            Stats for this edition will be added soon.
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="[@media(orientation:landscape)_and_(min-width:768px)_and_(max-width:1279px)]:order-2">
+                      <EditionGallery
+                        key={`${edition.name}-${previewImages.join("|")}`}
+                        accent={exhibition.theme.accent}
+                        images={previewImages}
+                        title={edition.name}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              <div className="rounded-[28px] border border-dashed border-[color:var(--about-card-border)] bg-white/86 px-6 py-10 text-center shadow-[0_22px_80px_rgba(18,18,18,0.06)] backdrop-blur-xl [html[data-theme='dark']_&]:bg-slate-950/82">
+                <div className="text-2xl font-black text-slate-950 [html[data-theme='dark']_&]:text-slate-50">
+                  Edition archive coming soon
+                </div>
+                <p className="mt-2 text-sm text-slate-500 [html[data-theme='dark']_&]:text-slate-400">
+                  This show will appear here with its full edition list once data is ready.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
+    </section>
+  );
+}
