@@ -881,7 +881,7 @@ export function HeroSectionDemo({
             </label>
             <label className="grid gap-1.5">
               <span className="text-[0.68rem] font-black uppercase tracking-[0.16em]" style={{ color: "var(--about-text-secondary)" }}>
-                Interested In
+                How Would You Like to Participate?
               </span>
               <select
                 value={interestedIn}
@@ -890,8 +890,8 @@ export function HeroSectionDemo({
                 style={{ borderColor: "var(--about-card-border)", color: "var(--about-text-primary)" }}
                 required
               >
-                <option value="visiting">Visitor Interest</option>
-                <option value="exhibiting">Exhibitor Interest</option>
+                <option value="visiting">Visit the Show</option>
+                <option value="exhibiting">Exhibit at the Show</option>
               </select>
             </label>
 
