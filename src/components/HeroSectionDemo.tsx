@@ -273,6 +273,7 @@ export function HeroSectionDemo({
           mobileNumber: normalizedMobileNumber,
           showTitle: activeFormSlide.title,
           interestedIn,
+          participation: interestedIn === "visiting" ? "Visit the Show" : "Exhibit at the Show",
           submittedAt: new Date().toISOString(),
         }),
       });

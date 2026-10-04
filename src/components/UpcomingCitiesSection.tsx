@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, Expand, MapPin, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { exhibitionSlides } from "@/lib/exhibitionSlides";
 
@@ -149,7 +150,8 @@ function UpcomingEditionCard({
   imageSrc,
   mapHref,
   venue,
-}: CityCard) {
+  onZoom,
+}: CityCard & { onZoom: (src: string, alt: string) => void }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -180,6 +182,14 @@ function UpcomingEditionCard({
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(19,24,32,0.1)_38%,rgba(19,24,32,0.38)_100%)] [html[data-theme='dark']_&]:bg-[linear-gradient(180deg,rgba(4,10,14,0.08)_0%,rgba(4,10,14,0.22)_38%,rgba(4,10,14,0.5)_100%)]" />
+          <button
+            type="button"
+            onClick={() => onZoom(imageSrc, `${city} upcoming exhibition`)}
+            aria-label={`View full image for ${city}`}
+            className="absolute bottom-3 right-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/70 bg-black/55 text-white shadow-lg backdrop-blur-sm transition hover:scale-105 hover:bg-black/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <Expand className="h-5 w-5" />
+          </button>
         </div>
 
         <div className="px-4 pb-4 pt-4">
@@ -245,6 +255,7 @@ export function UpcomingCitiesSection({
   content?: any;
 }) {
   const resolvedContent = resolveUpcomingCities(content);
+  const [zoomedImage, setZoomedImage] = useState<{ src: string; alt: string } | null>(null);
 
   return (
     <section className="relative mx-auto w-full max-w-[1700px] px-4 pb-20 pt-6 md:px-8 md:pb-24 md:pt-10 lg:px-12 lg:pb-28 lg:pt-12">
@@ -290,7 +301,7 @@ export function UpcomingCitiesSection({
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.45, delay: index * 0.08, ease: "easeOut" }}
               >
-                <UpcomingEditionCard {...card} />
+                <UpcomingEditionCard {...card} onZoom={(src, alt) => setZoomedImage({ src, alt })} />
               </motion.div>
             ))}
           </div>
@@ -306,6 +317,27 @@ export function UpcomingCitiesSection({
           </div>
         </div>
       </div>
+      {zoomedImage ? (
+        <div
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm md:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label={zoomedImage.alt}
+          onClick={() => setZoomedImage(null)}
+        >
+          <button
+            type="button"
+            aria-label="Close full image"
+            onClick={() => setZoomedImage(null)}
+            className="absolute right-4 top-4 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25 md:right-8 md:top-8"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          <div className="relative h-full max-h-[92vh] w-full max-w-[96vw]" onClick={(event) => event.stopPropagation()}>
+            <Image src={zoomedImage.src} alt={zoomedImage.alt} fill sizes="96vw" className="object-contain" />
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

@@ -46,6 +46,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Please choose what you're interested in." }, { status: 400 });
   }
 
+  const participation = interestedIn === "visiting" ? "Visit the Show" : "Exhibit at the Show";
+
   const webhookUrl =
     getEnv("GOOGLE_SHEET_WEBHOOK_URL") ||
     getEnv("NEXT_PUBLIC_GOOGLE_SHEET_WEBHOOK_URL");
@@ -70,6 +72,7 @@ export async function POST(req: Request) {
         mobileNumber,
         showTitle,
         interestedIn,
+        participation,
         submittedAt: new Date().toISOString(),
       }),
     });

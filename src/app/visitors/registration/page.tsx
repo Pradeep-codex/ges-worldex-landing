@@ -5,6 +5,7 @@ import { homeQuery } from "@/lib/sanityQueries";
 import urlFor from "@/lib/sanityImage";
 
 export const metadata: Metadata = { title: "Visitor Registration" };
+export const dynamic = "force-dynamic";
 
 type SanityHeroSlide = Omit<NonNullable<RegistrationHeroContent["slides"]>[number], "image"> & {
   image?: unknown;

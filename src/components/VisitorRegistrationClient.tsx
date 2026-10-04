@@ -189,6 +189,7 @@ export function VisitorRegistrationClient({
           mobileNumber: normalizedMobileNumber,
           showTitle: activeSlide.title,
           interestedIn,
+          participation: interestedIn === "visiting" ? "Visit the Show" : "Exhibit at the Show",
           submittedAt: new Date().toISOString(),
         }),
       });
